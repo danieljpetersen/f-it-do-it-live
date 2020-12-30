@@ -145,80 +145,66 @@ void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::onUpdate()
 	Vertices.clear();
 	VBO.create(0);
 
-	// TODO -- uncomment
-	//if (App.StateCitySelected.Active)
-	//{
-	//	Color = InVisionColor;
-	//	Color.a = 255;
-	//	for (int i = 0; i < App.Cities[App.Cities.getSelectedCity()].TilesOwned.size(); i++)
-	//	{
-	//		int TileIndex = App.Cities[App.Cities.getSelectedCity()].TilesOwned[i];
-	//		App.Drawable_Layers.buildVertexForTileLines(TileIndex, Color, GridLinesAlwaysOnVertexArray);
-	//	}
-	//}
-	//else
-	{
-		if ((GridLinesAlwaysOnInVision) || (GridLinesAlwaysOnNonVision))
-		{
-			std::vector<int> *TilesWithGridLines = nullptr;
-			if (getColorSchemes().getGridLinesAlwaysOnTileGrouping() == Tile_Type_Grouping::ALL_TILE_TYPES)
-			{
-				TilesWithGridLines = &getTiles().AllTiles;
-			}
-			else if (getColorSchemes().getGridLinesAlwaysOnTileGrouping() == Tile_Type_Grouping::OCEAN_TILE_TYPES)
-			{
-				TilesWithGridLines = &getTiles().WaterTiles;
-			}
-			else if (getColorSchemes().getGridLinesAlwaysOnTileGrouping() == Tile_Type_Grouping::LAND_TILE_TYPES)
-			{
-				TilesWithGridLines = &getTiles().LandTiles;
- 			}
-			else
-			{
-				TilesWithGridLines = &getTiles().AllTiles;
-			}
+    if ((GridLinesAlwaysOnInVision) || (GridLinesAlwaysOnNonVision))
+    {
+        std::vector<int> *TilesWithGridLines = nullptr;
+        if (getColorSchemes().getGridLinesAlwaysOnTileGrouping() == Tile_Type_Grouping::ALL_TILE_TYPES)
+        {
+            TilesWithGridLines = &getTiles().AllTiles;
+        }
+        else if (getColorSchemes().getGridLinesAlwaysOnTileGrouping() == Tile_Type_Grouping::OCEAN_TILE_TYPES)
+        {
+            TilesWithGridLines = &getTiles().WaterTiles;
+        }
+        else if (getColorSchemes().getGridLinesAlwaysOnTileGrouping() == Tile_Type_Grouping::LAND_TILE_TYPES)
+        {
+            TilesWithGridLines = &getTiles().LandTiles;
+        }
+        else
+        {
+            TilesWithGridLines = &getTiles().AllTiles;
+        }
 
 
-			int _Count = 0;
-			for (unsigned int i = 0; i < TilesWithGridLines->size(); i++)
-			{
-				int TileIndex = TilesWithGridLines->at(i);
-				{
-					 if (getVision().hasHumanNationExplored(TileIndex))
-					{
-						 if ((getVision().hasVision_IgnoreCheatMode(TileIndex) && (GridLinesAlwaysOnInVision)))
-						 {
-						 	Color = InVisionColor;
-						 }
-						 else if (GridLinesAlwaysOnNonVision)
-						 {
-						 	Color = OutVisionColor;
-						 }
-						 else
-						 {
-						 	continue;
-						 }
+        int _Count = 0;
+        for (unsigned int i = 0; i < TilesWithGridLines->size(); i++)
+        {
+            int TileIndex = TilesWithGridLines->at(i);
+            {
+                 if (getVision().hasHumanNationExplored(TileIndex))
+                {
+                     if ((getVision().hasVision_IgnoreCheatMode(TileIndex) && (GridLinesAlwaysOnInVision)))
+                     {
+                        Color = InVisionColor;
+                     }
+                     else if (GridLinesAlwaysOnNonVision)
+                     {
+                        Color = OutVisionColor;
+                     }
+                     else
+                     {
+                        continue;
+                     }
 
-						int VBOIndex = _Count++ * 8;
+                    int VBOIndex = _Count++ * 8;
 
-						Vertices.push_back(sf::Vertex(getTiles().Grid.CommonCellData[TileIndex].Corners[LEFT], Color));
-						Vertices.push_back(sf::Vertex(getTiles().Grid.CommonCellData[TileIndex].Corners[BACK], Color));
+                    Vertices.push_back(sf::Vertex(getTiles().Grid.CommonCellData[TileIndex].Corners[LEFT], Color));
+                    Vertices.push_back(sf::Vertex(getTiles().Grid.CommonCellData[TileIndex].Corners[BACK], Color));
 
-						Vertices.push_back(Vertices[VBOIndex+1]);
-						Vertices.push_back(sf::Vertex(getTiles().Grid.CommonCellData[TileIndex].Corners[RIGHT], Color));
+                    Vertices.push_back(Vertices[VBOIndex+1]);
+                    Vertices.push_back(sf::Vertex(getTiles().Grid.CommonCellData[TileIndex].Corners[RIGHT], Color));
 
-						Vertices.push_back(Vertices[VBOIndex+3]);
-						Vertices.push_back(sf::Vertex(getTiles().Grid.CommonCellData[TileIndex].Corners[FRONT], Color));
+                    Vertices.push_back(Vertices[VBOIndex+3]);
+                    Vertices.push_back(sf::Vertex(getTiles().Grid.CommonCellData[TileIndex].Corners[FRONT], Color));
 
-						Vertices.push_back(Vertices[VBOIndex+5]);
-						Vertices.push_back(Vertices[VBOIndex]);
-					}
-				}
-			}
+                    Vertices.push_back(Vertices[VBOIndex+5]);
+                    Vertices.push_back(Vertices[VBOIndex]);
+                }
+            }
+        }
 
-			VBO.update(&Vertices[0], Vertices.size(), 0);
-		}
-	}
+        VBO.update(&Vertices[0], Vertices.size(), 0);
+    }
 }
 
 ////////////////////////////////////////////////////////////

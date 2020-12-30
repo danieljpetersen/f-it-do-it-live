@@ -24,7 +24,7 @@ void IUEINW::IUEINW_Nations::onMapGeneration()
 
 		Nation.NationIndex = i;
 		Nation.Name = "";
-		Nation.Color = getColorSchemes().getNationColor(i);//needs to come before create city
+		Nation.Color = getColorSchemes().getNationColor(i);
 		Nation.IsAlive = true;
 
 		Nation.EdgeTilesDiscovered.clear();

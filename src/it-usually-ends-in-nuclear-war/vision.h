@@ -35,8 +35,6 @@ namespace IUEINW
 
 		bool hasNationExplored(int NationIndex, int TileIndex);
 		bool hasNationExplored_IgnoreCheatMode(int NationIndex, int TileIndex);
-		bool hasNationExploredProvinceCapital_ByCityId(int NationIndex, gr::Slot_Map_ID CityId);
-		bool hasNationExploredProvinceCapital_ByTileIndex(int NationIndex, int TileIndex);
 
 		bool hasVision(int TileIndex);
 		bool hasVision_IgnoreCheatMode(int TileIndex);

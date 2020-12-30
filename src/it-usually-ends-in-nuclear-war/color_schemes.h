@@ -101,11 +101,6 @@ namespace IUEINW
 			return AttritionColor[SelectedColorSchemeIndex];
 		}
 
-		sf::Color getUnitManpowerResupplyColor()
-		{
-			return UnitManpowerResupplyColor[SelectedColorSchemeIndex];
-		}
-
 		sf::Color getSettlerOverlayGridValidColor()
 		{
 			return SettlerOverlayGridValidColor[SelectedColorSchemeIndex];
@@ -192,7 +187,7 @@ namespace IUEINW
 		}
 
 	private:
-		/// <summary> Coastal is the last index </summary>
+		// Coastal is the last index
 		std::vector<std::vector<sf::Color>> TileTypeColors;
 		std::vector<sf::Color> UnexploredColors;
 		std::vector<std::string> ColorSchemeNames;
@@ -216,7 +211,6 @@ namespace IUEINW
 		std::vector<sf::Color> RoadColor;
 		std::vector<int> RoadThickness;
 
-		std::vector<sf::Color> UnitManpowerResupplyColor;
 		std::vector<sf::Color> SettlerOverlayGridValidColor, SettlerOverlayGridInvalidColor;
 		std::vector<sf::Color> SettlerOverlayRingValidColor, SettlerOverlayRingInvalidColor;
 

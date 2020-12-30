@@ -67,6 +67,7 @@ void IUEINW::IUEINW_Vision::incrementVision(int TileIndex, int NationIndex)
 
 	// By Default, values are flagged as -1 to indicate not ever explored.
 	// If we increment and the value is 0, we know this is the first time we've visited this tile
+	// todo what the fuck why don't i just check for 1 here?
 	if (VisionCount[TileIndex][NationIndex] == 0)
 	{
 		VisionCount[TileIndex][NationIndex] += 1;
@@ -341,24 +342,6 @@ bool IUEINW::IUEINW_Vision::hasVision(int TileIndex)
 bool IUEINW::IUEINW_Vision::hasVision_IgnoreCheatMode(int TileIndex)
 {
 	return VisionCount[TileIndex][getNations().HumanNationIndex] > 0;
-}
-
-//==================================
-
-bool IUEINW::IUEINW_Vision::hasNationExploredProvinceCapital_ByCityId(int NationIndex, gr::Slot_Map_ID CityId)
-{
-	// int CapitalTileIndex = App.Cities.get(CityId)->TileIndex;
-	// return hasNationExplored(NationIndex, CapitalTileIndex);
-	
-	return false;//todo
-}
-
-//==================================
-
-bool IUEINW::IUEINW_Vision::hasNationExploredProvinceCapital_ByTileIndex(int NationIndex, int TileIndex)
-{
-	return false;// todo
-	// return hasNationExploredProvinceCapital_ByCityId(NationIndex, getTiles().Grid.CustomCellData[TileIndex].CityId);
 }
 
 //==================================

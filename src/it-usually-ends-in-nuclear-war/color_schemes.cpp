@@ -42,8 +42,6 @@ void IUEINW::IUEINW_Color_Schemes::onProgramStart()
 
 	AttritionColor.resize(ColorSchemesArray.size());
 
-	UnitManpowerResupplyColor.resize(ColorSchemesArray.size());
-
 	SettlerOverlayGridValidColor.resize(ColorSchemesArray.size());;
 	SettlerOverlayGridInvalidColor.resize(ColorSchemesArray.size());;
 	SettlerOverlayRingValidColor.resize(ColorSchemesArray.size());;
@@ -108,8 +106,6 @@ void IUEINW::IUEINW_Color_Schemes::onProgramStart()
 
 		RoadColor[i] = fi::jsonGetColor(SchemeDefinition, "road-color");
 		RoadThickness[i] = SchemeDefinition["road-thickness"].get<int>();
-
-		UnitManpowerResupplyColor[i] = fi::jsonGetColor(SchemeDefinition, "unit-manpower-resupply-color");
 
 		SettlerOverlayGridValidColor[i] = fi::jsonGetColor(SchemeDefinition, "settler-overlay-grid-valid-color");
 		SettlerOverlayGridInvalidColor[i] = fi::jsonGetColor(SchemeDefinition, "settler-overlay-grid-invalid-color");

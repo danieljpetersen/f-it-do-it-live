@@ -1112,63 +1112,6 @@ namespace fi
 			ar(HorizontalWrap);
 		}
 	};
-
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-	
-	template <class T>
-	class Grid_2D_Custom_Data : public Grid_Base
-	{
-	public:
-		// app specific data.  Note that it is a 2D array to account for updating board as a whole rather than as a wave
-		// first vector is always 2 elements, second vector contains as many elements as there are cells
-		std::vector<std::vector<T>> CustomCellData;
-		
-		// indexes into first vector of the 2D vector CustomCellData
-		int FinishedIndex, UpdatingIndex;
-		
-		void resizeCustomCellData(int NumberOfCells)
-		{
-			FinishedIndex = 0;
-			UpdatingIndex = 1;
-			
-			CustomCellData.resize(2);
-			CustomCellData[0].resize(NumberOfCells);
-			CustomCellData[1].resize(NumberOfCells);
-		}
-		
-		////////////////////////////////////////////////////////////
-		
-		void switchIndexes()
-		{
-			int Temp = FinishedIndex;
-			FinishedIndex = UpdatingIndex;
-			UpdatingIndex = Temp;
-		}
-		
-	};
-
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////
-	
-	class Grid_2D : public Grid_Base
-	{
-	public:
-		void resizeCustomCellData(int NumberOfCells) {};
-	};
-	
-	class Grid_1D : public Grid_Base
-	{
-	public:
-		void resizeCustomCellData(int NumberOfCells) {};
-	};
-
 }
 
 #endif

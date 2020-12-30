@@ -11,8 +11,6 @@ namespace IUEINW
 	class IUEINW_Nation
 	{
 	public:
-		std::set<int> Units;
-		std::set<int> Cities;
 		std::vector<std::vector<int>> EdgeTilesDiscovered;
 
 		bool IsAlive;
@@ -23,22 +21,6 @@ namespace IUEINW
 
 		bool isHumanNation();
 
-		//void addCity(const gr::Component_ID CityID)
-		//{
-		//    Cities.insert(CityID);
-		//}
-		//
-		//void removeCity(gr::Component_ID CityID)
-		//{
-		//    Cities.erase(CityID);
-		//}
-		//
-		//bool ownsProvince(gr::Component_ID CityId)
-		//{
-		//    // return App.Cities.get(CityId)->NationIndex == NationIndex; // todo
-		//    return false;
-		//}
-		//
 		bool discoveredBottomLeftEdge()
 		{
 			return (bool)EdgeTilesDiscovered[BOTTOMLEFT_EDGE].empty();

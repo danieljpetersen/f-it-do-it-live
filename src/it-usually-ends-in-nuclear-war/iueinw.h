@@ -45,6 +45,39 @@ namespace IUEINW
                     .withPlugin(&MapGenerator, false);
             ;
 
+            /*
+
+             const int EVENT_ID_PROGRAM_START
+             const int EVENT_ID_ON_RESIZE
+             const int EVENT_ID_PRE_UPDATE
+             const int EVENT_ID_ON_UPDATE
+             const int EVENT_ID_POST_UPDATE
+             const int EVENT_ID_ON_DRAW
+             const int EVENT_ID_ON_QUIT
+             const int EVENT_CORE_TICK
+
+             Program_State_Builder &withPlugin(*Plugin, EventID)
+
+             .withPlugin(Controls, EVENT_ON_UPDATE)
+             .withPlugin(*plugin, EVENT_MAP_GENERATION);
+
+             vector<Plugin*> Plugins;
+             unordered_map<vector<int>> Plugins;
+             Plugins.resize(NUMBER_OF_DEFAULT_EVENTS);
+
+
+             map generation
+             unit created
+             city created
+
+             defineProgram()
+             .withPlugin(Controls, EVENT_CORE_TICK)
+
+
+
+             */
+
+
             fi::getPlugins().defineProgramState(ProgramStateIndex_Core)
                     .withPlugin(this, true)
                     .withPlugin(&Controls, true)
@@ -53,9 +86,7 @@ namespace IUEINW
                     .withPlugin(&ColorSchemes, false)
                     .withPlugin(&Vision, false)
                     .withPlugin(&Map, false)
-                    //.withPlugin(&Provinces, true)
                     .withPlugin(&Nations, true)
-                    //.withPlugin(&Units, true)
                     .withPlugin(&DrawableGridLinesAlwaysOn, true)
                     .withPlugin(&DrawableGridLinesAroundMouse, true)
                     .withPlugin(&DrawableMapEdges, false)
@@ -66,14 +97,6 @@ namespace IUEINW
             ;
 
             fi::getPlugins().push(ProgramStateIndex_MapGeneration);
-        }
-
-        void onUpdate() override
-        {
-        }
-
-        void onDraw() override
-        {
         }
     };
 

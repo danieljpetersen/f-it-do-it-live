@@ -126,7 +126,6 @@ namespace fi
     fi::Plugin_Manager &getPlugins();
     fi::Canvas &getCanvasWorld();
     fi::Canvas &getCanvasGUI();
-
     sf::RenderWindow &getWindow();
 }
 

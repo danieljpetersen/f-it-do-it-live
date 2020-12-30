@@ -5,6 +5,14 @@
 
 namespace IUEINW
 {
+    // convert to ecs
+    // use events to transform data
+
+    struct Enabled_Cheats
+    {
+
+    };
+
 	class IUEINW_Cheats : public fi::Plugin_Base
 	{
 	private:

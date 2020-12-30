@@ -369,14 +369,6 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_blendTileTypes()
 
 				// ---- tile output
 				{
-					int PO = ProductionOutput / NumOfValidTiles;
-					int FO = FoodOutput / NumOfValidTiles;
-
-					if (PO == 0)
-					{
-						PO = 5;
-					}
-
 					if (j == 0)
 					{
 						getTiles().Grid.CustomCellData[i].ProductionOutputBase = ProductionOutput / NumOfValidTiles;
