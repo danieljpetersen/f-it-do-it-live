@@ -17,6 +17,9 @@
 #include "last_plugin_core_state.h"
 #include "audio.h"
 
+#include "../common/imgui/imgui.h"
+#include "../common/imgui/imgui-SFML.h"
+
 namespace IUEINW
 {
     class IUEINW_Application : public fi::Application_Base, public fi::Plugin_Base, public fi::Singleton<IUEINW_Application>

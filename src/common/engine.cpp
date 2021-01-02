@@ -80,6 +80,8 @@ void fi::Engine::mainThreadLoop()
             CanvasWorld.clear(BackgroundColor);
             CanvasGUI.clear(sf::Color::Transparent);
 
+            ImGui::SFML::Update(Window, getDeltaTime());
+
             stepTicks();
             Plugins.changeStateIfApplicable();
             Plugins.execute(EVENT_PRE_UPDATE);
@@ -87,20 +89,21 @@ void fi::Engine::mainThreadLoop()
             Plugins.execute(EVENT_POST_UPDATE);
             Plugins.execute(EVENT_DRAW);
 
-            //Plugins.executeStateChangeIfApplicable();
-            //Plugins.executeUpdate();
-            //Plugins.executeDraw();
-
             ClockHUD.drawIfApplicable(*CanvasGUI.getRenderTarget());
             drawCanvasesToScreen();
+
+            ImGui::SFML::Render(Window);
 
             Window.display();
 
             ClockHUD.endFrame();
 
+
             DeltaTime = DeltaTimeClock.restart();
         }
     }
+
+    ImGui::SFML::Shutdown();
 }
 
 ////////////////////////////////////////////////////////////
@@ -294,13 +297,16 @@ void fi::Engine::initWindow()
 
     executeResize(xWindowSize, yWindowSize); // so plugins know what is up
 
+    ImGui::SFML::Init(Window); // todo can i call init multiple times?
+
     if (!QuitFlag) // possible QuitFlag==true if we are creating this window to display an error (ie: invalid json config)
     {
-        Input.record(); // lazy fix to what i believe is an issue with sfml window, where it won't report the correct size until the first poll event
+        //Input.record(); // lazy fix to what i believe is an issue with sfml window, where it won't report the correct size until the first poll event
     }
 
     Window.clear(BackgroundColor);
     Window.display();
+
 
     Engine::instance().CurrentlySuspended = false;
 }

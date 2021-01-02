@@ -35,6 +35,8 @@ bool fi::Input::record()
 	sf::Event Event;
 	while (Engine::instance().Window.pollEvent(Event))
 	{
+        ImGui::SFML::ProcessEvent(Event);
+
 		if (Event.type == sf::Event::Closed)
 		{
 			return true;

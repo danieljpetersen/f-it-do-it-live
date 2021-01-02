@@ -26,6 +26,8 @@
 #include "grid.h"
 #include "slot_map.h"
 #include "loading_plugins.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui-SFML.h"
 
 namespace fi
 {

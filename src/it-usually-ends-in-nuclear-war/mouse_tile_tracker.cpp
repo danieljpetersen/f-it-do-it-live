@@ -85,7 +85,7 @@ void IUEINW::IUEINW_Plugin_Mouse_Tile_Tracker::updateTileTransparenciesList()
 	// Step 2)  Remove any drawables with transparency of 0
 	if (TileTransparencies.size() > 0)
 	{
-		std::list<Tile_Transparency_Tracker>::iterator iterator = TileTransparencies.begin();
+		std::list<fi::Tile_Transparency_Tracker>::iterator iterator = TileTransparencies.begin();
 		while (iterator != TileTransparencies.end())
 		{
 			sf::Int32 Diff = (TheCurrentTime - (*iterator).TimeAdded.asMilliseconds()) / 5;
@@ -115,7 +115,7 @@ void IUEINW::IUEINW_Plugin_Mouse_Tile_Tracker::updateTileTransparenciesList()
 			bool Found = false;
 			if (TileTransparencies.size() > 0)
 			{
-				for (std::list<Tile_Transparency_Tracker>::iterator iterator = TileTransparencies.begin(), end = TileTransparencies.end(); iterator != end; ++iterator)
+				for (std::list<fi::Tile_Transparency_Tracker>::iterator iterator = TileTransparencies.begin(), end = TileTransparencies.end(); iterator != end; ++iterator)
 				{
 					if ((*iterator).AssociatedTile == MouseHighlightingTiles[i])
 					{
@@ -128,7 +128,7 @@ void IUEINW::IUEINW_Plugin_Mouse_Tile_Tracker::updateTileTransparenciesList()
 
 			if (Found != true)
 			{
-				Tile_Transparency_Tracker Marker = Tile_Transparency_Tracker();
+				fi::Tile_Transparency_Tracker Marker = fi::Tile_Transparency_Tracker();
 				Marker.AssociatedTile = MouseHighlightingTiles[i];
 				Marker.CurrentTransparency = 255;
 				Marker.TimeAdded = CurrentTimeClock;

@@ -48,6 +48,14 @@ function(configure_exe exe_name)
         target_link_libraries(${exe_name} ${SFML_LIBRARIES} ${SFML_DEPENDENCIES} )
     endif()
 
+    # OpenGL (for imgui)
+    set(OpenGL_GL_PREFERENCE GLVND) # GLVND or LEGACY -- some versions of SFML give warnings if not explicitly set
+    find_package(OpenGL REQUIRED)
+    include_directories(${OPENGL_INCLUDE_DIR})
+    if (OPENGL_FOUND)
+        target_link_libraries(${exe_name} ${OPENGL_LIBRARIES})
+    endif()
+
 
     # Thread Library
     find_package(Threads REQUIRED)

@@ -1,16 +1,17 @@
-#ifndef GR_TRANSPARENCY_TRACKER_H
-#define GR_TRANSPARENCY_TRACKER_H
+#ifndef FI_TRANSPARENCY_TRACKER_H
+#define FI_TRANSPARENCY_TRACKER_H
 
 #include <SFML/System.hpp>
 
-namespace IUEINW
+namespace fi
 {
-	class IUEINW_Transparency_Tracker
+	class Tile_Transparency_Tracker
 	{
 	public:
 		sf::Time TimeAdded;
 		sf::Uint8 CurrentTransparency;
-	};
+        int AssociatedTile;
+    };
 }
 
 ////////////////////////////////////////////////////////////

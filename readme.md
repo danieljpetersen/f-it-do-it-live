@@ -2,7 +2,7 @@
 
 This repository is a video game framework and monorepo for projects that I am building with said framework.
 
-It's made entirely in C++, with the framework consisting mostly of a poorly built wrapper around [SFML](https://github.com/SFML/sfml) and a few other libraries. As I hope to have made clear [by the name](https://youtu.be/W78AGkm_AtE?t=58), with this repository comes a decision to start working out in the open. The intended end state is to sell each of these projects on Steam when they are nearing completion, but currently they are nowhere near so.
+It's made entirely in C++, with the framework consisting mostly of a poorly built wrapper around [SFML](https://github.com/SFML/sfml) and a few other libraries. As I hope to have made clear [by the name](https://youtu.be/W78AGkm_AtE?t=58), with this repository comes a decision to start working out in the open with a certain pragmatic attitude on getting things done. The intended end state is to sell each of these projects on Steam when they are nearing completion, but currently they are nowhere near so.
 
 # Projects
 

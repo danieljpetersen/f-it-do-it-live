@@ -43,7 +43,7 @@ void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::buildDrawable()
 
     if (getMouseTileTracker().TileTransparencies.size())
     {
-        for (std::list<Tile_Transparency_Tracker>::iterator iterator = getMouseTileTracker().TileTransparencies.begin(),
+        for (std::list<fi::Tile_Transparency_Tracker>::iterator iterator = getMouseTileTracker().TileTransparencies.begin(),
                 end = getMouseTileTracker().TileTransparencies.end(); iterator != end; ++iterator)
         {
              if (!getVision().hasHumanNationExplored((*iterator).AssociatedTile))

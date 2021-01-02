@@ -22,6 +22,7 @@
 
 	"gui-style":
 	{
+		"imgui-font-size": 16,
 		"font-path" : "fonts/RobotoMono-Bold.ttf", // I coded the game with a mono font in mind.  There may or may not be formatting issues with a non-mono font
 		"text-outline-color": { "r": 0, "g": 0, "b": 0, "a": 255 },
 		"text-outline-thickness": 1,

@@ -5,18 +5,10 @@
 #include <vector>
 #include <list>
 #include "../common/engine.h"
-#include "transparency_tracker.h"
+#include "../common/tile_transparency_tracker.h"
 
 namespace IUEINW
 {
-    class Tile_Transparency_Tracker : public IUEINW_Transparency_Tracker
-    {
-    public:
-        int AssociatedTile;
-    };
-
-    ////////////////////////////////////////////////////////////
-
     class IUEINW_Plugin_Mouse_Tile_Tracker : public fi::Plugin_Base
     {
     private:
@@ -33,7 +25,7 @@ namespace IUEINW
         int PreviouslyMousedTile = -1;
         bool IsMouseActuallyInsideTile = false;
         std::vector<int> MouseHighlightingTiles;
-        std::list<Tile_Transparency_Tracker> TileTransparencies;
+        std::list<fi::Tile_Transparency_Tracker> TileTransparencies;
     };
 
     IUEINW_Plugin_Mouse_Tile_Tracker &getMouseTileTracker();
