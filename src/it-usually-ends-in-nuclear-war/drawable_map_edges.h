@@ -12,9 +12,9 @@ namespace IUEINW
         int FrontDirtHeight;
 
     public:
-        void onProgramStart() ;
-        void onUpdate() ;
-        void onDraw() ;
+        void init();
+        void buildDrawable();
+        void draw();
     };
 }
 #endif

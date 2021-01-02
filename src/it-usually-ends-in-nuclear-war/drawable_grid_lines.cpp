@@ -5,7 +5,7 @@
 #include "vision.h"
 #include "controls.h"
 
-void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::onProgramStart()
+void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::init()
 {
 	VertexArray.setPrimitiveType(sf::Lines);
 
@@ -22,74 +22,71 @@ void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::onProgramStart()
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::onDraw()
+void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::draw()
 {
 	fi::getCanvasWorld().draw(VertexArray);
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::onUpdate()
+void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::buildDrawable()
 {
 	VertexArray.clear();
 
-	//if (App.StateCitySelected.Active != true)
-	{
-		sf::Color Color;
-		sf::Color GridLineInVisionColor = getColorSchemes().getGridLinesAroundMouseVisionColor();
-		sf::Color GridLineOutVisionColor = getColorSchemes().getGridLinesAroundMouseNonVisionColor();
-		int MaxBlackAlpha = GridLineOutVisionColor.a, MaxWhiteAlpha = GridLineInVisionColor.a;
-		int Max = -1, Distance = -1, Percent =- 1;
+    sf::Color Color;
+    sf::Color GridLineInVisionColor = getColorSchemes().getGridLinesAroundMouseVisionColor();
+    sf::Color GridLineOutVisionColor = getColorSchemes().getGridLinesAroundMouseNonVisionColor();
+    int MaxBlackAlpha = GridLineOutVisionColor.a, MaxWhiteAlpha = GridLineInVisionColor.a;
+    int Max = -1, Distance = -1, Percent =- 1;
 
-		if (getMouseTileTracker().TileTransparencies.size())
-		{
-			for (std::list<Tile_Transparency_Tracker>::iterator iterator = getMouseTileTracker().TileTransparencies.begin(),
-					end = getMouseTileTracker().TileTransparencies.end(); iterator != end; ++iterator)
-			{
-				 if (!getVision().hasHumanNationExplored((*iterator).AssociatedTile))
-				 {
-				 	continue;
-				 }
-				 else if (getVision().hasVision_IgnoreCheatMode((*iterator).AssociatedTile))
-				 {
-				 	Max = MaxWhiteAlpha;
-				 	Color = GridLineInVisionColor;
-				 }
-				 else
-				 {
-				 	Max = MaxBlackAlpha;
-				 	Color = GridLineOutVisionColor;
-				 }
+    if (getMouseTileTracker().TileTransparencies.size())
+    {
+        for (std::list<Tile_Transparency_Tracker>::iterator iterator = getMouseTileTracker().TileTransparencies.begin(),
+                end = getMouseTileTracker().TileTransparencies.end(); iterator != end; ++iterator)
+        {
+             if (!getVision().hasHumanNationExplored((*iterator).AssociatedTile))
+             {
+                continue;
+             }
+             else if (getVision().hasVision_IgnoreCheatMode((*iterator).AssociatedTile))
+             {
+                Max = MaxWhiteAlpha;
+                Color = GridLineInVisionColor;
+             }
+             else
+             {
+                Max = MaxBlackAlpha;
+                Color = GridLineOutVisionColor;
+             }
 
-				if (GridLinesAroundMouseEnabled)
-				{
-					Distance = getTiles().Grid.CustomCellData[(*iterator).AssociatedTile].DistanceFromMousedTile;
-					if (Distance > 9)
-						Distance = 9;
-					Percent = Distance * 10;
-					//Color.a = sf::Uint8(fi::Math::getPercent(fi::Math::max(0, 100 - Percent), (*iterator).CurrentTransparency));
-					Color.a = sf::Uint8(fi::Math::getPercent(std::max(0, 90 - Percent), (*iterator).CurrentTransparency)); // december 30th 2017 this was the value
-					//Color.a = std::max(0, (*iterator).CurrentTransparency - 40);
-					if (Color.a > Max)
-						Color.a = sf::Uint8(Max);
+            if (GridLinesAroundMouseEnabled)
+            {
+                Distance = getTiles().Grid.CustomCellData[(*iterator).AssociatedTile].DistanceFromMousedTile;
+                if (Distance > 9)
+                    Distance = 9;
+                Percent = Distance * 10;
+                //Color.a = sf::Uint8(fi::Math::getPercent(fi::Math::max(0, 100 - Percent), (*iterator).CurrentTransparency));
+                Color.a = sf::Uint8(fi::Math::getPercent(std::max(0, 90 - Percent), (*iterator).CurrentTransparency)); // december 30th 2017 this was the value
+                //Color.a = std::max(0, (*iterator).CurrentTransparency - 40);
+                if (Color.a > Max)
+                    Color.a = sf::Uint8(Max);
 
-					if (Color.a > 0)
-					{
-						getTiles().Grid.buildVertexForCell_Lines((*iterator).AssociatedTile, Color, VertexArray);
-					}
-				}
-			}
-		}
-	}
+                if (Color.a > 0)
+                {
+                    getTiles().Grid.buildVertexForCell_Lines((*iterator).AssociatedTile, Color, VertexArray);
+                }
+            }
+        }
+    }
 }
 
-//==================================
-//==================================
-//==================================
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::onProgramStart()
+void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::init()
 {
 	VBO.setPrimitiveType(sf::Lines);
 	VBO.setUsage(sf::VertexBuffer::Dynamic);
@@ -119,9 +116,9 @@ void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::onProgramStart()
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::onDraw()
+void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::draw()
 {
 	//if (getUI().areWeShowingNoTextDueToZoomLevel())
 	//{
@@ -134,9 +131,9 @@ void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::onDraw()
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::onUpdate()
+void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::buildDrawable()
 {
 	sf::Color Color;
 	sf::Color InVisionColor = getColorSchemes().getGridLinesAlwaysOnVisionColor();
@@ -212,7 +209,7 @@ void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::onUpdate()
 void IUEINW::IUEINW_Drawable_Map_Land_Ocean_Border::addLandOceanBorderIfApplicable(int i)
 {
 	// todo, you know this shit can all be cached in terms of checking neighbors for border.
-		//  it's not because of vision concerns, i think, but that doesn't really matter
+	// todo hmm it's not cached because of vision concerns, i think, but that doesn't really matter. this whole thing is bad for performance
 	sf::Color LandOceanBorderLineColor  = getColorSchemes().getLandOceanBorderLineColor();
 	if (LandOceanBorderLineColor.a != 0)
 	{
@@ -282,7 +279,7 @@ void IUEINW::IUEINW_Drawable_Map_Land_Ocean_Border::addLandOceanBorderIfApplicab
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Drawable_Map_Land_Ocean_Border::onUpdate()
+void IUEINW::IUEINW_Drawable_Map_Land_Ocean_Border::buildDrawable()
 {
 	Lines.clear();
 	for (int TileIndex = 0; TileIndex < getTiles().size(); TileIndex++)

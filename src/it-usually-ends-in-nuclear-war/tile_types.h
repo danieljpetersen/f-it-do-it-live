@@ -51,7 +51,6 @@ namespace IUEINW
 	public:
 		void initFromJSON();
 
-
 		template <class Archive>
 		void serialize( Archive & ar )
 		{

@@ -6,10 +6,10 @@
 
 void IUEINW::IUEINW_Plugin_Init_Map_Drawables::work(const int Event)
 {
-    getMapDrawables().DrawableGridLinesAlwaysOn.onProgramStart();
-    getMapDrawables().DrawableGridLinesAroundMouse.onProgramStart();
-    getMapDrawables().DrawableMapEdges.onProgramStart();
-    getMapDrawables().DrawableMapLandOceanBorder.onProgramStart();
+    getMapDrawables().DrawableGridLinesAlwaysOn.init();
+    getMapDrawables().DrawableGridLinesAroundMouse.init();
+    getMapDrawables().DrawableMapEdges.init();
+    getMapDrawables().DrawableMapLandOceanBorder.init();
 }
 
 ////////////////////////////////////////////////////////////
@@ -17,22 +17,22 @@ void IUEINW::IUEINW_Plugin_Init_Map_Drawables::work(const int Event)
 void IUEINW::IUEINW_Plugin_Build_Map_Drawables::work(const int Event)
 {
     getMapDrawables().buildMapDrawable();
-    getMapDrawables().DrawableGridLinesAlwaysOn.onUpdate();
-    getMapDrawables().DrawableMapEdges.onUpdate();
-    getMapDrawables().DrawableMapLandOceanBorder.onUpdate();
+    getMapDrawables().DrawableGridLinesAlwaysOn.buildDrawable();
+    getMapDrawables().DrawableMapEdges.buildDrawable();
+    getMapDrawables().DrawableMapLandOceanBorder.buildDrawable();
 }
 
 ////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Plugin_Draw_Map::work(const int Event)
 {
-    getMapDrawables().DrawableGridLinesAroundMouse.onUpdate();
+    getMapDrawables().DrawableGridLinesAroundMouse.buildDrawable(); // updated per each frame
 
-    getMapDrawables().onDraw();
-    getMapDrawables().DrawableGridLinesAlwaysOn.onDraw();
-    getMapDrawables().DrawableGridLinesAroundMouse.onDraw();
-    getMapDrawables().DrawableMapEdges.onDraw();
-    getMapDrawables().DrawableMapLandOceanBorder.onDraw();
+    getMapDrawables().draw();
+    getMapDrawables().DrawableGridLinesAlwaysOn.draw();
+    getMapDrawables().DrawableGridLinesAroundMouse.draw();
+    getMapDrawables().DrawableMapEdges.draw();
+    getMapDrawables().DrawableMapLandOceanBorder.draw();
 }
 
 ////////////////////////////////////////////////////////////
@@ -109,7 +109,7 @@ void IUEINW::IUEINW_Map_Drawables::buildMapDrawable()
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Drawables::onDraw()
+void IUEINW::IUEINW_Map_Drawables::draw()
 {
     for (int ColIndex = 0; ColIndex < VBO.size(); ColIndex++)
     {

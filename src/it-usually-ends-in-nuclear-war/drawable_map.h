@@ -15,8 +15,8 @@ namespace IUEINW
         IUEINW_Drawable_Map_Edges DrawableMapEdges;
         IUEINW_Drawable_Map_Land_Ocean_Border DrawableMapLandOceanBorder;
 
+        void draw();
         void buildMapDrawable();
-        void onDraw();
         void setTileVertexColors(int TileIndex, bool ExploredTile);
         void setTileVertexColors(int TileIndex);
         void setTileVertexColors();

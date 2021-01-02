@@ -7,7 +7,6 @@
 
 namespace IUEINW
 {
-
     class IUEINW_Drawable_Grid_Lines_Around_Mouse
     {
     private:
@@ -16,9 +15,9 @@ namespace IUEINW
         bool GridLinesAroundMouseEnabled;
 
     public:
-        void onProgramStart() ;
-        void onUpdate() ;
-        void onDraw() ;
+        void init();
+        void buildDrawable();
+        void draw();
     };
 
     ////////////////////////////////////////////////////////////
@@ -31,25 +30,23 @@ namespace IUEINW
         std::vector<sf::Vertex> Vertices;
 
     public:
-        void onProgramStart() ;
-        void onUpdate() ;
-        void onDraw() ;
+        void init();
+        void buildDrawable();
+        void draw();
     };
 
     ////////////////////////////////////////////////////////////
-    // note needs to come after drawablemap due to vision lines obscuring the border
-
+    // note needs to come after DrawableMap due to vision lines obscuring the border
     class IUEINW_Drawable_Map_Land_Ocean_Border
     {
     public:
         sf::VertexArray Lines;
-        void onProgramStart() { Lines.setPrimitiveType(sf::Lines); }
-        void onUpdate() ;
-        void onDraw()  { fi::getCanvasWorld().draw(Lines); } ;
+        void init() { Lines.setPrimitiveType(sf::Lines); }
+        void buildDrawable();
+        void draw() { fi::getCanvasWorld().draw(Lines); } ;
 
     private:
         void addLandOceanBorderIfApplicable(int i);
-
     };
 }
 
