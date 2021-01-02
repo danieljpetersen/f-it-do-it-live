@@ -15,18 +15,19 @@ const int MAP_GENERATOR_MAKE_WATER = 2;
 
 namespace IUEINW
 {
-    class IUEINW_Map_Generator : public fi::Plugin_Base
+    class IUEINW_Plugin_Generate_Map : public fi::Plugin_Base
     {
     public:
-        void onEnableChange(bool Enabling) override;
-        void generate();
-
-        IUEINW_Map_Layout MapLayout;
+        void work(const int Event) override;
 
     private:
+
+        // where the largeBoard refers to the actual Map, or in other words getTiles()
+        // initially the game had a much smaller number of tiles. map generation doesn't give good results when ran on the current tile count
+        // therefore, i kept the old map generation on the smaller board but when complete simply scale the grid up to the current tile count
+        // works out since it's faster to do on a smaller board anyway
         IUEINW_Tiles SmallBoard;
 
-        int TileTypesIndex, CheckIndex;
         std::vector<int> TileTypes;
         std::list<int> TilesToCheck;
 
@@ -62,13 +63,9 @@ namespace IUEINW
         void largeBoard_setCoastalTiles();
         bool largeBoard_isCoastalTile(int Index);
 
-        void largeBoard_labelLatitudeZones();
-
         void largeBoard_determineTileShadows();
         void largeBoard_determineTileShadow(int TileIndex);
     };
-
-    IUEINW_Map_Generator &getMapGenerator();
 
 ////////////////////////////////////////////////////////////
 

@@ -61,14 +61,14 @@ int IUEINW::getProgramState_Core()
 
 ////////////////////////////////////////////////////////////
 
-int IUEINW::getProgramState_MapGeneration()
+IUEINW::IUEINW_Plugin_Mouse_Tile_Tracker &IUEINW::getMouseTileTracker()
 {
-    return getApp().ProgramStateIndex_MapGeneration;
+    return getApp().PluginMouseTileTracker;
 }
 
 ////////////////////////////////////////////////////////////
 
-IUEINW::IUEINW_Mouse_Tile_Tracker &IUEINW::getMouseTileTracker()
+IUEINW::IUEINW_Map_Drawables &IUEINW::getMapDrawables()
 {
-    return getApp().MouseTileTracker;
+    return getApp().MapDrawables;
 }

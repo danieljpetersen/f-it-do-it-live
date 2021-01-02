@@ -3,7 +3,14 @@
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Color_Schemes::onProgramStart()
+void IUEINW::IUEINW_Plugin_Init_Color_Schemes::work(const int Event)
+{
+    getColorSchemes().init();
+}
+
+////////////////////////////////////////////////////////////
+
+void IUEINW::IUEINW_Color_Schemes::init()
 {
 	TileTypeColors.clear();
 	UnexploredColors.clear();
@@ -17,7 +24,6 @@ void IUEINW::IUEINW_Color_Schemes::onProgramStart()
     TileTypeShadowColorOffset.clear();
     TileTypeNonShadowColorOffset.clear();
 
-	int i = 0;
 	auto ColorSchemesArray = VisualSection["map-color-schemes"];
 	TileTypeColors.resize(ColorSchemesArray.size());
 	ColorSchemeNames.resize(ColorSchemesArray.size());
@@ -58,6 +64,7 @@ void IUEINW::IUEINW_Color_Schemes::onProgramStart()
 	SelectedColorSchemeIndex = 0;
 	std::string SelectedColorSchemeName = VisualSection["selected-color-scheme"].get<std::string>();
 
+    int i = 0;
 	for (auto it = ColorSchemesArray.begin(); it != ColorSchemesArray.end(); ++it)
 	{
 		auto SchemeDefinition = (*it);

@@ -4,8 +4,14 @@
 #include "nations.h"
 #include "cheats.h"
 #include "map.h"
+#include "drawable_map.h"
 
-//==================================
+void IUEINW::IUEINW_Plugin_Init_Vision ::work(const int Event)
+{
+    getVision().init(getNations().size());
+}
+
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Vision::init(int NumberOfNations)
 {
@@ -23,7 +29,7 @@ void IUEINW::IUEINW_Vision::init(int NumberOfNations)
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Vision::revealTile(int TileIndex, int NationIndex)
 {
@@ -31,7 +37,7 @@ void IUEINW::IUEINW_Vision::revealTile(int TileIndex, int NationIndex)
 	decrementVision(TileIndex, NationIndex);
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Vision::incrementArea(int CenterTileIndex, int NationIndex, int HalfAreaSize)
 {
@@ -44,7 +50,7 @@ void IUEINW::IUEINW_Vision::incrementArea(int CenterTileIndex, int NationIndex, 
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Vision::decrementArea(int CenterTileIndex, int NationIndex, int HalfAreaSize)
 {
@@ -58,7 +64,7 @@ void IUEINW::IUEINW_Vision::decrementArea(int CenterTileIndex, int NationIndex, 
 }
 
 
-//==================================
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Vision::incrementVision(int TileIndex, int NationIndex)
 {
@@ -67,7 +73,7 @@ void IUEINW::IUEINW_Vision::incrementVision(int TileIndex, int NationIndex)
 
 	// By Default, values are flagged as -1 to indicate not ever explored.
 	// If we increment and the value is 0, we know this is the first time we've visited this tile
-	// todo what the fuck why don't i just check for 1 here?
+	// todo what the fuck this doesn't explain what is wrong with just checking for 1 here
 	if (VisionCount[TileIndex][NationIndex] == 0)
 	{
 		VisionCount[TileIndex][NationIndex] += 1;
@@ -139,21 +145,21 @@ void IUEINW::IUEINW_Vision::incrementVision(int TileIndex, int NationIndex)
 
 		if (NationIndex == getNations().HumanNationIndex)
 		{
-			getMap().setTileVertexColors(TileIndex, true);
+			getMapDrawables().setTileVertexColors(TileIndex, true);
 		}
 
-		fi::flagUpdate();
+		//fi::flagUpdate();
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Vision::decrementVision(int TileIndex, int NationIndex)
 {
 	VisionCount[TileIndex][NationIndex] -= 1;
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Vision::clearVision(int TileIndex, int NationIndex)
 {
@@ -161,7 +167,7 @@ void IUEINW::IUEINW_Vision::clearVision(int TileIndex, int NationIndex)
 	LastTickSeen[TileIndex][NationIndex] = -1;
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Vision::clearVision_AllNations(int TileIndex)
 {
@@ -171,7 +177,7 @@ void IUEINW::IUEINW_Vision::clearVision_AllNations(int TileIndex)
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredBottomLeftEdge()
 {
@@ -181,7 +187,7 @@ bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredBottomLeftEdge()
 	return getNations().Human->discoveredBottomLeftEdge();
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredBottomRightEdge()
 {
@@ -191,7 +197,7 @@ bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredBottomRightEdge()
 	return getNations().Human->discoveredBottomRightEdge();
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredTopLeftEdge()
 {
@@ -201,7 +207,7 @@ bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredTopLeftEdge()
 	return getNations().Human->discoveredTopLeftEdge();
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredTopRightEdge()
 {
@@ -211,7 +217,7 @@ bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredTopRightEdge()
 	return getNations().Human->discoveredTopRightEdge();
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredAllEdges()
 {
@@ -231,14 +237,14 @@ bool IUEINW::IUEINW_Vision::hasHumanNationDiscoveredAllEdges()
 	return false;
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 int IUEINW::IUEINW_Vision::lastTickSeen_ignoreCheatMode(int TileIndex, int NationIndex)
 {
 	return LastTickSeen[TileIndex][NationIndex];
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 int IUEINW::IUEINW_Vision::lastTickSeen(int TileIndex, int NationIndex)
 {
@@ -270,7 +276,7 @@ int IUEINW::IUEINW_Vision::lastTickSeen(int TileIndex, int NationIndex)
 	return LastTickSeen[TileIndex][NationIndex];
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasNationExplored(int NationIndex, int TileIndex)
 {
@@ -292,7 +298,7 @@ bool IUEINW::IUEINW_Vision::hasNationExplored(int NationIndex, int TileIndex)
 	return false;
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasNationExplored_IgnoreCheatMode(int NationIndex, int TileIndex)
 {
@@ -304,21 +310,21 @@ bool IUEINW::IUEINW_Vision::hasNationExplored_IgnoreCheatMode(int NationIndex, i
 	return false;
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasHumanNationExplored(int TileIndex)
 {
 	return hasNationExplored(getNations().HumanNationIndex, TileIndex);
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasHumanNationExplored_IgnoreCheatMode(int TileIndex)
 {
 	return hasNationExplored_IgnoreCheatMode(getNations().HumanNationIndex, TileIndex);
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasVision(int TileIndex)
 {
@@ -337,21 +343,21 @@ bool IUEINW::IUEINW_Vision::hasVision(int TileIndex)
 	return hasVision_IgnoreCheatMode(TileIndex);
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::hasVision_IgnoreCheatMode(int TileIndex)
 {
 	return VisionCount[TileIndex][getNations().HumanNationIndex] > 0;
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::canHumanSeeCity(int TileIndex, int TickCityCreated)
 {
 	return (getCheats().isRevealAllTerrainEnabled()) || (lastTickSeen(TileIndex, getNations().HumanNationIndex) >= TickCityCreated);
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::canAnyoneSee(int TileIndex)
 {
@@ -366,7 +372,7 @@ bool IUEINW::IUEINW_Vision::canAnyoneSee(int TileIndex)
 	return false;
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
 bool IUEINW::IUEINW_Vision::canNationSee(int TileIndex, int NationIndex)
 {

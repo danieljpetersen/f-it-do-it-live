@@ -2,11 +2,11 @@
 #include "map_generation.h"
 #include "color_schemes.h"
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_setTileTypesBasedOnSmallBoard()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_setTileTypesBasedOnSmallBoard()
 {
-	int Scale = MapLayout.getScale();
+	int Scale = getMap().CurrentMapLayout.getScale();
 
 	getTiles().LatitudeZone_NumberOfRowsInTopAndBottom *= Scale;
 
@@ -36,9 +36,9 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_setTileTypesBasedOnSmallBoard()
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_removeBlockinessFromTranslatedMap()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_removeBlockinessFromTranslatedMap()
 {
 	std::vector<int> ChangeToWater, ChangeToLand;
 	for (int i = 0; i < getTiles().Grid.size(); i++)
@@ -92,9 +92,9 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_removeBlockinessFromTranslatedMap(
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_setTilePropertiesBasedOnCurrentTileType()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_setTilePropertiesBasedOnCurrentTileType()
 {
 	int TileType;
 	for (int i = 0; i < getTiles().Grid.size(); i++)
@@ -113,9 +113,9 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_setTilePropertiesBasedOnCurrentTil
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_blendTiles()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_blendTiles()
 {
 	// Right now each tile has its TileType property set as one of the traditional types, IE:  GRASS, ICE, DESERT, etc.
 	// in this function we're going to assign TileType (LAND, OCEAN, COASTAL), TileOutputs, and TileColor based on the blending of tiles in this function
@@ -300,9 +300,9 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_blendTiles()
 	//}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_blendTileTypes()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_blendTileTypes()
 {
 	int NumberOfPasses = 5;//fi::getRandom().int_(2, 22);//4; //6 seems to look decent, play around with this if you want
 
@@ -389,9 +389,9 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_blendTileTypes()
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_setTileIntensitiesAkaBonusOutput()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_setTileIntensitiesAkaBonusOutput()
 {
 	std::vector<int> Intensities;
 	std::list<int> UnlockedTiles;
@@ -487,9 +487,9 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_setTileIntensitiesAkaBonusOutput()
 	}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_finalTileTypeAssignment()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_finalTileTypeAssignment()
 {
 	std::vector<sf::Color> MasterTileColors;
 	const int INDEXES[] = { GRASS, FOREST, ICE, DESERT, PLAINS };
@@ -557,9 +557,9 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_finalTileTypeAssignment()
 	//}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_setCoastalTiles()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_setCoastalTiles()
 {
 	sf::Color Color = getColorSchemes().getTileColor(COASTAL_OCEAN);
 
@@ -651,9 +651,9 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_setCoastalTiles()
 	//}
 }
 
-//==================================
+////////////////////////////////////////////////////////////
 
-bool IUEINW::IUEINW_Map_Generator::largeBoard_isCoastalTile(int Index)
+bool IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_isCoastalTile(int Index)
 {
 	// NOTE:  this function is legit, and returns true if land tile is coastal, or water tile is coastal
 	bool CheckingAgainstLand = true;
@@ -685,29 +685,4 @@ bool IUEINW::IUEINW_Map_Generator::largeBoard_isCoastalTile(int Index)
 	return false;
 }
 
-//==================================
-
-void IUEINW::IUEINW_Map_Generator::largeBoard_labelLatitudeZones()
-{
-	for (int i = 0; i < getTiles().Grid.size(); i++)
-	{
-		int Zone;
-		int Row = getTiles().Grid.CommonCellData[i].Row;
-		if (Row <= getTiles().LatitudeZone_NumberOfRowsInTopAndBottom)
-		{
-			Zone = 0;
-		}
-		else if (Row >= getTiles().Grid.NumberOfRows - getTiles().LatitudeZone_NumberOfRowsInTopAndBottom)
-		{
-			Zone = 2;
-		}
-		else
-		{
-			Zone = 1;
-		}
-
-		getTiles().Grid.CustomCellData[i].LatitudeZone = Zone;
-	}
-}
-
-//==================================
+////////////////////////////////////////////////////////////

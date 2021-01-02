@@ -3,7 +3,7 @@
 #include "map.h"
 #include "color_schemes.h"
 
-void IUEINW::IUEINW_Mouse_Tile_Tracker::onUpdate()
+void IUEINW::IUEINW_Plugin_Mouse_Tile_Tracker::work(const int Event)
 {
 	findMouseTileIndex();
     updateMouseHighlightingTiles();
@@ -12,7 +12,7 @@ void IUEINW::IUEINW_Mouse_Tile_Tracker::onUpdate()
 
 //==================================
 
-void IUEINW::IUEINW_Mouse_Tile_Tracker::updateMouseHighlightingTiles()
+void IUEINW::IUEINW_Plugin_Mouse_Tile_Tracker::updateMouseHighlightingTiles()
 {
 	MouseHighlightingTiles.clear();
 
@@ -76,7 +76,7 @@ void IUEINW::IUEINW_Mouse_Tile_Tracker::updateMouseHighlightingTiles()
 
 //==================================
 
-void IUEINW::IUEINW_Mouse_Tile_Tracker::updateTileTransparenciesList()
+void IUEINW::IUEINW_Plugin_Mouse_Tile_Tracker::updateTileTransparenciesList()
 {
 	sf::Time CurrentTimeClock = fi::getEngine().Clock.getElapsedTime();
 	sf::Int32 TheCurrentTime = CurrentTimeClock.asMilliseconds();
@@ -140,7 +140,7 @@ void IUEINW::IUEINW_Mouse_Tile_Tracker::updateTileTransparenciesList()
 
 //==================================
 
-void IUEINW::IUEINW_Mouse_Tile_Tracker::findMouseTileIndex()
+void IUEINW::IUEINW_Plugin_Mouse_Tile_Tracker::findMouseTileIndex()
 {
 //	if (App.Input.MouseMovementTracker.MouseInsideWindowBounds)
 	{

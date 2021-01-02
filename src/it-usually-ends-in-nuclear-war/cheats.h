@@ -5,22 +5,22 @@
 
 namespace IUEINW
 {
-    // convert to ecs
-    // use events to transform data
-
-    struct Enabled_Cheats
+    class IUEINW_Plugin_Init_Cheats : public fi::Plugin_Base
     {
-
+    public:
+        void work(const int Event) override;
     };
 
-	class IUEINW_Cheats : public fi::Plugin_Base
+    // ----
+
+    class IUEINW_Cheats
 	{
 	private:
 		bool RevealAllTerrain, NoFogOfWar;
 		bool Active;
 
 	public:
-		void onProgramStart() override;
+		void reset();
 
 		void toggleFow();
 		void toggleRevealTerrain();

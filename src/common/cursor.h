@@ -50,5 +50,9 @@ namespace sf
 	};
 }
 
+namespace fi
+{
+    void setCursorStyle(const sf::StandardCursor::TYPE Type);
+}
 
 #endif // STANDARCURSOR_HPP

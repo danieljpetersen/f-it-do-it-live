@@ -3,7 +3,7 @@
 
 // yeah, this is an abomination, but just go with it, it works
 
-void IUEINW::IUEINW_Map_Generator::smallBoard_generateLandAndOcean()
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generateLandAndOcean()
 {
 	TileTypes.resize(SmallBoard.Grid.size());
 	for (unsigned int i = 0; i < TileTypes.size(); i++)
@@ -114,7 +114,7 @@ void IUEINW::IUEINW_Map_Generator::smallBoard_generateLandAndOcean()
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::smallBoard_addSurroundingToTilesToLookAt(int Index)
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_addSurroundingToTilesToLookAt(int Index)
 {
 	const int MAKE_LAND = 1;
 

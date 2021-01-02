@@ -7,11 +7,9 @@
 
 namespace IUEINW
 {
-    class IUEINW_Audio : public fi::Plugin_Base
+    class IUEINW_Plugin_Audio : public fi::Plugin_Base
     {
     public:
-        void onProgramStart() override {};
-        void onUpdate() override {};
     };
 }
 

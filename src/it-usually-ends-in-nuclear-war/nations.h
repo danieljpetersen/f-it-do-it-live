@@ -8,16 +8,25 @@
 
 namespace IUEINW
 {
-	class IUEINW_Nation
+    ////////////////////////////////////////////////////////////
+
+    class IUEINW_Plugin_Init_Nations : public fi::Plugin_Base
+    {
+    public:
+        void work(const int Event) override;
+    };
+
+    ////////////////////////////////////////////////////////////
+
+    class IUEINW_Nation
 	{
 	public:
-		std::vector<std::vector<int>> EdgeTilesDiscovered;
-
+		std::vector<std::vector<int>> EdgeTilesDiscovered; // todo should be in vision
 		bool IsAlive;
 		sf::Color Color;
 		std::string Name;
 		int NationIndex;
-		int NumberOfUnitsInitialized;
+		int TotalNumberOfUnitsInitialized;
 
 		bool isHumanNation();
 
@@ -48,7 +57,7 @@ namespace IUEINW
 			ImmuneToWater = false;
 			ImmuneToIce = false;
 		}
-		//
+
 		std::vector<int> getCollectionOfCityTiles()
 		{
 			std::vector<int> CityTiles;
@@ -62,28 +71,24 @@ namespace IUEINW
 
 	////////////////////////////////////////////////////////////
 
-	class IUEINW_Nations : public fi::Plugin_Base
+	class IUEINW_Nations
 	{
 	public:
 		IUEINW_Nation   operator [](int i) const {return Nations[i];}
 		IUEINW_Nation & operator [](int i)       {return Nations[i];}
 
 		std::vector<IUEINW_Nation> Nations;
-
 		int HumanNationIndex = -1;
 		IUEINW_Nation *Human = nullptr;
 
-		unsigned int size() { return Nations.size(); }
-
+		void init();
+		unsigned int size() { return (unsigned int)Nations.size(); }
 		bool changeHumanPlayer(int NationIndex);
-
 		void changeHumanPlayerToNextNation();
-	private:
-		void onMapGeneration();
-
-		friend class IUEINW_Map_Generator;
 	};
 
-	IUEINW_Nations &getNations();
+    ////////////////////////////////////////////////////////////
+
+    IUEINW_Nations &getNations();
 }
 #endif

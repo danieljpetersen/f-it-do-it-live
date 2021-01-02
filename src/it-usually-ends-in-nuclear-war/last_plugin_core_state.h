@@ -5,10 +5,10 @@
 
 namespace IUEINW
 {
-    class IUEINW_Last_Plugin_Core_State : public fi::Plugin_Base
+    class IUEINW_Plugin_Last_Core_State : public fi::Plugin_Base
     {
     public:
-        void onUpdate() override {};
+        void work(const int Event) override {};
     };
 }
 

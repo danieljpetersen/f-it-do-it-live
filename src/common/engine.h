@@ -6,6 +6,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include "nlohmann_json.h"
+#include "nameof.h"
 #include "non_copyable.h"
 #include "non_movable.h"
 #include "singleton.h"
@@ -24,6 +25,7 @@
 #include "tick.h"
 #include "grid.h"
 #include "slot_map.h"
+#include "loading_plugins.h"
 
 namespace fi
 {
@@ -60,6 +62,7 @@ namespace fi
         bool isSuspended();
         sf::Uint64 getFrameCount();
         fi::Tick *getTick(std::string TickID);
+        fi::Tick *getTick(int TickID);
 
         sf::Clock Clock;
         sf::RenderWindow Window;
@@ -117,12 +120,12 @@ namespace fi
     Engine &getEngine();
     Operating_System &getOS();
     nlohmann::json &getConfig();
-    fi::Random_Generator &getRandom();
     fi::Input &getInput();
     sf::Time getDeltaTime();
     sf::Clock &getClock();
     fi::Audio getAudio();
     fi::Tick *getTick(std::string TickID);
+    fi::Tick *getTick(int TickID);
     fi::Plugin_Manager &getPlugins();
     fi::Canvas &getCanvasWorld();
     fi::Canvas &getCanvasGUI();

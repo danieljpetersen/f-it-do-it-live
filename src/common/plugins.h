@@ -2,6 +2,8 @@
 #define FI_PLUGINS_H
 
 #include <SFML/Graphics.hpp>
+#include <unordered_map>
+#include <deque>
 #include "atomic_wrapper.h"
 #include "cereal/archives/binary.hpp"
 #include "non_movable.h"
@@ -10,298 +12,258 @@
 
 namespace fi
 {
-	////////////////////////////////////////////////////////////
-	// a shell of empty functions which are overridable and automatically called at their implied points
-	class Plugin_Base
-	{
-	public:
-		int PluginIndex = -1;
-		bool Enabled = false;
-		bool ShouldUpdate = false, ShouldUpdateDefaultValue = false; // is this plugin called every update, or only updates at which ShouldUpdate == true?
+    const int EVENT_PRE_LOAD = 1;
+    const int EVENT_SERIALIZE = 0;
+    const int EVENT_POST_LOAD = 2;
+    const int EVENT_PRE_UPDATE = 3;
+    const int EVENT_UPDATE = 4;
+    const int EVENT_POST_UPDATE = 5;
+    const int EVENT_DRAW = 6;
+    const int EVENT_RESIZE = 7;
+    const int FI_EVENT_COUNT = 8;
 
-		virtual void onProgramStart() {};
-		virtual void onResize() {};
-		virtual void onUpdate() {};
-		virtual void onDraw() {};
+    ////////////////////////////////////////////////////////////
+    // a wrapper for an empty overridable function which is automatically called at specified events
+    class Plugin_Base
+    {
+    public:
+        int PluginIndex = -1;
+        bool Enabled = false;
 
-		virtual void onEnableChange(bool Enabling) {};
+        virtual void work(const int Event) {};
+        virtual void onEnableChange(bool Enabling) {};
+    };
 
-		virtual void afterLoad() {};
-		virtual void save( cereal::BinaryOutputArchive & ar ) {}; // see note below
-		virtual void load( cereal::BinaryInputArchive & ar ) {}; // see note below
-		// NOTE: you could override save/load manually, but it's easier to use FI_MODULE_SERIALIZATION_BOILERPLATE
-		// then define a regular cereal function inside your plugin like <template Archive>serialize(Archive & Ar).  IE:
-			//  FI_MODULE_SERIALIZATION_BOILERPLATE
-			//
-			// 	template <class Archive>
-			// 	void serialize( Archive & ar )
-			// 	{
-			// 		ar(myData, myData2);
-			// 	}
-		// this way you only need to define your variables to serialize once
-	};
-
-	////////////////////////////////////////////////////////////
-    // ProgramState is a set of plugins executing at once
-	class Program_State_Builder
-	{
-	public:
-		Program_State_Builder(int ProgramStateIndex);
-
-		Program_State_Builder withPlugin(fi::Plugin_Base *Plugin, bool DefaultUpdateValue);
+    ////////////////////////////////////////////////////////////
+    // ProgramState is a set of plugins eligible to execute
+    class Program_State_Builder
+    {
+    public:
+        Program_State_Builder(int ProgramStateIndex);
+        Program_State_Builder withPlugin(Plugin_Base *Plugin, int OnEvent);
+        Program_State_Builder withTick(int TickID);
         Program_State_Builder withTick(std::string TickID);
+        Program_State_Builder withProgramState(int OtherProgramState);
 
-        // do note that the other ProgramState needs to be already defined.  @refactor fix via delay of processing
-		Program_State_Builder withProgramState(int ProgramStateIndex);
+    private:
+        int mProgramStateIndex = -1;
+    };
 
-	private:
-		int mProgramStateIndex = -1;
-	};
+    ////////////////////////////////////////////////////////////
 
-	////////////////////////////////////////////////////////////
-    // todo this thing could use a refactor + consider merging with a thread pool job system
-	class Plugin_Manager : public Non_Copyable, public Non_Movable
-	{
-	public:
-		std::vector<fi::Plugin_Base*> Plugins;
-		bool ForceExecuteEnables = false;
-
-        fi::Program_State_Builder defineProgramState(int &ProgramStateIndex)
-		{
-			ProgramStateIndex = (signed)ProgramStates.size();
-			ProgramStates.resize(ProgramStates.size() + 1);
-
-			ProgramStateIndexesActivePerEachState.resize(ProgramStateIndexesActivePerEachState.size() + 1);
-			ProgramStateIndexesActivePerEachState[ProgramStateIndex].push_back(ProgramStateIndex);
-			return Program_State_Builder(ProgramStateIndex);
-		}
-
-		void push(int ProgramStateIndex)
-		{
-			assert(ProgramStateIndex != -1);
-			push(ProgramStates[ProgramStateIndex]);
-		}
-
-		void pop()
-		{
-			if (!StateStack.empty())
-			{
-				StateStack.pop_back();
-			}
-		}
-
-        void clearStackThenTransitionToProgramState_ForceExecuteEnables(int ProgramStateIndex)
+    class Plugin_Manager : public Non_Copyable, public Non_Movable
+    {
+    public:
+        Program_State_Builder defineProgramState(int &ProgramStateIndex)
         {
-		    ForceExecuteEnables = true;
-            StateStack.clear();
-            push(ProgramStateIndex);
+            ProgramStateIndex = (signed)EnabledPluginsPerStatePerEventType.size();
+            EnabledPluginsPerStatePerEventType.resize(EnabledPluginsPerStatePerEventType.size() + 1);
+
+            ProgramStatesPerProgramState.resize(ProgramStatesPerProgramState.size()+1);
+            ProgramStatesPerProgramState.back().push_back(ProgramStateIndex);
+
+            return Program_State_Builder(ProgramStateIndex);
         }
 
-		void clearStackThenTransitionToProgramState(int ProgramStateIndex)
-		{
-			StateStack.clear();
-			push(ProgramStateIndex);
-		}
-
-		bool isProgramStateActive(int ProgramStateIndex)
-		{
-			int _CurrentProgramStateIndex = CurrentProgramStateIndex._a.load();
-			if (_CurrentProgramStateIndex == ProgramStateIndex)
-			{
-				return true;
-			}
-
-			// ie:  withProgramState(...) was used.
-			for (int i = 0; i < ProgramStateIndexesActivePerEachState[_CurrentProgramStateIndex].size(); i++)
-			{
-				if (ProgramStateIndexesActivePerEachState[_CurrentProgramStateIndex][i] == ProgramStateIndex)
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-        int getCurrentProgramState()
+        // ProgramStates used to be but are no longer a stack, as I never actually used it as a stack.
+        // setting a new ProgramState will replace the current ProgramState (as well as any previously queued ProgramState) at the start of new frames
+        // so the current set of executing Plugins will always finish executing if a state change is performed, and again, next plugin set starts next frame
+        void setProgramState(int ProgramStateIndex)
         {
-            return CurrentProgramStateIndex._a.load();
+            NextProgramState = ProgramStateIndex;
+
+            // first time being set, let's call the relevant onEnabled
+            if (CurrentProgramStateIndex == -1)
+            {
+                changeStateIfApplicable();
+            }
         }
 
-		void flagUpdate()
-		{
-			ShouldUpdate = true;
-		}
+        // two functions for this because, thanks to ProgramStateBuilder.withProgramState(...), a ProgramState can made up of multiple ProgramStates.
+        // thus isProgramStateEnabled returns true if, for example, the program state you are querying was made with a call to withProgramState(QueriedProgramState)
+        bool isProgramStateEnabled(int ProgramStateIndex)
+        {
+            if (CurrentProgramStateIndex == ProgramStateIndex)
+            {
+                return true;
+            }
 
-		atomicwrapper<int> CurrentProgramStateIndex;
+            // ie:  withProgramState(...) was used.
+            if (CurrentProgramStateIndex == -1)
+            {
+                return false;
+            }
 
-	private:
-		std::vector<std::vector<int>> ProgramStates; // all possible states
-		std::vector<std::vector<int>> StateStack;
-		std::vector<std::vector<int>> ProgramStateIndexesActivePerEachState; // ie:  withProgramState(...) would cause vector to be + 1 size -- todo should be a map
-		std::vector<int> CurrentState;
-		bool ShouldUpdate;
+            for (int i = 0; i < ProgramStatesPerProgramState[CurrentProgramStateIndex].size(); i++)
+            {
+                if (ProgramStatesPerProgramState[CurrentProgramStateIndex][i] == ProgramStateIndex)
+                {
+                    return true;
+                }
+            }
 
-		void registerPlugin(fi::Plugin_Base *Plugin, bool DefaultUpdateValue)
-		{
-			Plugins.push_back(Plugin);
-			Plugin->PluginIndex = (int)Plugins.size() - 1;
-			Plugin->ShouldUpdateDefaultValue = DefaultUpdateValue;
-			Plugin->ShouldUpdate = DefaultUpdateValue;
-		}
+            return false;
+        }
 
-		////////////////////////////////////////////////////////////
+        int getCurrentProgramStateIndex()
+        {
+            return CurrentProgramStateIndex;
+        }
 
-		void executeOnProgramStart()
-		{
-			CurrentProgramStateIndex._a.store(-1);
-			for (int _i = 0; _i < Plugins.size(); _i++)
-			{
-				Plugins[_i]->onProgramStart();
-			}
-		}
+        // engine calls this->execute(...) for all the default EVENT_* events, but users are equally able to call execute with user defined events
+        // note that executions happen immediately, so if you're in the middle of an update event, plugins which are yet to be executed for update will wait
+        // until the new event is done executing
+        void execute(int EventType)
+        {
+            if (CurrentProgramStateIndex == -1)
+            {
+                return;
+            }
 
-		////////////////////////////////////////////////////////////
+            std::vector<int> *PluginsToExecute = &EnabledPluginsPerStatePerEventType[CurrentProgramStateIndex][EventType];
+            for (int i = 0; i < PluginsToExecute->size(); i++)
+            {
+                int PluginIndex = PluginsToExecute->at(i);
+                Plugins[PluginIndex]->work(EventType);
+            }
 
-		bool executeStateChangeIfApplicable()
-		{
-			if (StateStack.empty())
-			{
-				fi::log("State stack is empty.  is this an error?");
-				return false;
-			}
+            if (DelayedExecutes.empty() != true)
+            {
+                auto Event = DelayedExecutes.front();
 
-			// ---- Perform change from one state to another if applicable
-			if ((CurrentState != StateStack.back()) || (ForceExecuteEnables))
-			{
-                flagUpdate();
+                // second being the Event that the delayed event should execute after. -1 for after the current stack is exhausted
+                if ((Event.second == -1) || (Event.second == EventType))
+                {
+                    DelayedExecutes.pop_front();
+                    execute(Event.first);
+                }
+            }
+        }
 
-				// ---- save which are currently enabled so that we can properly call onEnableCHange after all is done
-				std::vector<bool> PrevState(Plugins.size(), false);
-				for (int _i = 0; _i < Plugins.size(); _i++)
-				{
-					PrevState[_i] = Plugins[_i]->Enabled;
-					Plugins[_i]->Enabled = false;
-				}
+        // same as execute but can queue events; will wait until the current event (+ any previous delayedExecute) is exhausted
+        void delayedExecute(int EventType)
+        {
+            // not intuitive but i don't want the events to be repeatable. if an event is queued, queuing it again before firing won't do anything
+            if (isEventQueued(EventType))
+            {
+                return;
+            }
 
+            DelayedExecutes.push_back(std::pair<int, int>(EventType, -1));
+        }
 
-				CurrentState = StateStack.back();
-				for (int _i = 0; _i < ProgramStates.size(); _i++)
-				{
-					if (ProgramStates[_i] == CurrentState)
-					{
-						CurrentProgramStateIndex._a.store(_i); // todo this is needless work + can be wrong if identical states
-					}
-				}
+        void delayedExecute(int EventType, int EventTypeToExecuteAfter)
+        {
+            // not intuitive but i don't want the events to be repeatable. if an event is queued, queuing it again before firing won't do anything
+            if (isEventQueued(EventType))
+            {
+                return;
+            }
 
+            DelayedExecutes.push_back(std::pair<int, int>(EventType, EventTypeToExecuteAfter));
+        }
 
-				for (int _i = 0; _i < CurrentState.size(); _i++)
-				{
-					int _Index = CurrentState[_i];
-					Plugins[_Index]->Enabled = true;
-				}
+        bool isEventQueued(int EventType)
+        {
+            for (int i = 0; i < DelayedExecutes.size(); i++)
+            {
+                if (DelayedExecutes[i].first == EventType)
+                {
+                    return true;
+                }
+            }
 
+            return false;
+        }
 
-				// ---- execute onEnableChange(...)
-				{
-					// ---- execute onEnableChange(false)
-					for (int _i = 0; _i < PrevState.size(); _i++)
-					{
-						if (PrevState[_i] != Plugins[_i]->Enabled)
-						{
-							if (!Plugins[_i]->Enabled)
-							{
-								Plugins[_i]->onEnableChange(false);
-							}
-						}
-					}
+    private:
+        std::vector<fi::Plugin_Base*> Plugins;
 
-					// ---- execute onEnableChange(true)
-					for (int _i = 0; _i < PrevState.size(); _i++)
-					{
-						if ((PrevState[_i] != Plugins[_i]->Enabled) || ForceExecuteEnables)
-						{
-							if (Plugins[_i]->Enabled)
-							{
-								Plugins[_i]->onEnableChange(true);
-							}
-						}
-					}
-				}
+        // slightly confusing construct here but basically for each program state we have a map with a key of event type, value of vector<int>.
+        // vector<int> corresponds to plugins called for that event.  So:
+        // first dimension: int ProgramStateIndex
+        // map key: int EventType
+        // third dimension: the set (duplicates not allowed, ordered according to the order of withPlugin(...) calls) of enabled plugins for that state / event combination
+        std::vector<std::unordered_map<int, std::vector<int>>> EnabledPluginsPerStatePerEventType;
 
-                ForceExecuteEnables = false;
+        std::vector<std::vector<int>> ProgramStatesPerProgramState; // like was said, ProgramStates can be made up of multiple ProgramStates. This tracks that
 
-				flagUpdate();
+        std::deque<std::pair<int, int>> DelayedExecutes; // EventType, EventTypeToExecuteAfter (-1 for after current event is exhuasted)
 
-				return true;
-			}
+        int CurrentProgramStateIndex = -1;
+        int NextProgramState = -1;
 
-			return false;
-		}
+        bool changeStateIfApplicable()
+        {
+            if ((CurrentProgramStateIndex == -1) && (NextProgramState == -1))
+            {
+                fi::log("State never set. is this an error?");
+            }
 
-		////////////////////////////////////////////////////////////
+            if (NextProgramState != -1)
+            {
+                // ---- save which are currently enabled so that we can properly call onEnableChange after all is done
+                std::vector<bool> PrevState(Plugins.size(), false);
+                for (int _i = 0; _i < Plugins.size(); _i++)
+                {
+                    PrevState[_i] = Plugins[_i]->Enabled;
+                    Plugins[_i]->Enabled = false;
+                }
 
-		void executeUpdate()
-		{
-			for (int _i = 0; _i < CurrentState.size(); _i++)
-			{
-				int _Index = CurrentState[_i];
+                // ---- mark the relevant plugins as enabled
+                for (int _i = 0; _i < EnabledPluginsPerStatePerEventType[NextProgramState].size(); _i++)
+                {
+                    for (auto Events : EnabledPluginsPerStatePerEventType[NextProgramState])
+                    {
+                        for (int j = 0; j < Events.second.size(); j++)
+                        {
+                            int _Index = Events.second[j];
+                            Plugins[_Index]->Enabled = true;
+                        }
+                    }
 
-				Plugins[_Index]->ShouldUpdate = (Plugins[_Index]->ShouldUpdateDefaultValue) || (this->ShouldUpdate);
+                }
 
-				if (Plugins[_Index]->ShouldUpdate)
-				{
-					Plugins[_Index]->onUpdate();
-				}
+                // ---- execute onEnableChange(false)
+                for (int _i = 0; _i < PrevState.size(); _i++)
+                {
+                    if (PrevState[_i] != Plugins[_i]->Enabled)
+                    {
+                        if (!Plugins[_i]->Enabled)
+                        {
+                            Plugins[_i]->onEnableChange(false);
+                        }
+                    }
+                }
 
-				Plugins[_Index]->ShouldUpdate = Plugins[_Index]->ShouldUpdateDefaultValue;
-			}
+                // ---- execute onEnableChange(true)
+                for (int _i = 0; _i < PrevState.size(); _i++)
+                {
+                    if (PrevState[_i] != Plugins[_i]->Enabled)
+                    {
+                        if (Plugins[_i]->Enabled)
+                        {
+                            Plugins[_i]->onEnableChange(true);
+                        }
+                    }
+                }
 
-			this->ShouldUpdate = false;
-		}
+                CurrentProgramStateIndex = NextProgramState;
+                NextProgramState = -1;
+            }
 
-		////////////////////////////////////////////////////////////
+            return false;
+        }
 
-		void executeDraw()
-		{
-			for (int _i = 0; _i < CurrentState.size(); _i++)
-			{
-				Plugins[CurrentState[_i]]->onDraw();
-			}
-		}
+        void registerPlugin(fi::Plugin_Base *Plugin)
+        {
+            Plugins.push_back(Plugin);
+            Plugin->PluginIndex = (int)Plugins.size() - 1;
+        }
 
-		////////////////////////////////////////////////////////////
-
-		void executeResize()
-		{
-			for (int _i = 0; _i < Plugins.size(); _i++)
-			{
-				Plugins[_i]->onResize();
-			}
-		}
-
-		////////////////////////////////////////////////////////////
-
-		void push(std::vector<int> NewActivePlugins)
-		{
-			StateStack.push_back(NewActivePlugins);
-		}
-
-		////////////////////////////////////////////////////////////
-
-		void executeAfterLoad()
-		{
-			for (int i = 0; i < CurrentState.size(); i++)
-			{
-				Plugins[i]->afterLoad();
-			}
-		}
-
-		friend class Engine;
-		friend class Program_State_Builder;
-	};
-
-    void flagUpdate(); // common to all apps
+        friend class Program_State_Builder;
+        friend class Engine;
+    };
 }
 
 #define FI_MODULE_SERIALIZATION_BOILERPLATE \

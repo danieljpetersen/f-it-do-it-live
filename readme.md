@@ -2,9 +2,7 @@
 
 This repository is a video game framework and monorepo for projects that I am building with said framework.
 
-It's made entirely in C++, with the framework consisting mostly of a poorly built wrapper around [SFML](https://github.com/SFML/sfml) and a few other libraries. It provides windowing, input, sound, 2D graphics, ECS, GUI, json configuration, serialization, state management, slot map container type, 2d grid type, pathfinding, filesystem functions, other stuff maybe
-
-As I hope to have made clear [by the name](https://youtu.be/W78AGkm_AtE?t=58), with this repository comes a decision to start working out in the open. The intended end state is to sell each of these projects on Steam when they are nearing completion, but currently they are nowhere near so.
+It's made entirely in C++, with the framework consisting mostly of a poorly built wrapper around [SFML](https://github.com/SFML/sfml) and a few other libraries. As I hope to have made clear [by the name](https://youtu.be/W78AGkm_AtE?t=58), with this repository comes a decision to start working out in the open. The intended end state is to sell each of these projects on Steam when they are nearing completion, but currently they are nowhere near so.
 
 # Projects
 
@@ -19,7 +17,7 @@ A 4x civilization building game with a focus on simplicity and reducing microman
 **Status**: Currently it consists of only map generation and drawing. I have working code for a much more complete version of this game, but I've stripped everything out and will be adding it back in system by system so that I can validate and change things as needed.
 
 High level to do (roughly in order that I need to do it):
-- [ ] bugs
+- [ ] bugs / refactoring
 - [ ] nations
 - [ ] vision
 - [ ] cities

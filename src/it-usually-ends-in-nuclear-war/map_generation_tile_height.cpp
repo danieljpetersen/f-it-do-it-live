@@ -2,7 +2,7 @@
 #include "map_generation.h"
 #include "nations.h"
 
-void IUEINW::IUEINW_Map_Generator::generateHeights()
+void IUEINW::IUEINW_Plugin_Generate_Map::generateHeights()
 {
 	for (int i = 0; i < getTiles().Grid.size(); i++)
 	{
@@ -181,7 +181,7 @@ void IUEINW::IUEINW_Map_Generator::generateHeights()
 
 //==================================	
 
-bool IUEINW::IUEINW_Map_Generator::canWeRaisePoint(int TopLeftTile, int TopRightTile, int BottomLeftTile, int BottomRightTile)
+bool IUEINW::IUEINW_Plugin_Generate_Map::canWeRaisePoint(int TopLeftTile, int TopRightTile, int BottomLeftTile, int BottomRightTile)
 {
 	//find lowest neighboring point
 	int LowestPoint = 100, MiddlePoint = RIGHT, CurrentTile = TopLeftTile;
@@ -226,7 +226,7 @@ bool IUEINW::IUEINW_Map_Generator::canWeRaisePoint(int TopLeftTile, int TopRight
 
 //==================================
 
-void IUEINW::IUEINW_Map_Generator::getPointTiles(int Tile, int Point, int &aTile, int &bTile, int &cTile, int &dTile)
+void IUEINW::IUEINW_Plugin_Generate_Map::getPointTiles(int Tile, int Point, int &aTile, int &bTile, int &cTile, int &dTile)
 {
 	aTile = Tile;
 
@@ -302,7 +302,7 @@ void IUEINW::IUEINW_Map_Generator::getPointTiles(int Tile, int Point, int &aTile
 
 //==================================
 
-void IUEINW::IUEINW_Map_Generator::changePointHeight(int Tile, int Point, int Height)
+void IUEINW::IUEINW_Plugin_Generate_Map::changePointHeight(int Tile, int Point, int Height)
 {
 	getTiles().Grid.CustomCellData[Tile].Height[Point] = Height;
 
@@ -373,7 +373,7 @@ void IUEINW::IUEINW_Map_Generator::changePointHeight(int Tile, int Point, int He
 
 //==================================
 
-bool IUEINW::IUEINW_Map_Generator::isPointWater(int Tile)
+bool IUEINW::IUEINW_Plugin_Generate_Map::isPointWater(int Tile)
 {
 	if (getTiles().Grid.CustomCellData[Tile].isWaterTile())
 		return true;
@@ -391,7 +391,7 @@ bool IUEINW::IUEINW_Map_Generator::isPointWater(int Tile)
 
 //==================================
 
-bool IUEINW::IUEINW_Map_Generator::isPointWater(int Tile, int Point)
+bool IUEINW::IUEINW_Plugin_Generate_Map::isPointWater(int Tile, int Point)
 {
 	if (getTiles().Grid.CustomCellData[Tile].isWaterTile())
 		return true;

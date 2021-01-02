@@ -5,16 +5,16 @@
 
 namespace IUEINW
 {
-    class IUEINW_Drawable_Map_Edges : public fi::Plugin_Base
+    class IUEINW_Drawable_Map_Edges
     {
     private:
         sf::VertexArray Quads;
         int FrontDirtHeight;
 
     public:
-        void onProgramStart() override;
-        void onUpdate() override;
-        void onDraw() override;
+        void onProgramStart() ;
+        void onUpdate() ;
+        void onDraw() ;
     };
 }
 #endif

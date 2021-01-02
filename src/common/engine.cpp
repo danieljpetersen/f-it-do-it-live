@@ -18,7 +18,7 @@ void fi::Engine::run(fi::Application_Base *App)
 
     App->setup();
 
-    Plugins.executeOnProgramStart();
+    Plugins.changeStateIfApplicable();
 
     executeResize(Window.getSize().x, Window.getSize().y);
 
@@ -81,9 +81,15 @@ void fi::Engine::mainThreadLoop()
             CanvasGUI.clear(sf::Color::Transparent);
 
             stepTicks();
-            Plugins.executeStateChangeIfApplicable();
-            Plugins.executeUpdate();
-            Plugins.executeDraw();
+            Plugins.changeStateIfApplicable();
+            Plugins.execute(EVENT_PRE_UPDATE);
+            Plugins.execute(EVENT_UPDATE);
+            Plugins.execute(EVENT_POST_UPDATE);
+            Plugins.execute(EVENT_DRAW);
+
+            //Plugins.executeStateChangeIfApplicable();
+            //Plugins.executeUpdate();
+            //Plugins.executeDraw();
 
             ClockHUD.drawIfApplicable(*CanvasGUI.getRenderTarget());
             drawCanvasesToScreen();
@@ -156,7 +162,7 @@ void fi::Engine::executeResize(float x, float y)
         Ticks[i].init(); // delay the tick when resized, seems right to me
     }
 
-    Plugins.executeResize();
+    Plugins.execute(EVENT_RESIZE);
 }
 
 ////////////////////////////////////////////////////////////
@@ -516,6 +522,13 @@ bool fi::Engine::isSuspended()
 
 ////////////////////////////////////////////////////////////
 
+fi::Tick *fi::Engine::getTick(int TickID)
+{
+    return &Ticks[TickID];
+}
+
+////////////////////////////////////////////////////////////
+
 fi::Tick *fi::Engine::getTick(std::string TickID)
 {
     int TickIndex = TickIdToIndexMap[TickID];
@@ -632,6 +645,13 @@ fi::Tick *fi::getTick(std::string TickID)
 
 ////////////////////////////////////////////////////////////
 
+fi::Tick *fi::getTick(int TickID)
+{
+    return fi::Engine::instance().getTick(TickID);
+}
+
+////////////////////////////////////////////////////////////
+
 sf::Vector2i fi::getMouseWorldPosition2i()
 {
     return getInput().MouseWorldPosition;
@@ -669,7 +689,14 @@ bool isSuspended()
 
 int getCurrentProgramState()
 {
-    return fi::Engine::instance().Plugins.getCurrentProgramState();
+    return fi::Engine::instance().Plugins.getCurrentProgramStateIndex();
+}
+
+////////////////////////////////////////////////////////////
+
+void fi::setCursorStyle(const sf::StandardCursor::TYPE Type)
+{
+    fi::getEngine().setCursorStyle(Type);
 }
 
 ////////////////////////////////////////////////////////////
@@ -678,3 +705,4 @@ fi::Tick *getCoreTick()
 {
     return fi::Engine::instance().getTick("core");
 }
+

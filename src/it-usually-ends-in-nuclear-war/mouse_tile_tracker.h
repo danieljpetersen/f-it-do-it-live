@@ -17,7 +17,7 @@ namespace IUEINW
 
     ////////////////////////////////////////////////////////////
 
-    class IUEINW_Mouse_Tile_Tracker : public fi::Plugin_Base
+    class IUEINW_Plugin_Mouse_Tile_Tracker : public fi::Plugin_Base
     {
     private:
         void findMouseTileIndex();
@@ -27,19 +27,15 @@ namespace IUEINW
         void updateMouseHighlightingTiles();
 
     public:
-        void onProgramStart() override
-        {
-            PreviouslyMousedTile = -1;
-        }
+        void work(const int Event) override;
 
-        void onUpdate() override;
-
-        int MouseTileIndex, PreviouslyMousedTile;
-        bool IsMouseActuallyInsideTile;
+        int MouseTileIndex =-1;
+        int PreviouslyMousedTile = -1;
+        bool IsMouseActuallyInsideTile = false;
         std::vector<int> MouseHighlightingTiles;
         std::list<Tile_Transparency_Tracker> TileTransparencies;
     };
 
-    IUEINW_Mouse_Tile_Tracker &getMouseTileTracker();
+    IUEINW_Plugin_Mouse_Tile_Tracker &getMouseTileTracker();
 }
 #endif

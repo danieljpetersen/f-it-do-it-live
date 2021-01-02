@@ -40,6 +40,8 @@ namespace fi
 		sf::Vector2f vector2f(float xMin, float xMax, float yMin, float yMax);
 		sf::Vector2f pointInRadius(sf::Vector2f CenterPosition, float Radius);
 	};
+
+    fi::Random_Generator &getRandom();
 }
 
 

@@ -31,7 +31,6 @@ namespace IUEINW
 		int TileType, NationIndex;
 		int ContinentIndex, BodyOfWaterIndex;
 		int ProductionOutputBase, FoodOutputBase, OutputBonusBase;
-		int LatitudeZone; // ...only used for map gen, should refactor to remove
 
 		float DistanceFromMousedTile = 0;
 
@@ -54,7 +53,6 @@ namespace IUEINW
 			ar(ProductionOutputBase);
 			ar(FoodOutputBase);
 			ar(OutputBonusBase);
-			ar(LatitudeZone);
 			ar(VerticalSplit);
 			ar(HorizontalSplit);
 		}
@@ -87,9 +85,6 @@ namespace IUEINW
 		IUEINW_Tile & operator [](int i)       {return Grid.CustomCellData[i];}
 		int size(){ return Grid.size(); }
 
-		bool lineBetweenTiles(int aTileIndex, int bTileIndex, sf::Color Color, sf::VertexArray &VertexArray);
-		bool lineBetweenTiles(int aTileIndex, int bTileIndex, sf::Color Color, sf::VertexArray &VertexArray, int Thickness);
-		bool differentEdgesFromHorizontalMap(int aTileIndex, int bTileIndex);
 		bool isPointInsideTile(int x, int y, int Index);
 		bool areSameContinent(int aTileIndex, int bTileIndex);
 
@@ -99,7 +94,7 @@ namespace IUEINW
 		std::vector<int> *getArea(int Center, int HalfSize, Tile_Type_Grouping TileTypeGrouping, int &Size);
 		std::vector<int> getAreaSpreadingFromCenter(int Start, int DistanceCutoff, bool WithOceanTiles);
 
-		//RETURNS INDEX FOR CoT [CoT.getTile(result)] --  In other words, use return CoT.getTile(result) to get the actual Tiles.Tiles index-- GOD BLESS ME
+		//RETURNS INDEX FOR CoT [CoT.getTile(result)] --  In other words, use return CoT.getTile(result) to get the actual Tiles.Tiles index
 		int findClosestTileFromTileIndex_returnsLocalIndex(std::vector<int> &TileList, int GoalTile);
 		int findClosestTileFromTileIndex_returnsLocalIndex(std::vector<int> &TileList, int GoalTile, bool IncludeWaterTilesInSearch);
 
@@ -123,7 +118,7 @@ namespace IUEINW
 		std::vector<int> calculateArea_ImplementationOne(int Center, int NumberOfRings, bool WithWaterTiles); // order is different -- goes column by column
 		std::vector<int> calculateArea_ImplementationTwo(int Center, int NumberOfRings, Tile_Type_Grouping TileTypeGrouping); // order is different -- goes in rings
 
-		friend class IUEINW_Map_Generator;
+		friend class IUEINW_Plugin_Generate_Map;
 		friend class IUEINW_Map;
 	};
 
@@ -131,57 +126,40 @@ namespace IUEINW
 	////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////
 
-	class IUEINW_Map : public fi::Plugin_Base
+    class IUEINW_Map
 	{
 	public:
 		IUEINW_Tiles Tiles;
 		IUEINW_Tile_Type_Properties TileTypeProperties;
 		IUEINW_Map_Layout CurrentMapLayout;
+        IUEINW_Map_Layouts PossibleMapLayouts;
 
-		////////////////////////////////////////////////////////////
+		//template <class Archive>
+		//void serialize( Archive & ar )
+		//{
+		//	ar(Tiles);
+		//	ar(PossibleMapLayouts);
+		//	ar(TileTypeProperties);
+		//	ar(CurrentMapLayout);
+		//}
+        //
+		//void afterLoad() override
+		//{
+		//	Tiles.Grid.ColumnTransforms.clear();
+		//	Tiles.Grid.ColumnTransforms.resize(Tiles.Grid.NumberOfColumns);
+        //
+		//	Tiles.populateAreaCache();
+		//	Tiles.determineContinents();
+		//	Tiles.determineBodiesOfWater();
+		//	Tiles.determineLandAndWaterTiles();
+		//}
 
-		void onUpdate() override;
-		void onDraw() override;
-
-		void setTileVertexColors(int TileIndex, bool ExploredTile);
-		void setTileVertexColors(int TileIndex);
-		void setTileVertexColors();
-
-		template <class Archive>
-		void serialize( Archive & ar )
-		{
-			ar(Tiles);
-			ar(PossibleMapLayouts);
-			ar(TileTypeProperties);
-			ar(CurrentMapLayout);
-		}
-
-		void afterLoad() override
-		{
-			Tiles.Grid.ColumnTransforms.clear();
-			Tiles.Grid.ColumnTransforms.resize(Tiles.Grid.NumberOfColumns);
-
-			Tiles.populateAreaCache();
-			Tiles.determineContinents();
-			Tiles.determineBodiesOfWater();
-			Tiles.determineLandAndWaterTiles();
-		}
-
-		FI_MODULE_SERIALIZATION_BOILERPLATE
-
-		////////////////////////////////////////////////////////////
-
-	private:
-		std::vector<sf::VertexBuffer> VBO;
-		std::vector<std::vector<sf::Vertex>> Vertices;
-		IUEINW_Map_Layouts PossibleMapLayouts;
-
-		void buildDrawable();
-		void onMapGeneration();
-		friend class IUEINW_Map_Generator;
+		//FI_MODULE_SERIALIZATION_BOILERPLATE
 	};
 
-	IUEINW_Map &getMap();
+    ////////////////////////////////////////////////////////////
+
+    IUEINW_Map &getMap();
 	IUEINW_Tiles &getTiles();
 }
 

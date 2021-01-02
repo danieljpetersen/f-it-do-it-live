@@ -11,6 +11,7 @@
 #include "cheats.h"
 #include "controls.h"
 #include "mouse_tile_tracker.h"
+#include "drawable_map.h"
 #include "drawable_grid_lines.h"
 #include "drawable_map_edges.h"
 #include "last_plugin_core_state.h"
@@ -22,81 +23,71 @@ namespace IUEINW
     {
     public:
         int ProgramStateIndex_Core = -1;
-        int ProgramStateIndex_MapGeneration = -1;
+        int ProgramStateIndex_MainMenu = -1;
+        int ProgramStateIndex_LoadMenu = -1;
+        int ProgramStateIndex_OptionsMenu = -1;
+        int ProgramStateIndex_MapGenerationMenu = -1;
+        int ProgramStateIndex_HallOfFameMenu = -1;
+        int ProgramStateIndex_CreditsMenu = -1;
 
+        // ---- bags of data / associated functions
         IUEINW_Map Map;
-        IUEINW_Map_Generator MapGenerator;
-        IUEINW_Color_Schemes ColorSchemes;
-        IUEINW_Audio Audio;
+        IUEINW_Map_Drawables MapDrawables;
         IUEINW_Nations Nations;
+        IUEINW_Color_Schemes ColorSchemes;
         IUEINW_Vision Vision;
         IUEINW_Cheats Cheats;
-        IUEINW_Controls Controls;
-        IUEINW_Mouse_Tile_Tracker MouseTileTracker;
-        IUEINW_Drawable_Grid_Lines_Around_Mouse DrawableGridLinesAroundMouse;
-        IUEINW_Drawable_Grid_Lines_Always_On DrawableGridLinesAlwaysOn;
-        IUEINW_Drawable_Map_Land_Ocean_Border DrawableMapLandOceanBorder;
-        IUEINW_Drawable_Map_Edges DrawableMapEdges;
-        IUEINW_Last_Plugin_Core_State LastPluginCoreState;
+        // Cities
+        // Units
+        // GovernmentTypes
+        // Technologies
+
+        // ---- Plugins related to Loading / Map Generation
+        fi::Plugin_Loading_Start PluginLoadingStart;
+        fi::Plugin_Loading_End PluginLoadingEnd;
+        IUEINW_Plugin_Init_Color_Schemes PluginInitColorSchemes;
+        IUEINW_Plugin_Generate_Map PluginGenerateMap;
+        IUEINW_Plugin_Init_Nations PluginInitNations;
+        IUEINW_Plugin_Init_Vision PluginInitVision;
+        IUEINW_Plugin_Init_Cheats PluginInitCheats;
+        IUEINW_Plugin_Init_Map_Drawables PluginInitMapDrawables;
+
+        // ---- Plugins related to fi::EVENT_UPDATE
+        IUEINW_Plugin_Audio PluginAudio;
+        IUEINW_Plugin_Controls PluginControls;
+        IUEINW_Plugin_Mouse_Tile_Tracker PluginMouseTileTracker;
+        IUEINW_Plugin_Last_Core_State PluginLastCoreState;
+
+        // ---- Plugins related to fi::EVENT_DRAW / EVENT_BUILD_MAP_DRAWABLES
+        IUEINW_Plugin_Build_Map_Drawables PluginBuildMapDrawables;
+        IUEINW_Plugin_Draw_Map PluginDrawMap;
 
         void setup() override
         {
-            fi::getPlugins().defineProgramState(ProgramStateIndex_MapGeneration)
-                    .withPlugin(&MapGenerator, false);
-            ;
-
-            /*
-
-             const int EVENT_ID_PROGRAM_START
-             const int EVENT_ID_ON_RESIZE
-             const int EVENT_ID_PRE_UPDATE
-             const int EVENT_ID_ON_UPDATE
-             const int EVENT_ID_POST_UPDATE
-             const int EVENT_ID_ON_DRAW
-             const int EVENT_ID_ON_QUIT
-             const int EVENT_CORE_TICK
-
-             Program_State_Builder &withPlugin(*Plugin, EventID)
-
-             .withPlugin(Controls, EVENT_ON_UPDATE)
-             .withPlugin(*plugin, EVENT_MAP_GENERATION);
-
-             vector<Plugin*> Plugins;
-             unordered_map<vector<int>> Plugins;
-             Plugins.resize(NUMBER_OF_DEFAULT_EVENTS);
-
-
-             map generation
-             unit created
-             city created
-
-             defineProgram()
-             .withPlugin(Controls, EVENT_CORE_TICK)
-
-
-
-             */
-
-
             fi::getPlugins().defineProgramState(ProgramStateIndex_Core)
-                    .withPlugin(this, true)
-                    .withPlugin(&Controls, true)
-                    .withPlugin(&Audio, true)
-                    .withPlugin(&MouseTileTracker, true)
-                    .withPlugin(&ColorSchemes, false)
-                    .withPlugin(&Vision, false)
-                    .withPlugin(&Map, false)
-                    .withPlugin(&Nations, true)
-                    .withPlugin(&DrawableGridLinesAlwaysOn, true)
-                    .withPlugin(&DrawableGridLinesAroundMouse, true)
-                    .withPlugin(&DrawableMapEdges, false)
-                    .withPlugin(&DrawableMapLandOceanBorder, false)
-                    .withPlugin(&Cheats, true)
-                    .withPlugin(&LastPluginCoreState, true)
+                    .withPlugin(&PluginLoadingStart, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginInitColorSchemes, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginGenerateMap, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginInitNations, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginInitVision, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginInitCheats, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginInitMapDrawables, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginLoadingEnd, EVENT_MAP_GENERATION)
+
+                    .withPlugin(this, fi::EVENT_UPDATE)
+                    .withPlugin(&PluginMouseTileTracker, fi::EVENT_UPDATE)
+                    .withPlugin(&PluginControls, fi::EVENT_UPDATE)
+                    .withPlugin(&PluginAudio, fi::EVENT_UPDATE)
+                    .withPlugin(&PluginLastCoreState, fi::EVENT_POST_UPDATE)
+
+                    .withPlugin(&PluginBuildMapDrawables, EVENT_BUILD_MAP_DRAWABLES)
+                    .withPlugin(&PluginDrawMap, fi::EVENT_DRAW)
                     .withTick("core")
             ;
 
-            fi::getPlugins().push(ProgramStateIndex_MapGeneration);
+            fi::getPlugins().setProgramState(ProgramStateIndex_Core);
+            fi::getPlugins().execute(EVENT_MAP_GENERATION);
+            fi::getPlugins().execute(EVENT_BUILD_MAP_DRAWABLES);
         }
     };
 

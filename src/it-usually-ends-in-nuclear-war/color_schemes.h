@@ -7,12 +7,20 @@
 
 namespace IUEINW
 {
-    class IUEINW_Color_Schemes : public fi::Plugin_Base
+    class IUEINW_Plugin_Init_Color_Schemes : public fi::Plugin_Base
+    {
+    public:
+        void work(const int Event) override;
+    };
+
+    // ----
+
+    class IUEINW_Color_Schemes
 	{
 	public:
-		void onProgramStart() override;
+	    void init();
 
-		int getNotificationTextSizeOffset()
+        int getNotificationTextSizeOffset()
 		{
 			return NotificationTextSizeOffset;
 		}

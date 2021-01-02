@@ -8,7 +8,7 @@
 namespace IUEINW
 {
 
-    class IUEINW_Drawable_Grid_Lines_Around_Mouse : public fi::Plugin_Base
+    class IUEINW_Drawable_Grid_Lines_Around_Mouse
     {
     private:
         sf::VertexArray VertexArray;
@@ -16,14 +16,14 @@ namespace IUEINW
         bool GridLinesAroundMouseEnabled;
 
     public:
-        void onProgramStart() override;
-        void onUpdate() override;
-        void onDraw() override;
+        void onProgramStart() ;
+        void onUpdate() ;
+        void onDraw() ;
     };
 
     ////////////////////////////////////////////////////////////
 
-    class IUEINW_Drawable_Grid_Lines_Always_On : public fi::Plugin_Base
+    class IUEINW_Drawable_Grid_Lines_Always_On
     {
     private:
         bool GridLinesAlwaysOnNonVision, GridLinesAlwaysOnInVision;
@@ -31,26 +31,21 @@ namespace IUEINW
         std::vector<sf::Vertex> Vertices;
 
     public:
-        void onProgramStart() override;
-        void onUpdate() override;
-        void onDraw() override;
+        void onProgramStart() ;
+        void onUpdate() ;
+        void onDraw() ;
     };
 
     ////////////////////////////////////////////////////////////
     // note needs to come after drawablemap due to vision lines obscuring the border
 
-    class IUEINW_Drawable_Map_Land_Ocean_Border : public fi::Plugin_Base
+    class IUEINW_Drawable_Map_Land_Ocean_Border
     {
     public:
-
-        IUEINW_Drawable_Map_Land_Ocean_Border()
-        {
-            Lines.setPrimitiveType(sf::Lines);
-        }
-
         sf::VertexArray Lines;
-        void onUpdate() override;
-        void onDraw() override { fi::getCanvasWorld().draw(Lines); } ;
+        void onProgramStart() { Lines.setPrimitiveType(sf::Lines); }
+        void onUpdate() ;
+        void onDraw()  { fi::getCanvasWorld().draw(Lines); } ;
 
     private:
         void addLandOceanBorderIfApplicable(int i);

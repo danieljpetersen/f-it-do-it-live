@@ -1,6 +1,6 @@
 #include "map_generation.h"
 
-void IUEINW::IUEINW_Map_Generator::smallBoard_generateTileTypes()
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generateTileTypes()
 {
 	bool savedRound = SmallBoard.Grid.HorizontalWrap;
 	SmallBoard.Grid.HorizontalWrap = false;
@@ -14,7 +14,7 @@ void IUEINW::IUEINW_Map_Generator::smallBoard_generateTileTypes()
 
 //==================================
 
-void IUEINW::IUEINW_Map_Generator::smallBoard_generateForest()
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generateForest()
 {
 	const int LowestRow = 0;
 	const int HighestRow = SmallBoard.Grid.NumberOfRows - 1;
@@ -29,7 +29,7 @@ void IUEINW::IUEINW_Map_Generator::smallBoard_generateForest()
 
 //==================================
 
-void IUEINW::IUEINW_Map_Generator::smallBoard_generateDesert()
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generateDesert()
 {
 	int Range = fi::Math::getPercent(15, (float) SmallBoard.Grid.NumberOfRows - 1);
 	const int LowestRow = ((SmallBoard.Grid.NumberOfRows) / 2) - Range;
@@ -58,7 +58,7 @@ void IUEINW::IUEINW_Map_Generator::smallBoard_generateDesert()
 
 //==================================
 
-void IUEINW::IUEINW_Map_Generator::smallBoard_generateIce()
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generateIce()
 {
 	int LowestRow = 0;
 	int HighestRow = int(fi::Math::getPercent(24, (float) SmallBoard.Grid.NumberOfRows));
@@ -97,7 +97,7 @@ void IUEINW::IUEINW_Map_Generator::smallBoard_generateIce()
 
 //==================================
 // small board extra tile type
-void IUEINW::IUEINW_Map_Generator::smallBoard_generateHill()
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generateHill()
 {
 	const int LowestRow = 0;
 	const int HighestRow = SmallBoard.Grid.NumberOfRows - 1;
@@ -110,7 +110,7 @@ void IUEINW::IUEINW_Map_Generator::smallBoard_generateHill()
 
 //==================================
 
-void IUEINW::IUEINW_Map_Generator::smallBoard_generatePlains()
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generatePlains()
 {
 	const int LowestRow = int(fi::Math::getPercent(15, (float) SmallBoard.Grid.NumberOfRows));
 	const int HighestRow = SmallBoard.Grid.NumberOfRows - 1;
@@ -123,7 +123,7 @@ void IUEINW::IUEINW_Map_Generator::smallBoard_generatePlains()
 
 //==================================
 
-void IUEINW::IUEINW_Map_Generator::smallBoard_generateTileType(int LowestRow, int HighestRow, int ModifyChance, int ExpandChance, int TileType)
+void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generateTileType(int LowestRow, int HighestRow, int ModifyChance, int ExpandChance, int TileType)
 {
 	int Index = LowestRow, DiceRoll = 0, Row = LowestRow;;
 	std::vector<int> TileSeeds;

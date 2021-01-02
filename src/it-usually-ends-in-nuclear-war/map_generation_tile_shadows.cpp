@@ -1,7 +1,7 @@
 #include "map_generation.h"
 #include "color_schemes.h"
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_determineTileShadows()
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_determineTileShadows()
 {
     for (int i = 0; i < getTiles().size(); i++)
     {
@@ -11,7 +11,7 @@ void IUEINW::IUEINW_Map_Generator::largeBoard_determineTileShadows()
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Map_Generator::largeBoard_determineTileShadow(int Index)
+void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_determineTileShadow(int Index)
 {
     int Height[4];
     Height[LEFT] = getTiles()[Index].Height[LEFT];

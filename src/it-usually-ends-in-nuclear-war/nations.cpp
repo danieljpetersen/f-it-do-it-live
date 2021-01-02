@@ -5,19 +5,18 @@
 
 ////////////////////////////////////////////////////////////
 
-bool IUEINW::IUEINW_Nation::isHumanNation()
+void IUEINW::IUEINW_Plugin_Init_Nations::work(const int Event)
 {
-	return NationIndex == getNations().HumanNationIndex;
+    getNations().init();
 }
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Nations::onMapGeneration()
+void IUEINW::IUEINW_Nations::init()
 {
 	Nations.clear();
 	getMap().CurrentMapLayout.StartingNumberOfNations = getMap().CurrentMapLayout.SuggestedNumberOfNations;
 	const int NumberOfNations = getMap().CurrentMapLayout.StartingNumberOfNations;
-	getVision().init(NumberOfNations);
 	for (int i = 0; i < NumberOfNations; i++)
 	{
 		IUEINW::IUEINW_Nation Nation;
@@ -33,7 +32,7 @@ void IUEINW::IUEINW_Nations::onMapGeneration()
 		Nation.EdgeTilesDiscovered[1].clear();
 		Nation.EdgeTilesDiscovered[2].clear();
 		Nation.EdgeTilesDiscovered[3].clear();
-		Nation.NumberOfUnitsInitialized = 0;
+		Nation.TotalNumberOfUnitsInitialized = 0;
 		//Nation.Units.clear();
 		//Nation.Cities.clear();
 
@@ -109,3 +108,9 @@ void IUEINW::IUEINW_Nations::changeHumanPlayerToNextNation()
 
 ////////////////////////////////////////////////////////////
 
+bool IUEINW::IUEINW_Nation::isHumanNation()
+{
+    return NationIndex == getNations().HumanNationIndex;
+}
+
+////////////////////////////////////////////////////////////

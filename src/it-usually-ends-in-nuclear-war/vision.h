@@ -5,14 +5,23 @@
 
 namespace IUEINW
 {
-    class IUEINW_Vision : public fi::Plugin_Base
+    class IUEINW_Plugin_Init_Vision : public fi::Plugin_Base
+    {
+    public:
+        void work(const int Event) override;
+    };
+
+    // ----
+
+    class IUEINW_Vision
 	{
 	private:
 		std::vector<std::vector<int>> VisionCount; // [0] == TileIndexes, [1] == NationIndexes;  VisionCount of -1 indicates not explored
 		std::vector<std::vector<int>> LastTickSeen; // [0] == TileIndexes, [1] == NationIndexes;  VisionCount of -1 indicates not explored
 
 	public:
-		void init(int NumberOfNations);
+        void init(int NumberOfNations);
+
 		void revealTile(int TileIndex, int NationIndex);
 		void incrementVision(int TileIndex, int NationIndex);
 		void decrementVision(int TileIndex, int NationIndex);
@@ -43,7 +52,7 @@ namespace IUEINW
 		bool canNationSee(int TileIndex, int NationIndex);
 	};
 
-	IUEINW_Vision &getVision();
+    IUEINW_Vision &getVision();
 }
 
 #endif

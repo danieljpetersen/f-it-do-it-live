@@ -23,7 +23,7 @@ void IUEINW::IUEINW_Drawable_Map_Edges::onDraw()
 
 void IUEINW::IUEINW_Drawable_Map_Edges::onUpdate()
 {
-    if (ShouldUpdate)
+    //if (ShouldUpdate)
     {
         Quads.clear();
 

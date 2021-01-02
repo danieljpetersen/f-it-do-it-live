@@ -1,8 +1,9 @@
 #include "controls.h"
 #include "globals.h"
 #include "cheats.h"
+#include "iueinw.h"
 
-void IUEINW::IUEINW_Controls::onUpdate()
+void IUEINW::IUEINW_Plugin_Controls::work(const int Event)
 {
     //fi::getCanvasWorld().processStandardInput_PanZoom(true, true, true, true, true, true, true, true, true);
 
@@ -11,7 +12,7 @@ void IUEINW::IUEINW_Controls::onUpdate()
     {
         if (fi::getInput().check("Generate New Map"))
         {
-            fi::getPlugins().clearStackThenTransitionToProgramState(getProgramState_MapGeneration());
+            fi::getPlugins().execute(EVENT_MAP_GENERATION);
         }
         //else if (fi::getInput().check(fi::key::code::L))
         //{
