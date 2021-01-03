@@ -176,7 +176,7 @@ namespace IUEINW
 
         bool doesExplicitCityColorExist()
         {
-            return ExplicitCityColor[SelectedColorSchemeIndex].a != 0;
+            return !UseNationColorInsteadOfExplicitCityColor[SelectedColorSchemeIndex];
         }
 
 		sf::Color getExplicitCityColor()
@@ -188,11 +188,6 @@ namespace IUEINW
         {
             return CityUndersideColor[SelectedColorSchemeIndex];
         }
-
-		sf::Color getGoodyHutColor()
-		{
-			return GoodyHutColor[SelectedColorSchemeIndex];
-		}
 
 		sf::Color getNationColor(int Index)
 		{
@@ -241,10 +236,9 @@ namespace IUEINW
 		std::vector<std::string> NationBorderPrimitiveType;
 		std::vector<std::string> NationBorderColorType;
 
+        std::vector<bool> UseNationColorInsteadOfExplicitCityColor;
         std::vector<sf::Color> ExplicitCityColor;
         std::vector<sf::Color> CityUndersideColor;
-
-		std::vector<sf::Color> GoodyHutColor;
 
 		sf::Color BarbarianColor;
 

@@ -131,7 +131,7 @@ namespace fi
 
 	////////////////////////////////////////////////////////////
 
-		void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellSize, bool HorizontalWrap)
+		virtual void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellSize, bool HorizontalWrap)
 		{
 			int Width = CellSize;
 			int Height = CellSize;
@@ -146,7 +146,7 @@ namespace fi
 
 	////////////////////////////////////////////////////////////
 
-		void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellWidth, int CellHeight, bool HorizontalWrap)
+		virtual void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellWidth, int CellHeight, bool HorizontalWrap)
 		{
 			this->NumberOfRows = NumberOfRows;
 			this->NumberOfColumns = NumberOfColumns;
@@ -1115,8 +1115,20 @@ namespace fi
 	public:
 		// app specific data.
 		std::vector<T> CustomCellData;
-		
-		void resizeCustomCellData(int NumberOfCells)
+
+        void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellSize, bool HorizontalWrap) override
+        {
+            CustomCellData.clear();
+            Grid_Base::init(NumberOfRows, NumberOfColumns, GridType, CellSpacing, CellSize, HorizontalWrap);
+        }
+
+        void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellWidth, int CellHeight, bool HorizontalWrap) override
+        {
+            CustomCellData.clear();
+            Grid_Base::init(NumberOfRows, NumberOfColumns, GridType, CellSpacing, CellWidth, CellHeight, HorizontalWrap);
+        }
+
+        void resizeCustomCellData(int NumberOfCells)
 		{
 			CustomCellData.resize(NumberOfCells);
 		}

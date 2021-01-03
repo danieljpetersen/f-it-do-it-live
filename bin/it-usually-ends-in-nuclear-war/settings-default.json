@@ -172,10 +172,9 @@
 				"nation-border-color-type": "vertex-blend", // "vertex-blend", "color-average".  Wasn't sure what to name these, but see explanation a few lines above this
 				"nation-border-thickness": 1,
 
-				 "city-color": "222,0,0",  // trying something different here -- this can either be the string "nation-color" or a color int he format "r,g,b"
-//				"city-color": "nation-color",  // trying something different here -- this can either be the string "nation-color" or a color int he format "r,g,b"
-				"city-underside-color": "112,112,112", // drawn beneath city quad
-				"goody-hut-color": "255,255,255"
+				 "explicit-city-color": "222,0,0",
+				 "use-nation-color-instead-of-explicit-city-color": false,
+				 "city-underside-color": "112,112,112", // drawn beneath city quad
 			},
 		],
 

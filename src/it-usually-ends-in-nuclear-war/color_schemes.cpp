@@ -59,11 +59,10 @@ void IUEINW::IUEINW_Color_Schemes::init()
 	GridLinesAlwaysOnTileGrouping.resize(ColorSchemesArray.size());
 	GridLinesAroundMouseTileGrouping.resize(ColorSchemesArray.size());
 
+    UseNationColorInsteadOfExplicitCityColor.resize(ColorSchemesArray.size());
 	ExplicitCityColor.resize(ColorSchemesArray.size());
     CityUndersideColor.resize(ColorSchemesArray.size());
-	GoodyHutColor.resize(ColorSchemesArray.size());
 
-	//SelectedColorSchemeIndex = App.Random.int_(0, (int)TileTypeColors.size());
 	SelectedColorSchemeIndex = 0;
 	std::string SelectedColorSchemeName = VisualSection["selected-color-scheme"].get<std::string>();
 
@@ -161,20 +160,9 @@ void IUEINW::IUEINW_Color_Schemes::init()
 		NationBorderColorType[i] = fi::stringDowncase(SchemeDefinition["nation-border-color-type"].get<std::string>());
 		NationBorderPrimitiveType[i] = fi::stringDowncase(SchemeDefinition["nation-border-vertex-array-primitive-type"].get<std::string>());
 
-
-		std::string CityColorField = "city-color";
-		if (SchemeDefinition[CityColorField].get<std::string>() == "nation-color")
-		{
-			ExplicitCityColor[i] = sf::Color(0,0,0,0);
-		}
-		else
-		{
-			ExplicitCityColor[i] = fi::jsonGetColor(SchemeDefinition, CityColorField);
-		}
-
+        UseNationColorInsteadOfExplicitCityColor[i] = SchemeDefinition["use-nation-color-instead-of-explicit-city-color"].get<bool>();
+        ExplicitCityColor[i] = fi::jsonGetColor(SchemeDefinition, "explicit-city-color");
 		CityUndersideColor[i] = fi::jsonGetColor(SchemeDefinition, "city-underside-color");
-
-        GoodyHutColor[i] = fi::jsonGetColor(SchemeDefinition, "goody-hut-color");
 
 		i++;
 	}
@@ -195,7 +183,8 @@ void IUEINW::IUEINW_Color_Schemes::init()
 		NationColorSchemes.push_back(Color);
 	}
 
-	std::random_shuffle(std::begin(NationColorSchemes), NationColorSchemes.end());
+	// todo -- does not work on windows due to being deprecated
+	//std::random_shuffle(std::begin(NationColorSchemes), NationColorSchemes.end());
 
 	fi::getEngine().setBackgroundColor(getUnexplored());
 }
