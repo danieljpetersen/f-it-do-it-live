@@ -47,46 +47,12 @@ void IUEINW::IUEINW_Cities::init()
 {
     // around 15k land tiles per a normal sized map
     // we want to spawn around 100 cities.
-    // 15,000 / 100 == 150ish tiles per city
-    // proposal: spawn cities in a grid pattern, move cities by 3/4 tiles to best tile combo from the centerr of it's initial grid pattern spawn
-    // then expand the tiles for each city by 1 each iteration
-    // if a city runs out of tiles and doesn't meet a min tile threshold, eliminate the city and restart the city growth process on that continent
-
-    // loop each continent
-        // number of cities = continent_tile_count / 100;
-        // randomly place that many cities
-
-        // while (closest distance < 10)
-        //    move closest city away1
-
-    // ----
-    // for assigning cities plots of land we need to split the map up into roughly evenly sized partitions of (land) tiles
-    // the aim is 100 cities per map. around 15000ish land tiles per map, so 150ish tiles per city
-    // we're going to assign many tiles on the map a 'SpreadNode' with some minimum distance between each node;
-    // we're going to then loop through each of these nodes, and for each iteration expand the tiles in this node by 1 (for currently unassigned tiles)
-    // when each land tile is assigned a value, we're then going to combine these smaller nodes with their neighbors, until the clumps of tiles are the size / number desired
-    // the spawning of more SpreadNodes than cities, and then the merging is to prevent snaking of tiles
-    // next step is to make the borders a bit more fuzy / less square and rigid by exchanging a few tiles between neighboring city borders
-    // final step is center the city inside it's owned tiles
-
-    // in other words:
-        // for every continent
-            // spread_node_count = continent_tile_count / 10
-            // randomly place spread nodes across continent
-            // while (tiles without spread node)
-                // for every spread node (has a collection of tiles)
-                    // CoT.growByOne()
-
-            // number_of_continent_cities = continent_tile_count / 100
-            // while (spreadNodes.count > number_of_continent_cities
-                // spreadNode.combineWithSmallestNeighbor
-            // exchange border tiles
+    // spawn cities and assign surrounding land as belonging to relevant city
 
     Cities.clear();
 
     std::map<int, int> CityIndexMappedToNodeIndex; // key: CityIndex; value: NodeIndex....
     int CurrentCityIndex = 0;
-    int NodeCount = 0;
     for (int ContinentIndex = 0; ContinentIndex < getMap().Tiles.Continents.size(); ContinentIndex++)
     {
         std::vector<int> SpreadNodes;
@@ -139,8 +105,6 @@ void IUEINW::IUEINW_Cities::init()
             }
         }
 
-        NodeCount += SpreadNodes.size();
-
         // ---- spread the nodes - this was the easiest thing i could think of, not performant but doesn't matter as this only happens map gen
         {
             std::vector<std::vector<int>> DistancesToSpreadNodes(SpreadNodes.size(), std::vector<int>());
@@ -149,14 +113,7 @@ void IUEINW::IUEINW_Cities::init()
                 for (int j = 0; j < getTiles().Continents[ContinentIndex].size(); j++)
                 {
                     int TileIndex = getTiles().Continents[ContinentIndex][j];
-                    if (TileIndex == SpreadNodes[i])
-                    {
-                        DistancesToSpreadNodes[i].push_back(9999);
-                    }
-                    else
-                    {
-                        DistancesToSpreadNodes[i].push_back(getGrid().getDistanceBetweenTiles(SpreadNodes[i], TileIndex));
-                    }
+                    DistancesToSpreadNodes[i].push_back(getGrid().getDistanceBetweenTiles(SpreadNodes[i], TileIndex));
                 }
             }
 
@@ -272,7 +229,6 @@ void IUEINW::IUEINW_Cities::init()
                 int Row = RowColumnWeights[i].first / TileCountPerNode[i];
                 int Col = RowColumnWeights[i].second / TileCountPerNode[i];
 
-                fi::log(RowColumnWeights[i].first );
                 int TileIndex = getGrid().getCellIndex(Col, Row);
 
                 // averaged center tile fell in the ocean or something
@@ -303,8 +259,6 @@ void IUEINW::IUEINW_Cities::init()
             }
         }
     }
-
-    fi::getPlugins().delayedExecute(EVENT_BUILD_MAP_DRAWABLES);
 }
 
 ////////////////////////////////////////////////////////////

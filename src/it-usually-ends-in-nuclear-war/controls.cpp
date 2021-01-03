@@ -5,6 +5,13 @@
 
 void IUEINW::IUEINW_Plugin_Controls::work(const int Event)
 {
+    if (fi::getInput().check(fi::key::U))
+    {
+        getMapDrawables().ShowDebugProvinceTiles = !getMapDrawables().ShowDebugProvinceTiles;
+        fi::getPlugins().delayedExecute(EVENT_BUILD_MAP_DRAWABLES);
+    }
+
+
     //fi::getCanvasWorld().processStandardInput_PanZoom(true, true, true, true, true, true, true, true, true);
 
 

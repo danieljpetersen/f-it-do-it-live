@@ -162,8 +162,11 @@ void IUEINW::IUEINW_Map_Drawables::setTileVertexColors(int TileIndex, bool Explo
         sf::Color aColor = Grid->CustomCellData[TileIndex].aColor;
         sf::Color bColor = Grid->CustomCellData[TileIndex].bColor;
 
-        aColor = Grid->CustomCellData[TileIndex].DebugColor;
-        bColor = Grid->CustomCellData[TileIndex].DebugColor;
+        if (ShowDebugProvinceTiles)
+        {
+            aColor = Grid->CustomCellData[TileIndex].DebugColor;
+            bColor = Grid->CustomCellData[TileIndex].DebugColor;
+        }
 
         //aColor = fi::getRandom().color(); // test for when drawable updates
 

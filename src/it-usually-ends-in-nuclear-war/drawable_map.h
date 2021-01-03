@@ -21,6 +21,7 @@ namespace IUEINW
         void setTileVertexColors(int TileIndex);
         void setTileVertexColors();
 
+        bool ShowDebugProvinceTiles = false;
         std::vector<sf::VertexBuffer> VBO;
         std::vector<std::vector<sf::Vertex>> Vertices;
     };
