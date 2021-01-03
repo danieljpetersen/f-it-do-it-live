@@ -33,8 +33,8 @@ namespace IUEINW
 		int TileType, NationIndex, CityIndex;
 		int ContinentIndex, BodyOfWaterIndex;
 		int ProductionOutputBase, FoodOutputBase, OutputBonusBase;
-
-		float DistanceFromMousedTile = 0;
+		bool IsCityTile = false; // CityIndex indicates what city it belongs to, this variable indicates whether this is the actual tile containing the city
+        float DistanceFromMousedTile = 0;
 
 		bool isWaterTile() { return ((TileType == OCEAN) || (TileType == COASTAL_OCEAN)); }
 

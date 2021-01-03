@@ -3,6 +3,7 @@
 #include "map.h"
 #include "nations.h"
 #include "color_schemes.h"
+#include "mouse_tile_tracker.h"
 
 void IUEINW::IUEINW_Plugin_Init_Cities::work(const int Event)
 {
@@ -16,30 +17,43 @@ void IUEINW::IUEINW_Plugin_Draw_Cities::work(const int Event)
     Lines.clear();
     Quads.clear();
 
-    // ---- draw unsettled city mouse hover effect
+    // ---- draw unsettled city mouse effect on hover
     {
-
+        sf::Color Color = getColorSchemes().getExplicitCityColor();
+        for (auto TileTransparencyInfo : getMouseTileTracker().TileTransparencies)
+        {
+            int TileIndex = TileTransparencyInfo.AssociatedTile;
+            if (getVision().hasHumanNationExplored(TileIndex))
+            {
+                if (getTiles()[TileIndex].IsCityTile)
+                {
+                    Color.a = TileTransparencyInfo.CurrentTransparency;
+                    getGrid().buildVertexForCell_Lines(TileIndex, Color, Lines);
+                }
+            }
+        }
     }
 
     // ---- draw settled cities
     {
-        int TileIndex;
-        sf::Color NationColor;
         for (int i = 0; i < getCities().Cities.size(); i++)
         {
-            TileIndex = getCities()[i].TileIndex;
-
-            if (getVision().canHumanSeeCity(TileIndex, getCities()[i].TickCreated))
+            if (getCities().Cities[i].NationIndex != -1)
             {
-                getTiles().Grid.buildVertexForCell_Quad(TileIndex, getColorSchemes().getCityUndersideColor(), Quads); // underneath city
+                int TileIndex = getCities()[i].TileIndex;
 
-                if (getColorSchemes().doesExplicitCityColorExist())
+                if (getVision().canHumanSeeCity(TileIndex, getCities()[i].TickCreated))
                 {
-                    getTiles().Grid.buildVertexForCell_QuadOffset(TileIndex, getColorSchemes().getExplicitCityColor(), getColorSchemes().getCityQuadOffset(), Quads);
-                }
-                else
-                {
-                    getTiles().Grid.buildVertexForCell_QuadOffset(TileIndex, getNations()[getCities()[i].NationIndex].Color, getColorSchemes().getCityQuadOffset(), Quads);
+                    getTiles().Grid.buildVertexForCell_Quad(TileIndex, getColorSchemes().getCityUndersideColor(), Quads); // underneath city
+
+                    if (getColorSchemes().doesExplicitCityColorExist())
+                    {
+                        getTiles().Grid.buildVertexForCell_QuadOffset(TileIndex, getColorSchemes().getExplicitCityColor(), getColorSchemes().getCityQuadOffset(), Quads);
+                    }
+                    else
+                    {
+                        getTiles().Grid.buildVertexForCell_QuadOffset(TileIndex, getNations()[getCities()[i].NationIndex].Color, getColorSchemes().getCityQuadOffset(), Quads);
+                    }
                 }
             }
         }
@@ -274,10 +288,12 @@ void IUEINW::IUEINW_Cities::init()
 void IUEINW::IUEINW_Cities::addCity(int TileIndex)
 {
     IUEINW_City City;
-    City.NationIndex = 0;
+    //City.NationIndex = 0;
     City.TickCreated = 0;
     City.TileIndex = TileIndex;
     Cities.push_back(City);
+
+    getTiles()[TileIndex].IsCityTile = true;
 }
 
 ////////////////////////////////////////////////////////////
