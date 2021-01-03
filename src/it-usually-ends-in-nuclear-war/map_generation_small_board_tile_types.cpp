@@ -35,23 +35,23 @@ void IUEINW::IUEINW_Plugin_Generate_Map::smallBoard_generateDesert()
 	const int LowestRow = ((SmallBoard.Grid.NumberOfRows) / 2) - Range;
 	const int HighestRow = int(SmallBoard.Grid.NumberOfRows / 2 + Range);
 	int ModifyChance = 1;
-	int ExpandChance = 95;
+	int ExpandChance = 45;
 	const int TileType = DESERT;
 
 	smallBoard_generateTileType(LowestRow, HighestRow, ModifyChance, ExpandChance, TileType);
 
 	ModifyChance = 1;
-	ExpandChance = 30;
+	ExpandChance = 10;
 	smallBoard_generateTileType(LowestRow, HighestRow, ModifyChance, ExpandChance, TileType);
 
 	ModifyChance = 0;
-	ExpandChance = 66;
+	ExpandChance = 26;
 	smallBoard_generateTileType(LowestRow, HighestRow, ModifyChance, ExpandChance, TileType);
-	if (fi::getRandom().chance(50))
+	if (fi::getRandom().chance(20))
 	{
 		smallBoard_generateTileType(LowestRow, HighestRow, ModifyChance, ExpandChance, TileType);
 
-		if (fi::getRandom().chance(10))
+		if (fi::getRandom().chance(4))
 			smallBoard_generateTileType(LowestRow, HighestRow, ModifyChance, ExpandChance, TileType);
 	}
 }

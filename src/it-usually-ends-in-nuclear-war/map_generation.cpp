@@ -43,4 +43,6 @@ void IUEINW::IUEINW_Plugin_Generate_Map::work(const int Event)
 
     largeBoard_determineTileShadows();
     TileTypes.clear();
+
+    fi::getPlugins().delayedExecute(EVENT_BUILD_MAP_DRAWABLES);
 }
