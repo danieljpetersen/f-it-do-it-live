@@ -75,4 +75,4 @@ Something akin to Conway's Game of Life but the simulation is modeling human his
 
 Everything is bundled with the exception of SFML. That will need to be installed (version 2.4 or greater) somewhere CMake can find it. In the scripts folder is a bash script to install SFML dependencies (but not SFML itself) on Debian derived distros.
 
-By default cmake will build all of the projects. It Usually Ends In Nuclear War is currently the only runnable project. I believe nothing will currently compile on Windows due to 1) a missing dirent.h file, and 2) std::random_shuffle being deprecated
+By default cmake will build all of the projects. It Usually Ends In Nuclear War is currently the only runnable project.
