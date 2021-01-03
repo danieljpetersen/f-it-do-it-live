@@ -422,6 +422,37 @@ namespace fi
 
         ////////////////////////////////////////////////////////////
 
+        void buildVertexForCell_Quad(int TileIndex, sf::Color Color, sf::VertexArray &VertArray)
+        {
+            for (int iter = 0; iter < CornerSize; iter++)
+            {
+                VertArray.append(sf::Vertex(CommonCellData[TileIndex].Corners[iter], Color));
+            }
+        }
+
+        ////////////////////////////////////////////////////////////
+
+        void buildVertexForCell_QuadOffset(int TileIndex, sf::Color Color, int Offset, sf::VertexArray &VertArray)
+        {
+            sf::Vertex Vert(CommonCellData[TileIndex].getLeft2f(), Color);
+            Vert.position.x += Offset;
+            VertArray.append(Vert);
+
+            Vert.position = CommonCellData[TileIndex].getBack2f();
+            Vert.position.y += Offset;
+            VertArray.append(Vert);
+
+            Vert.position = CommonCellData[TileIndex].getRight2f();
+            Vert.position.x -= Offset;
+            VertArray.append(Vert);
+
+            Vert.position = CommonCellData[TileIndex].getFront2f();
+            Vert.position.y -= Offset;
+            VertArray.append(Vert);
+        }
+
+        ////////////////////////////////////////////////////////////
+
         void updateCenterPositions()
         {
             for (int CellIndex = 0; CellIndex < CommonCellData.size(); CellIndex++)

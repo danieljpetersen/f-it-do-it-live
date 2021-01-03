@@ -17,6 +17,8 @@ namespace IUEINW
     class IUEINW_Tile
 	{
 	public:
+	    sf::Color DebugColor;//todo delete
+
 		int TileIndex;
 		int Height[4];
 
@@ -28,7 +30,7 @@ namespace IUEINW
 			return VerticalSplit == false && HorizontalSplit == false;
 		}
 
-		int TileType, NationIndex;
+		int TileType, NationIndex, CityIndex;
 		int ContinentIndex, BodyOfWaterIndex;
 		int ProductionOutputBase, FoodOutputBase, OutputBonusBase;
 
@@ -49,6 +51,7 @@ namespace IUEINW
 			ar(aColor);
 			ar(bColor);
 			ar(NationIndex);
+			ar(CityIndex);
 			ar(ContinentIndex);
 			ar(ProductionOutputBase);
 			ar(FoodOutputBase);
@@ -88,7 +91,8 @@ namespace IUEINW
 		bool isPointInsideTile(int x, int y, int Index);
 		bool areSameContinent(int aTileIndex, int bTileIndex);
 
-		int randomLandTile();
+        int getRandomLandTile();
+        int getRandomLandTile(int ContinentIndex);
 		static void collectTilesInColumn_WithoutWaterTiles(int ColIndex, int StartingRow, int EndingRow, std::vector<int> &TileCollection);
 		static void collectTilesInColumn(int ColIndex, int StartingRow, int EndingRow, std::vector<int> &TileCollection);
 		std::vector<int> *getArea(int Center, int HalfSize, Tile_Type_Grouping TileTypeGrouping, int &Size);
@@ -160,7 +164,8 @@ namespace IUEINW
     ////////////////////////////////////////////////////////////
 
     IUEINW_Map &getMap();
-	IUEINW_Tiles &getTiles();
+    IUEINW_Tiles &getTiles();
+    fi::Grid_1D_Custom_Data<IUEINW_Tile> &getGrid();
 }
 
 #endif

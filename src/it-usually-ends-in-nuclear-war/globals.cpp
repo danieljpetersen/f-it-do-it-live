@@ -26,6 +26,13 @@ IUEINW::IUEINW_Tiles &IUEINW::getTiles()
 
 ////////////////////////////////////////////////////////////
 
+fi::Grid_1D_Custom_Data<IUEINW::IUEINW_Tile> &IUEINW::getGrid()
+{
+    return getApp().Map.Tiles.Grid;
+}
+
+////////////////////////////////////////////////////////////
+
 IUEINW::IUEINW_Color_Schemes &IUEINW::getColorSchemes()
 {
     return getApp().ColorSchemes;
@@ -72,3 +79,11 @@ IUEINW::IUEINW_Map_Drawables &IUEINW::getMapDrawables()
 {
     return getApp().MapDrawables;
 }
+
+////////////////////////////////////////////////////////////
+
+IUEINW::IUEINW_Cities &IUEINW::getCities()
+{
+    return getApp().Cities;
+}
+

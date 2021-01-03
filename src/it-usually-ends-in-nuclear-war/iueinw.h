@@ -16,9 +16,7 @@
 #include "drawable_map_edges.h"
 #include "last_plugin_core_state.h"
 #include "audio.h"
-
-#include "../common/imgui/imgui.h"
-#include "../common/imgui/imgui-SFML.h"
+#include "cities.h"
 
 namespace IUEINW
 {
@@ -40,7 +38,7 @@ namespace IUEINW
         IUEINW_Color_Schemes ColorSchemes;
         IUEINW_Vision Vision;
         IUEINW_Cheats Cheats;
-        // Cities
+        IUEINW_Cities Cities;
         // Units
         // GovernmentTypes
         // Technologies
@@ -50,6 +48,7 @@ namespace IUEINW
         fi::Plugin_Loading_End PluginLoadingEnd;
         IUEINW_Plugin_Init_Color_Schemes PluginInitColorSchemes;
         IUEINW_Plugin_Generate_Map PluginGenerateMap;
+        IUEINW_Plugin_Init_Cities PluginInitCities;
         IUEINW_Plugin_Init_Nations PluginInitNations;
         IUEINW_Plugin_Init_Vision PluginInitVision;
         IUEINW_Plugin_Init_Cheats PluginInitCheats;
@@ -64,13 +63,17 @@ namespace IUEINW
         // ---- Plugins related to fi::EVENT_DRAW / EVENT_BUILD_MAP_DRAWABLES
         IUEINW_Plugin_Build_Map_Drawables PluginBuildMapDrawables;
         IUEINW_Plugin_Draw_Map PluginDrawMap;
+        IUEINW_Plugin_Draw_Cities PluginDrawCities;
 
         void setup() override
         {
             fi::getPlugins().defineProgramState(ProgramStateIndex_Core)
+                    .withTick("core") // ticks defined in / auto loaded from settings json file
+
                     .withPlugin(&PluginLoadingStart, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitColorSchemes, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginGenerateMap, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginInitCities, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitNations, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitVision, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitCheats, EVENT_MAP_GENERATION)
@@ -84,13 +87,20 @@ namespace IUEINW
                     .withPlugin(&PluginLastCoreState, fi::EVENT_POST_UPDATE)
 
                     .withPlugin(&PluginBuildMapDrawables, EVENT_BUILD_MAP_DRAWABLES)
+
                     .withPlugin(&PluginDrawMap, fi::EVENT_DRAW)
-                    .withTick("core")
+                    .withPlugin(&PluginDrawCities, fi::EVENT_DRAW)
             ;
 
             fi::getPlugins().setProgramState(ProgramStateIndex_Core);
             fi::getPlugins().execute(EVENT_MAP_GENERATION);
             fi::getPlugins().execute(EVENT_BUILD_MAP_DRAWABLES);
+        }
+
+
+        void work(const int Event) override
+        {
+            //fi::log((int)Map.Tiles.LandTiles.size());
         }
     };
 

@@ -172,9 +172,9 @@
 				"nation-border-color-type": "vertex-blend", // "vertex-blend", "color-average".  Wasn't sure what to name these, but see explanation a few lines above this
 				"nation-border-thickness": 1,
 
-				// "city-color": "222,0,0",  // trying something different here -- this can either be the string "nation-color" or a color int he format "r,g,b"
-				"city-color": "nation-color",  // trying something different here -- this can either be the string "nation-color" or a color int he format "r,g,b"
-
+				 "city-color": "222,0,0",  // trying something different here -- this can either be the string "nation-color" or a color int he format "r,g,b"
+//				"city-color": "nation-color",  // trying something different here -- this can either be the string "nation-color" or a color int he format "r,g,b"
+				"city-underside-color": "112,112,112", // drawn beneath city quad
 				"goody-hut-color": "255,255,255"
 			},
 		],
@@ -296,6 +296,7 @@
 			//		"tile-height": 12,
 			"tile-height-offset": 3.5, // the game assigns each tile corner a height value (representing how many pixels of height a tile corner has).  set to 0 for flat map
 			"unit-drawable-tile-offset": 4, // offset verticies of unit quads so that some of the tile is visible.
+			"city-drawable-tile-offset": 2, // offset verticies of city quads so that some of the tile is visible.
 			"grid-type": "isometric", // "isometric" || "rectangle" -- rectangle was added after the fact.  it mostly works, but there are a few visual issues (for instance, w/ nation borders) due to everything initially being coded with isometric in mind.
 			"grid-spacing": 0, // not quite all there w/ isometric
 //			"round-world": true,

@@ -31,7 +31,8 @@ void IUEINW::IUEINW_Tiles::init(int ColCount, int RowCount)
 		Grid.CustomCellData[i].OutputBonusBase = 0;
 		Grid.CustomCellData[i].ProductionOutputBase = 0;
 		Grid.CustomCellData[i].FoodOutputBase = 0;
-		Grid.CustomCellData[i].NationIndex = -1;
+        Grid.CustomCellData[i].NationIndex = -1;
+        Grid.CustomCellData[i].CityIndex = -1;
 		Grid.CustomCellData[i].ContinentIndex = -1;
 		Grid.CustomCellData[i].BodyOfWaterIndex = -1;
 	}
@@ -89,9 +90,16 @@ bool IUEINW::IUEINW_Tiles::areSameContinent(int aTileIndex, int bTileIndex)
 
 ////////////////////////////////////////////////////////////
 
-int IUEINW::IUEINW_Tiles::randomLandTile()
+int IUEINW::IUEINW_Tiles::getRandomLandTile()
 {
 	return LandTiles[fi::getRandom().i(0, LandTiles.size()-1)];
+}
+
+////////////////////////////////////////////////////////////
+
+int IUEINW::IUEINW_Tiles::getRandomLandTile(int ContinentIndex)
+{
+    return Continents[ContinentIndex][fi::getRandom().i(0, Continents[ContinentIndex].size()-1)];
 }
 
 ////////////////////////////////////////////////////////////

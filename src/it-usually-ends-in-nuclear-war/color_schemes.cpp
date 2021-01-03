@@ -21,6 +21,8 @@ void IUEINW::IUEINW_Color_Schemes::init()
 	NotificationTextSizeOffset = VisualSection["notification-text-size-offset"].get<int>();
 	NotificationTransparencyTime = VisualSection["notification-transparency-time"].get<float>();
 
+    CityQuadOffset = fi::getConfig()["game"]["map"]["city-drawable-tile-offset"].get<int>(); // todo should be in visual section
+
     TileTypeShadowColorOffset.clear();
     TileTypeNonShadowColorOffset.clear();
 
@@ -58,6 +60,7 @@ void IUEINW::IUEINW_Color_Schemes::init()
 	GridLinesAroundMouseTileGrouping.resize(ColorSchemesArray.size());
 
 	ExplicitCityColor.resize(ColorSchemesArray.size());
+    CityUndersideColor.resize(ColorSchemesArray.size());
 	GoodyHutColor.resize(ColorSchemesArray.size());
 
 	//SelectedColorSchemeIndex = App.Random.int_(0, (int)TileTypeColors.size());
@@ -169,8 +172,9 @@ void IUEINW::IUEINW_Color_Schemes::init()
 			ExplicitCityColor[i] = fi::jsonGetColor(SchemeDefinition, CityColorField);
 		}
 
+		CityUndersideColor[i] = fi::jsonGetColor(SchemeDefinition, "city-underside-color");
 
-		GoodyHutColor[i] = fi::jsonGetColor(SchemeDefinition, "goody-hut-color");
+        GoodyHutColor[i] = fi::jsonGetColor(SchemeDefinition, "goody-hut-color");
 
 		i++;
 	}

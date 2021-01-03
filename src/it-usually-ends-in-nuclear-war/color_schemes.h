@@ -14,7 +14,7 @@ namespace IUEINW
     };
 
     // ----
-
+    // todo -- kind of a misnomer, transitioning to storing information about visual style in general
     class IUEINW_Color_Schemes
 	{
 	public:
@@ -119,7 +119,7 @@ namespace IUEINW
 			return SettlerOverlayGridInvalidColor[SelectedColorSchemeIndex];
 		}
 
-		sf::Color getSettlerOverlaRingInvalidColor()
+		sf::Color getSettlerOverlayRingInvalidColor()
 		{
 			return SettlerOverlayRingInvalidColor[SelectedColorSchemeIndex];
 		}
@@ -174,10 +174,20 @@ namespace IUEINW
 			return NationBorderPrimitiveType[SelectedColorSchemeIndex];
 		}
 
+        bool doesExplicitCityColorExist()
+        {
+            return ExplicitCityColor[SelectedColorSchemeIndex].a != 0;
+        }
+
 		sf::Color getExplicitCityColor()
 		{
 			return ExplicitCityColor[SelectedColorSchemeIndex];
 		}
+
+        sf::Color getCityUndersideColor()
+        {
+            return CityUndersideColor[SelectedColorSchemeIndex];
+        }
 
 		sf::Color getGoodyHutColor()
 		{
@@ -193,6 +203,11 @@ namespace IUEINW
 
 			return fi::getRandom().color();
 		}
+
+		int getCityQuadOffset()
+        {
+            return CityQuadOffset;
+        }
 
 	private:
 		// Coastal is the last index
@@ -226,13 +241,17 @@ namespace IUEINW
 		std::vector<std::string> NationBorderPrimitiveType;
 		std::vector<std::string> NationBorderColorType;
 
-		std::vector<sf::Color> ExplicitCityColor;
+        std::vector<sf::Color> ExplicitCityColor;
+        std::vector<sf::Color> CityUndersideColor;
+
 		std::vector<sf::Color> GoodyHutColor;
 
 		sf::Color BarbarianColor;
 
 		float NotificationTransparencyTime;
 		int NotificationTextSizeOffset;
+
+		int CityQuadOffset = 0;
 	};
 
 	////////////////////////////////////////////////////////////

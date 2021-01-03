@@ -85,6 +85,7 @@ namespace IUEINW
 		unsigned int size() { return (unsigned int)Nations.size(); }
 		bool changeHumanPlayer(int NationIndex);
 		void changeHumanPlayerToNextNation();
+		IUEINW_Nation &getRandomNation();
 	};
 
     ////////////////////////////////////////////////////////////

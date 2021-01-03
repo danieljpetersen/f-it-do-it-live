@@ -75,6 +75,13 @@ void IUEINW::IUEINW_Nations::init()
 
 ////////////////////////////////////////////////////////////
 
+IUEINW::IUEINW_Nation &IUEINW::IUEINW_Nations::getRandomNation()
+{
+    return Nations[fi::getRandom().i(0, Nations.size()-1)];
+}
+
+////////////////////////////////////////////////////////////
+
 bool IUEINW::IUEINW_Nations::changeHumanPlayer(int NationIndex)
 {
 	// todo
