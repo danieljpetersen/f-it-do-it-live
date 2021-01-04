@@ -199,9 +199,14 @@ namespace IUEINW
 			return fi::getRandom().color();
 		}
 
-		int getCityQuadOffset()
+        int getCityQuadOffset()
         {
             return CityQuadOffset;
+        }
+
+        int getUnitQuadOffset()
+        {
+            return UnitQuadOffset;
         }
 
 	private:
@@ -246,6 +251,7 @@ namespace IUEINW
 		int NotificationTextSizeOffset;
 
 		int CityQuadOffset = 0;
+		int UnitQuadOffset = 0;
 	};
 
 	////////////////////////////////////////////////////////////

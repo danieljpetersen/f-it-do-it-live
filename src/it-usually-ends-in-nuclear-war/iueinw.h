@@ -17,6 +17,7 @@
 #include "last_plugin_core_state.h"
 #include "audio.h"
 #include "cities.h"
+#include "units.h"
 
 namespace IUEINW
 {
@@ -39,7 +40,7 @@ namespace IUEINW
         IUEINW_Vision Vision;
         IUEINW_Cheats Cheats;
         IUEINW_Cities Cities;
-        // Units
+        IUEINW_Units Units;
         // GovernmentTypes
         // Technologies
 
@@ -49,6 +50,7 @@ namespace IUEINW
         IUEINW_Plugin_Init_Color_Schemes PluginInitColorSchemes;
         IUEINW_Plugin_Generate_Map PluginGenerateMap;
         IUEINW_Plugin_Init_Cities PluginInitCities;
+        IUEINW_Plugin_Init_Units PluginInitUnits;
         IUEINW_Plugin_Init_Nations PluginInitNations;
         IUEINW_Plugin_Init_Cheats PluginInitCheats;
         IUEINW_Plugin_Init_Map_Drawables PluginInitMapDrawables;
@@ -63,7 +65,7 @@ namespace IUEINW
         IUEINW_Plugin_Build_Map_Drawables PluginBuildMapDrawables;
         IUEINW_Plugin_Draw_Map PluginDrawMap;
         IUEINW_Plugin_Draw_Cities PluginDrawCities;
-
+        IUEINW_Plugin_Draw_Units PluginDrawUnits;
         void setup() override
         {
             fi::getPlugins().defineProgramState(ProgramStateIndex_Core)
@@ -73,6 +75,7 @@ namespace IUEINW
                     .withPlugin(&PluginInitColorSchemes, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginGenerateMap, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitCities, EVENT_MAP_GENERATION)
+                    .withPlugin(&PluginInitUnits, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitNations, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitCheats, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitMapDrawables, EVENT_MAP_GENERATION)
@@ -88,6 +91,7 @@ namespace IUEINW
 
                     .withPlugin(&PluginDrawMap, fi::EVENT_DRAW)
                     .withPlugin(&PluginDrawCities, fi::EVENT_DRAW)
+                    .withPlugin(&PluginDrawUnits, fi::EVENT_DRAW)
             ;
 
             fi::getPlugins().setProgramState(ProgramStateIndex_Core);

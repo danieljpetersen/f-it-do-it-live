@@ -1,12 +1,12 @@
-#ifndef GR_SLOT_MAP_H
-#define GR_SLOT_MAP_H
+#ifndef FI_SLOT_MAP_H
+#define FI_SLOT_MAP_H
 
 #include <vector>
 #include <string>
 
 ////////////////////////////////////////////////////////////
 
-namespace gr
+namespace fi
 {
     class Slot_Map_ID
     {
@@ -18,7 +18,7 @@ namespace gr
             this->SlotMapIndex = -1;
         }
 
-        static gr::Slot_Map_ID null()
+        static fi::Slot_Map_ID null()
         {
             // Do not change this without also changing the default constructor
             return { -1, -1 };
@@ -32,7 +32,7 @@ namespace gr
 
         int SlotMapIndex=-1, Version=-1;
 
-        gr::Slot_Map_ID getSlotMapID() const // convenience for inheriting classes
+        fi::Slot_Map_ID getSlotMapID() const // convenience for inheriting classes
         {
             return { SlotMapIndex, Version };
         }
@@ -233,7 +233,7 @@ namespace gr
 
         ////////////////////////////////////////////////////////////
 
-        void remove(gr::Slot_Map_ID id)
+        void remove(fi::Slot_Map_ID id)
         {
             if (isValid(id))
             {
@@ -263,7 +263,7 @@ namespace gr
 
         ////////////////////////////////////////////////////////////
 
-        bool isValid(gr::Slot_Map_ID id)
+        bool isValid(fi::Slot_Map_ID id)
         {
             int SlotMapIndex = id.SlotMapIndex;
             int Version = id.Version;
@@ -292,7 +292,7 @@ namespace gr
 
         ////////////////////////////////////////////////////////////
 
-        int getObjectIndex(gr::Slot_Map_ID id)
+        int getObjectIndex(fi::Slot_Map_ID id)
         {
             int SlotMapIndex = id.SlotMapIndex;
             if (SlotMapIndex < 0)
@@ -310,7 +310,7 @@ namespace gr
 
         ////////////////////////////////////////////////////////////
 
-        T *get(gr::Slot_Map_ID id)
+        T *get(fi::Slot_Map_ID id)
         {
             int SlotMapIndex = id.SlotMapIndex;
             if (SlotMapIndex < 0)

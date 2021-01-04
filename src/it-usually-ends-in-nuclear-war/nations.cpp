@@ -21,18 +21,6 @@ void IUEINW::IUEINW_Nations::init()
     // actual number of nations can be lower if there aren't enough cities on the map to go around.
     const int NumberOfNations = (int)SpawnTiles.size();
     getMap().CurrentMapLayout.StartingNumberOfNations = NumberOfNations;
-
-    for (int i = 0; i < SpawnTiles.size(); i++)
-    {
-        int TileIndex = SpawnTiles[i];
-        getMap().Tiles[TileIndex].aColor = sf::Color::Yellow;
-        getMap().Tiles[TileIndex].bColor = sf::Color::Yellow;
-    }
-
-    fi::log(fi::to_s((int)SpawnTiles.size()) + " + " + fi::to_s((int)NumberOfNations));
-
-    // todo -- something is fucked. disparity between red tiles and yellow tiles
-
     getVision().init(NumberOfNations);
 
     Nations.clear();
@@ -53,7 +41,7 @@ void IUEINW::IUEINW_Nations::init()
 		Nation.EdgeTilesDiscovered[3].clear();
 		Nation.TotalNumberOfUnitsInitialized = 0;
 		Nation.Cities.clear();
-        //Nation.Units.clear();
+        Nation.Units.clear();
 
 		Nations.push_back(Nation);
 

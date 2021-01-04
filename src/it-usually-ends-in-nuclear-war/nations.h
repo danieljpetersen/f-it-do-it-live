@@ -22,6 +22,7 @@ namespace IUEINW
 	{
 	public:
 	    std::vector<int> Cities;
+	    std::vector<fi::Slot_Map_ID> Units;
 
 		std::vector<std::vector<int>> EdgeTilesDiscovered; // todo should be in vision
 		bool IsAlive;

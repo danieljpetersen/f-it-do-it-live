@@ -1,5 +1,4 @@
 #include "iueinw.h"
-#include "vision.h"
 
 int IUEINW::CITY_RING_SIZE = 0;
 
@@ -87,3 +86,9 @@ IUEINW::IUEINW_Cities &IUEINW::getCities()
     return getApp().Cities;
 }
 
+////////////////////////////////////////////////////////////
+
+IUEINW::IUEINW_Units &IUEINW::getUnits()
+{
+    return getApp().Units;
+}

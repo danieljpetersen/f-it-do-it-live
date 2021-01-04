@@ -347,7 +347,7 @@ bool IUEINW::IUEINW_Vision::hasVision_IgnoreCheatMode(int TileIndex)
 
 bool IUEINW::IUEINW_Vision::canHumanSeeCity(int TileIndex, int TickCityCreated)
 {
-	return (getCheats().isRevealAllTerrainEnabled()) || (lastTickSeen(TileIndex, getNations().HumanNationIndex) > TickCityCreated);
+	return (getCheats().isRevealAllTerrainEnabled()) || (lastTickSeen(TileIndex, getNations().HumanNationIndex) >= TickCityCreated);
 }
 
 ////////////////////////////////////////////////////////////

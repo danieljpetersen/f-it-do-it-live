@@ -22,7 +22,7 @@ void IUEINW::IUEINW_Color_Schemes::init()
 	NotificationTransparencyTime = VisualSection["notification-transparency-time"].get<float>();
 
     CityQuadOffset = fi::getConfig()["game"]["map"]["city-drawable-tile-offset"].get<int>(); // todo should be in visual section
-
+    UnitQuadOffset = fi::getConfig()["game"]["map"]["unit-drawable-tile-offset"].get<int>(); // todo should be in visual section
     TileTypeShadowColorOffset.clear();
     TileTypeNonShadowColorOffset.clear();
 

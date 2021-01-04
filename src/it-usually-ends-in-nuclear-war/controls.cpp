@@ -15,6 +15,12 @@ void IUEINW::IUEINW_Plugin_Controls::work(const int Event)
     //fi::getCanvasWorld().processStandardInput_PanZoom(true, true, true, true, true, true, true, true, true);
 
 
+    if (fi::getInput().check(fi::key::Mouse1))
+    {
+        getUnits().spawnUnit_noRequirements(0, getMouseTileTracker().MouseTileIndex, 0);
+    }
+
+
     // ---- load / save / map gen
     {
         if (fi::getInput().check("Generate New Map"))

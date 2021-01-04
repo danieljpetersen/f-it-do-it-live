@@ -314,6 +314,10 @@ void IUEINW::IUEINW_Cities::setCity(int CityIndex, int NationIndex)
         std::vector<int> *Vec = &getNations()[PreviousNationIndex].Cities;
         Vec->erase(std::remove(Vec->begin(), Vec->end(), CityIndex), Vec->end());
     }
+    else
+    {
+        Cities[CityIndex].TickCreated = getCoreTick()->getTickCount();
+    }
 
     // ---- add to new owner
     {
