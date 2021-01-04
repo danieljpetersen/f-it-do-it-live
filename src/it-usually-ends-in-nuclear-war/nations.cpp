@@ -2,6 +2,8 @@
 #include "map.h"
 #include "color_schemes.h"
 #include "vision.h"
+#include "cities.h"
+#include "drawable_map.h"
 
 ////////////////////////////////////////////////////////////
 
@@ -14,9 +16,20 @@ void IUEINW::IUEINW_Plugin_Init_Nations::work(const int Event)
 
 void IUEINW::IUEINW_Nations::init()
 {
-	Nations.clear();
-	getMap().CurrentMapLayout.StartingNumberOfNations = getMap().CurrentMapLayout.SuggestedNumberOfNations;
-	const int NumberOfNations = getMap().CurrentMapLayout.StartingNumberOfNations;
+	auto SpawnTiles = getCities().getSpawnLocations_ReturnsTileIndexes(getMap().CurrentMapLayout.SuggestedNumberOfNations, getMap().CurrentMapLayout.MinimumNationSpawnDistance);
+
+    // actual number of nations can be lower if there aren't enough cities on the map to go around.
+    const int NumberOfNations = (int)SpawnTiles.size();
+    getMap().CurrentMapLayout.StartingNumberOfNations = NumberOfNations;
+
+    for (int i = 0; i < SpawnTiles.size(); i++)
+    {
+        int TileIndex = SpawnTiles[i];
+        getMap().Tiles[TileIndex].aColor = sf::Color::Yellow;
+        getMap().Tiles[TileIndex].bColor = sf::Color::Yellow;
+    }
+
+    Nations.clear();
 	for (int i = 0; i < NumberOfNations; i++)
 	{
 		IUEINW::IUEINW_Nation Nation;
@@ -33,16 +46,16 @@ void IUEINW::IUEINW_Nations::init()
 		Nation.EdgeTilesDiscovered[2].clear();
 		Nation.EdgeTilesDiscovered[3].clear();
 		Nation.TotalNumberOfUnitsInitialized = 0;
-		//Nation.Units.clear();
 		//Nation.Cities.clear();
+        //Nation.Units.clear();
 
 		Nations.push_back(Nation);
 	}
 
 	getMap().CurrentMapLayout.StartingNumberOfNations = NumberOfNations;
 
-	 //spawn points
 
+	 //spawn points
 
 	// json GameplayJSON = gr::jsonConfig["gameplay"].get<json>();
 	// json UnitsJSON = GameplayJSON["units"].get<json>();

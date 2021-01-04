@@ -39,7 +39,6 @@ void IUEINW::IUEINW_Plugin_Generate_Map::work(const int Event)
     }
 
     getTiles().Grid.updateCenterPositions();
-    getMap().TileTypeProperties.rankTiles();
 
     largeBoard_determineTileShadows();
     TileTypes.clear();

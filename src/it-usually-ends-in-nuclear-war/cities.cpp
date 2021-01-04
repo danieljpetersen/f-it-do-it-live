@@ -73,6 +73,7 @@ void IUEINW::IUEINW_Cities::init()
 
     Cities.clear();
 
+    std::vector<std::vector<int>> CityTiles; // CityIndex, vector of tile idnexes per that city; for assigning City.AllTiles at end of function
     std::map<int, int> CityIndexMappedToNodeIndex; // key: CityIndex; value: NodeIndex....
     int CurrentCityIndex = 0;
     for (int ContinentIndex = 0; ContinentIndex < getMap().Tiles.Continents.size(); ContinentIndex++)
@@ -111,12 +112,12 @@ void IUEINW::IUEINW_Cities::init()
                 {
                     SpreadNodes.push_back(PotentialTile);
                     DebugColors.push_back(fi::getRandom().color());
+                    CityTiles.push_back(std::vector<int>(1, PotentialTile));
 
                     getMap().Tiles[PotentialTile].DebugColor = DebugColors.back();
                     getMap().Tiles[PotentialTile].CityIndex = CurrentCityIndex++;
                     CityIndexMappedToNodeIndex[getMap().Tiles[PotentialTile].CityIndex] = (int)SpreadNodes.size()-1;
                     TileCountPerNode.push_back(1);
-                    //getCities().addCity(PotentialTile);
                 }
 
                 TryCount++;
@@ -185,6 +186,7 @@ void IUEINW::IUEINW_Cities::init()
                         int TileIndex = getTiles().Continents[ContinentIndex][BestIndex];
                         getTiles()[TileIndex].DebugColor = DebugColors[i];
                         getTiles()[TileIndex].CityIndex = getTiles()[SpreadNodes[i]].CityIndex;
+                        CityTiles[getTiles()[TileIndex].CityIndex].push_back(TileIndex);
                         TileCountPerNode[i]++;
                     }
                 }
@@ -218,6 +220,7 @@ void IUEINW::IUEINW_Cities::init()
                                 int NodeIndex = CityIndexMappedToNodeIndex[getTiles()[Neighbor].CityIndex];
                                 getTiles()[TileIndex].DebugColor = DebugColors[NodeIndex];
                                 getTiles()[TileIndex].CityIndex = getTiles()[Neighbor].CityIndex;
+                                CityTiles[getTiles()[Neighbor].CityIndex].push_back(TileIndex);
                                 TileCountPerNode[NodeIndex]++;
                                 break;
                             }
@@ -277,7 +280,7 @@ void IUEINW::IUEINW_Cities::init()
                     TileIndex = ClosestTileIndex;
                 }
 
-                addCity(TileIndex);
+                createUnsettledCity(TileIndex, &CityTiles[getTiles()[TileIndex].CityIndex]);
             }
         }
     }
@@ -285,17 +288,82 @@ void IUEINW::IUEINW_Cities::init()
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Cities::addCity(int TileIndex)
+void IUEINW::IUEINW_Cities::createUnsettledCity(int CityTileIndex, std::vector<int> *CityTiles)
 {
-    IUEINW_City City;
-    //City.NationIndex = 0;
-    City.TickCreated = 0;
-    City.TileIndex = TileIndex;
-    Cities.push_back(City);
+    Cities.push_back(IUEINW_City());
+    Cities.back().NationIndex = -1;
+    Cities.back().TickCreated = -1;
+    Cities.back().TileIndex = CityTileIndex;
 
-    getTiles()[TileIndex].IsCityTile = true;
+    for (int i = 0; i < CityTiles->size(); i++)
+    {
+        Cities.back().AllCityTiles.push_back(CityTiles->at(i));
+    }
+
+    getTiles()[CityTileIndex].IsCityTile = true;
 }
 
+////////////////////////////////////////////////////////////
+
+std::vector<int> IUEINW::IUEINW_Cities::getSpawnLocations_ReturnsTileIndexes(const int DesiredNationCount, const int MinimumNationSpawnDistance)
+{
+    std::vector<int> SpawnTiles;
+
+    //int AveragedLandTileCount = 0;
+    //for (int i = 0; i < Cities.size(); i++)
+    //{
+    //    fi::log((int)Cities[i].AllCityTiles.size());
+    //
+    //    AveragedLandTileCount += Cities[i].AllCityTiles.size();
+    //}
+    //AveragedLandTileCount /= Cities.size();
+    //fi::log("---");
+    //fi::log(AveragedLandTileCount);
+
+    int TryCount = 0;
+    for (int i = 0; i < DesiredNationCount; i++)
+    {
+        if (i >= Cities.size())
+        {
+            break;
+        }
+
+        int TileIndex = Cities[getTiles()[getTiles().getRandomLandTile()].CityIndex].TileIndex;
+
+        bool Valid = true;
+        for (int j = 0; j < SpawnTiles.size(); j++)
+        {
+            auto Distance = getGrid().getDistanceBetweenTiles(TileIndex, SpawnTiles[j]);
+            if (Distance < MinimumNationSpawnDistance)
+            {
+                Valid = false;
+            }
+        }
+
+        if (Valid)
+        {
+            SpawnTiles.push_back(TileIndex);
+        }
+        else
+        {
+            i--;
+        }
+
+        TryCount++;
+        if (TryCount > 100)
+        {
+            break;
+        }
+    }
+
+    return SpawnTiles;
+
+}
+
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_City::acquireTile()
@@ -312,7 +380,7 @@ void IUEINW::IUEINW_City::removeTile()
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_City::setOwner(int NationIndex)
+void IUEINW::IUEINW_City::settle(int NationIndex)
 {
     NationIndex = NationIndex;
 }

@@ -257,6 +257,7 @@
 					"rows": 50,
 					"cols": 50,
 					"suggested-number-of-nations": 6,
+					"minimum-nation-spawn-distance": 20,
 				},
 
 				{
@@ -265,6 +266,7 @@
 					"rows": 80,
 					"cols": 80,
 					"suggested-number-of-nations": 7,
+					"minimum-nation-spawn-distance": 20
 				},
 
 				{
@@ -272,7 +274,8 @@
 					"scale": 1,
 					"rows": 220,//210
 					"cols": 220,
-					"suggested-number-of-nations": 10
+					"suggested-number-of-nations": 11,
+					"minimum-nation-spawn-distance": 20
 				},
 
 				{
@@ -280,7 +283,8 @@
 					"scale": 2,
 					"rows": 115,
 					"cols": 115,
-					"suggested-number-of-nations": 12,
+					"suggested-number-of-nations": 13,
+					"minimum-nation-spawn-distance": 20
 				}
 			],
 

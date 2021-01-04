@@ -19,6 +19,7 @@ namespace IUEINW
         int SuggestedNumberOfNations;
         int StartingNumberOfNations;
         int LargeRowCount, LargeColumnCount;
+        int MinimumNationSpawnDistance;
 
         ////////////////////////////////////////////////////////////
 
@@ -29,6 +30,7 @@ namespace IUEINW
             ar(StartingNumberOfNations);
             ar(LargeRowCount);
             ar(LargeColumnCount);
+            ar(MinimumNationSpawnDistance);
 
             ar(SmallRowCount);
             ar(SmallColumnCount);
@@ -38,13 +40,14 @@ namespace IUEINW
 
         ////////////////////////////////////////////////////////////
 
-        void init(std::string Name, int SmallToLargeConversionScale, int SmallRowCount, int SmallColumnCount, int SuggestedNumberOfNations)
+        void init(std::string Name, int SmallToLargeConversionScale, int SmallRowCount, int SmallColumnCount, int SuggestedNumberOfNations, int MinimumNationSpawnDistance)
         {
             this->Name = Name;
             this->SmallToLargeConversionScale = SmallToLargeConversionScale;
             this->SmallRowCount = SmallRowCount;
             this->SmallColumnCount = SmallColumnCount;
             this->SuggestedNumberOfNations = SuggestedNumberOfNations;
+            this->MinimumNationSpawnDistance = MinimumNationSpawnDistance;
 
             LargeColumnCount = SmallToLargeConversionScale * SmallColumnCount;
             LargeRowCount = SmallToLargeConversionScale * SmallRowCount;
@@ -114,9 +117,10 @@ namespace IUEINW
                 int SmallRows = (*it)["rows"].get<int>();
                 int SmallCols = (*it)["cols"].get<int>();
                 int SuggestedNationCount = (*it)["suggested-number-of-nations"].get<int>();
+                int MinimumNationSpawnDistance = (*it)["minimum-nation-spawn-distance"].get<int>();
 
                 IUEINW_Map_Layout Size;
-                Size.init(Name, Scale, SmallRows, SmallCols, SuggestedNationCount);
+                Size.init(Name, Scale, SmallRows, SmallCols, SuggestedNationCount, MinimumNationSpawnDistance);
                 Objects.push_back(Size);
             }
 

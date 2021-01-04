@@ -19,6 +19,7 @@ namespace IUEINW
         void buildMapDrawable();
         void setTileVertexColors(int TileIndex, bool ExploredTile);
         void setTileVertexColors(int TileIndex);
+        void setTileVertexColors(int TileIndex, sf::Color Color); // for debugging
         void setTileVertexColors();
 
         bool ShowDebugProvinceTiles = false;

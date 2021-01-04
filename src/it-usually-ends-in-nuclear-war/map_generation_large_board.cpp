@@ -466,21 +466,21 @@ void IUEINW::IUEINW_Plugin_Generate_Map::largeBoard_setTileIntensitiesAkaBonusOu
 				if (Intensity < 9)
 				{
 					getTiles().Grid.CustomCellData[i].aColor = getColorSchemes().calculateDarkerColor_NonShadow(getTiles().Grid.CustomCellData[i].aColor);
-					getTiles().Grid.CustomCellData[i].OutputBonusBase = TILE_OUTPUT_BONUS_PRODUCTION;
-					getTiles().Grid.CustomCellData[i].ProductionOutputBase += 2;
+					//getTiles().Grid.CustomCellData[i].OutputBonusBase = TILE_OUTPUT_BONUS_PRODUCTION;
+					//getTiles().Grid.CustomCellData[i].ProductionOutputBase += 2;
 					//getTiles().Grid.CustomCellData[i].FoodOutput -= 2;
 				}
 				else if (Intensity < 19)
 				{
 					// nothing
-					getTiles().Grid.CustomCellData[i].OutputBonusBase = TILE_OUTPUT_BONUS_NONE;
+					//getTiles().Grid.CustomCellData[i].OutputBonusBase = TILE_OUTPUT_BONUS_NONE;
 				}
 				else
 				{
 					getTiles().Grid.CustomCellData[i].aColor = getColorSchemes().calculateLighterColor_NonShadow(getTiles().Grid.CustomCellData[i].aColor);
-					getTiles().Grid.CustomCellData[i].OutputBonusBase = TILE_OUTPUT_BONUS_FOOD;
+					//getTiles().Grid.CustomCellData[i].OutputBonusBase = TILE_OUTPUT_BONUS_FOOD;
 					//getTiles().Grid.CustomCellData[i].ProductionOutput -= 2;
-					getTiles().Grid.CustomCellData[i].FoodOutputBase += 2;
+					//getTiles().Grid.CustomCellData[i].FoodOutputBase += 2;
 				}
 			}
 		}

@@ -24,24 +24,6 @@ namespace IUEINW
 	const int COASTAL_OCEAN = 6;
 	const int NUMBER_OF_TILE_TYPES = 7;
 
-	const int TILE_OUTPUT_BONUS_NONE = 0;
-	const int TILE_OUTPUT_BONUS_FOOD = 1;
-	const int TILE_OUTPUT_BONUS_PRODUCTION = 2;
-
-	////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////
-	////////////////////////////////////////////////////////////
-	// requisite stuff for getting spawn tiles
-	struct SpawnTileRank {
-		int Rank, TileIndex;
-	};
-
-	struct SortTilesByRank {
-		bool operator()(SpawnTileRank const &a, SpawnTileRank const &b) {
-			return a.Rank > b.Rank;
-		}
-	};
-
 	////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////
@@ -56,19 +38,12 @@ namespace IUEINW
 		{
 			ar(DefaultProductionByTileType);
 			ar(DefaultFoodByTileType);
-			ar(TileRanks);
-			ar(SortedTileRanks_PerContinent);
 		}
 
 		std::vector<int> DefaultProductionByTileType;
 		std::vector<int> DefaultFoodByTileType;
-		std::vector<int> TileRanks;
-		std::vector<std::vector<int>> SortedTileRanks_PerContinent; // first dimension represents ContinentIndex, second dimension represents sorted (highest to lowest) tile ranks for that continent
 
 		int convertStringToTileType(std::string TileTypeString);
-		void rankTiles();
-		int rankTile(int TileIndex); // todo -- should be private
-		std::vector<int> getSpawnTiles(int &NumberOfNations);
 	};
 }
 

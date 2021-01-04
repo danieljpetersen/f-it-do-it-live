@@ -16,7 +16,7 @@ namespace IUEINW
 
         void acquireTile();
         void removeTile();
-        void setOwner(int NationIndex);
+        void settle(int NationIndex);
     };
 
     ////////////////////////////////////////////////////////////
@@ -29,8 +29,11 @@ namespace IUEINW
         IUEINW_City & operator [](int i)       {return Cities[i];}
 
         void init();
-        void addCity(int TileIndex);
+        std::vector<int> getSpawnLocations_ReturnsTileIndexes(const int DesiredNationCount, const int MinimumNationSpawnDistance);
         unsigned long size() { return Cities.size(); }
+
+    private:
+        void createUnsettledCity(int TileIndex, std::vector<int> *CityTiles);
     };
 
     IUEINW_Cities &getCities();

@@ -50,22 +50,11 @@ namespace IUEINW
 			return (bool)EdgeTilesDiscovered[TOPRIGHT_EDGE].empty();
 		}
 
-		void getUnitAttritionImmunities(bool &ImmuneToIce, bool &ImmuneToWater, bool &ImmuneToDesert)
-		{
-			// todo
+		void getUnitAttritionImmunities(bool &ImmuneToIce, bool &ImmuneToWater, bool &ImmuneToDesert) // todo
+        {
 			ImmuneToDesert = false;
 			ImmuneToWater = false;
 			ImmuneToIce = false;
-		}
-
-		std::vector<int> getCollectionOfCityTiles()
-		{
-			std::vector<int> CityTiles;
-			//for (int i = 0; i < Cities.size(); i++)
-			{
-				// CityTiles.push_back(App.Cities.get(Cities[i])->TileIndex); // todo
-			}
-			return CityTiles;
 		}
 	};
 

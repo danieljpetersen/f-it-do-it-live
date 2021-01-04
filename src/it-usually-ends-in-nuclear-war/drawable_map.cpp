@@ -134,6 +134,21 @@ void IUEINW::IUEINW_Map_Drawables::setTileVertexColors()
 }
 
 ////////////////////////////////////////////////////////////
+// for debugging
+void IUEINW::IUEINW_Map_Drawables::setTileVertexColors(int TileIndex, sf::Color Color)
+{
+    int ColIndex = getTiles().Grid.getCol(TileIndex);
+    int RowIndex = getTiles().Grid.getRow(TileIndex);
+    int VBOIndex = RowIndex * 6;
+    Vertices[ColIndex][VBOIndex].color = Color;
+    Vertices[ColIndex][VBOIndex + 1].color = Color;
+    Vertices[ColIndex][VBOIndex + 2].color = Color;
+    Vertices[ColIndex][VBOIndex + 3].color = Color;
+    Vertices[ColIndex][VBOIndex + 4].color = Color;
+    Vertices[ColIndex][VBOIndex + 5].color = Color;
+}
+
+////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Map_Drawables::setTileVertexColors(int TileIndex)
 {
