@@ -6,13 +6,6 @@
 #include "map.h"
 #include "drawable_map.h"
 
-void IUEINW::IUEINW_Plugin_Init_Vision ::work(const int Event)
-{
-    getVision().init(getNations().size());
-}
-
-////////////////////////////////////////////////////////////
-
 void IUEINW::IUEINW_Vision::init(int NumberOfNations)
 {
 	VisionCount.clear();
@@ -354,7 +347,7 @@ bool IUEINW::IUEINW_Vision::hasVision_IgnoreCheatMode(int TileIndex)
 
 bool IUEINW::IUEINW_Vision::canHumanSeeCity(int TileIndex, int TickCityCreated)
 {
-	return (getCheats().isRevealAllTerrainEnabled()) || (lastTickSeen(TileIndex, getNations().HumanNationIndex) >= TickCityCreated);
+	return (getCheats().isRevealAllTerrainEnabled()) || (lastTickSeen(TileIndex, getNations().HumanNationIndex) > TickCityCreated);
 }
 
 ////////////////////////////////////////////////////////////

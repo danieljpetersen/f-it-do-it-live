@@ -29,14 +29,20 @@ void IUEINW::IUEINW_Nations::init()
         getMap().Tiles[TileIndex].bColor = sf::Color::Yellow;
     }
 
+    fi::log(fi::to_s((int)SpawnTiles.size()) + " + " + fi::to_s((int)NumberOfNations));
+
+    // todo -- something is fucked. disparity between red tiles and yellow tiles
+
+    getVision().init(NumberOfNations);
+
     Nations.clear();
-	for (int i = 0; i < NumberOfNations; i++)
+	for (int NationIndex = 0; NationIndex < NumberOfNations; NationIndex++)
 	{
 		IUEINW::IUEINW_Nation Nation;
 
-		Nation.NationIndex = i;
+		Nation.NationIndex = NationIndex;
 		Nation.Name = "";
-		Nation.Color = getColorSchemes().getNationColor(i);
+		Nation.Color = getColorSchemes().getNationColor(NationIndex);
 		Nation.IsAlive = true;
 
 		Nation.EdgeTilesDiscovered.clear();
@@ -46,13 +52,19 @@ void IUEINW::IUEINW_Nations::init()
 		Nation.EdgeTilesDiscovered[2].clear();
 		Nation.EdgeTilesDiscovered[3].clear();
 		Nation.TotalNumberOfUnitsInitialized = 0;
-		//Nation.Cities.clear();
+		Nation.Cities.clear();
         //Nation.Units.clear();
 
 		Nations.push_back(Nation);
+
+		int i = fi::getRandom().i(0, (int)SpawnTiles.size()-1);
+        int CityIndex = getTiles()[SpawnTiles[i]].CityIndex;
+        SpawnTiles[i] = SpawnTiles.back();
+        SpawnTiles.pop_back();
+
+		getCities().setCity(CityIndex, NationIndex);
 	}
 
-	getMap().CurrentMapLayout.StartingNumberOfNations = NumberOfNations;
 
 
 	 //spawn points
@@ -84,13 +96,19 @@ void IUEINW::IUEINW_Nations::init()
 
 	HumanNationIndex = 0;
 	Human = &Nations[HumanNationIndex];
+
+	// ---- set camera position
+    {
+        int TileIndex = getCities()[Human->Cities[0]].TileIndex;
+        fi::getCanvasWorld().setCenter(getGrid().CommonCellData[TileIndex].getBack2f());
+    }
 }
 
 ////////////////////////////////////////////////////////////
 
 IUEINW::IUEINW_Nation &IUEINW::IUEINW_Nations::getRandomNation()
 {
-    return Nations[fi::getRandom().i(0, Nations.size()-1)];
+    return Nations[fi::getRandom().i(0, (int)Nations.size()-1)];
 }
 
 ////////////////////////////////////////////////////////////

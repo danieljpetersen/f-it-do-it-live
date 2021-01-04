@@ -16,7 +16,6 @@ namespace IUEINW
 
         void acquireTile();
         void removeTile();
-        void settle(int NationIndex);
     };
 
     ////////////////////////////////////////////////////////////
@@ -27,6 +26,8 @@ namespace IUEINW
         std::vector<IUEINW_City> Cities;
         IUEINW_City   operator [](int i) const {return Cities[i];}
         IUEINW_City & operator [](int i)       {return Cities[i];}
+
+        void setCity(int CityIndex, int NationIndex);
 
         void init();
         std::vector<int> getSpawnLocations_ReturnsTileIndexes(const int DesiredNationCount, const int MinimumNationSpawnDistance);

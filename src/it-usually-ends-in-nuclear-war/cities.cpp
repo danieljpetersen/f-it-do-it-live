@@ -305,6 +305,42 @@ void IUEINW::IUEINW_Cities::createUnsettledCity(int CityTileIndex, std::vector<i
 
 ////////////////////////////////////////////////////////////
 
+void IUEINW::IUEINW_Cities::setCity(int CityIndex, int NationIndex)
+{
+    // ---- remove from previous owner
+    if (Cities[CityIndex].NationIndex != -1)
+    {
+        int PreviousNationIndex = Cities[CityIndex].NationIndex;
+        std::vector<int> *Vec = &getNations()[PreviousNationIndex].Cities;
+        Vec->erase(std::remove(Vec->begin(), Vec->end(), CityIndex), Vec->end());
+    }
+
+    // ---- add to new owner
+    {
+        getNations()[NationIndex].Cities.push_back(CityIndex);
+    }
+
+    Cities[CityIndex].NationIndex = NationIndex;
+
+    // ---- handle vision
+    {
+        int ContinentIndex = getTiles()[Cities[CityIndex].TileIndex].ContinentIndex;
+        int CoTSize;
+        std::vector<int> *Area = getTiles().getArea(Cities[CityIndex].TileIndex, CITY_CREATION_REVEAL_AREA_SIZE, Tile_Type_Grouping::ALL_TILE_TYPES, CoTSize);
+        for (int i = 0; i < CoTSize; i++)
+        {
+            int TileIndex = Area->at(i);
+            int OtherContinentIndex = getTiles()[TileIndex].ContinentIndex;
+            if ((OtherContinentIndex == -1) || (OtherContinentIndex == ContinentIndex)) // if is water or the same continent, set vision to explored
+            {
+                getVision().revealTile(Area->at(i), NationIndex);
+            }
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////
+
 std::vector<int> IUEINW::IUEINW_Cities::getSpawnLocations_ReturnsTileIndexes(const int DesiredNationCount, const int MinimumNationSpawnDistance)
 {
     std::vector<int> SpawnTiles;
@@ -328,15 +364,24 @@ std::vector<int> IUEINW::IUEINW_Cities::getSpawnLocations_ReturnsTileIndexes(con
             break;
         }
 
-        int TileIndex = Cities[getTiles()[getTiles().getRandomLandTile()].CityIndex].TileIndex;
+        int CityIndex = getTiles()[getTiles().getRandomLandTile()].CityIndex;
+        int TileIndex = Cities[CityIndex].TileIndex;
 
         bool Valid = true;
-        for (int j = 0; j < SpawnTiles.size(); j++)
+
+        if (Cities[CityIndex].AllCityTiles.size() < 100)
         {
-            auto Distance = getGrid().getDistanceBetweenTiles(TileIndex, SpawnTiles[j]);
-            if (Distance < MinimumNationSpawnDistance)
+            Valid = false;
+        }
+        else
+        {
+            for (int j = 0; j < SpawnTiles.size(); j++)
             {
-                Valid = false;
+                auto Distance = getGrid().getDistanceBetweenTiles(TileIndex, SpawnTiles[j]);
+                if (Distance < MinimumNationSpawnDistance)
+                {
+                    Valid = false;
+                }
             }
         }
 
@@ -380,7 +425,3 @@ void IUEINW::IUEINW_City::removeTile()
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_City::settle(int NationIndex)
-{
-    NationIndex = NationIndex;
-}

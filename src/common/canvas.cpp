@@ -4,7 +4,11 @@
 
 void fi::Canvas::create(int width, int height, sf::ContextSettings Settings)
 {
+    auto Center = RenderTexture.getView().getCenter();
     RenderTexture.create(width, height, Settings);
+    sf::View v = RenderTexture.getView();
+    v.setCenter((Center));
+    RenderTexture.setView(v);
 }
 
 ////////////////////////////////////////////////////////////

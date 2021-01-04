@@ -5,14 +5,6 @@
 
 namespace IUEINW
 {
-    class IUEINW_Plugin_Init_Vision : public fi::Plugin_Base
-    {
-    public:
-        void work(const int Event) override;
-    };
-
-    // ----
-
     class IUEINW_Vision
 	{
 	private:

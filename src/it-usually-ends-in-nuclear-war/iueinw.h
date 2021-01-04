@@ -50,7 +50,6 @@ namespace IUEINW
         IUEINW_Plugin_Generate_Map PluginGenerateMap;
         IUEINW_Plugin_Init_Cities PluginInitCities;
         IUEINW_Plugin_Init_Nations PluginInitNations;
-        IUEINW_Plugin_Init_Vision PluginInitVision;
         IUEINW_Plugin_Init_Cheats PluginInitCheats;
         IUEINW_Plugin_Init_Map_Drawables PluginInitMapDrawables;
 
@@ -75,7 +74,6 @@ namespace IUEINW
                     .withPlugin(&PluginGenerateMap, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitCities, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitNations, EVENT_MAP_GENERATION)
-                    .withPlugin(&PluginInitVision, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitCheats, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginInitMapDrawables, EVENT_MAP_GENERATION)
                     .withPlugin(&PluginLoadingEnd, EVENT_MAP_GENERATION)

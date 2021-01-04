@@ -21,6 +21,8 @@ namespace IUEINW
     class IUEINW_Nation
 	{
 	public:
+	    std::vector<int> Cities;
+
 		std::vector<std::vector<int>> EdgeTilesDiscovered; // todo should be in vision
 		bool IsAlive;
 		sf::Color Color;
