@@ -5,7 +5,7 @@
 #include <vector>
 #include <list>
 #include "../common/engine.h"
-#include "../common/tile_transparency_tracker.h"
+#include "../common/transparency_tracker.h"
 
 namespace IUEINW
 {

@@ -6,6 +6,29 @@
 
 namespace fi
 {
+    class Texture_Store
+    {
+    public:
+        ~Texture_Store();
+
+        std::optional<sf::Texture*> addTexture(std::string Path);
+        std::optional<sf::Texture*> getTexture(std::string Path);
+        std::optional<sf::Texture*> getAddTexture(std::string Path);
+        bool hasTexture(std::string Path);
+
+    private:
+        std::unordered_map<std::string, sf::Texture*> Textures;
+    };
+
+    // ----
+
+    Texture_Store &getTextureStore();
+}
+
+////////////////////////////////////////////////////////////
+
+namespace fi
+{
     // this is all fucked and needs to be burned with fire. No real rhyme or reason to anything added to on an as needed basis
 
     namespace Draw

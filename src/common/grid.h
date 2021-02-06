@@ -45,6 +45,7 @@ const int TileToRight = 4;
 const int TileToBottomRight = 5;
 const int TileToBottom = 6;
 const int TileToBottomLeft = 7;
+const int NumberOfTileNeighbors = 8;
 
 const int LEFT = 0;
 const int TOP = 1;
@@ -131,21 +132,6 @@ namespace fi
 
 	////////////////////////////////////////////////////////////
 
-		virtual void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellSize, bool HorizontalWrap)
-		{
-			int Width = CellSize;
-			int Height = CellSize;
-
-			if (GridType == GRID_TYPE_ISOMETRIC)
-			{
-				Height = Height / 2;
-			}
-
-			init(NumberOfRows, NumberOfColumns, GridType, CellSpacing, Width, Height, HorizontalWrap);
-		}
-
-	////////////////////////////////////////////////////////////
-
 		virtual void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellWidth, int CellHeight, bool HorizontalWrap)
 		{
 			this->NumberOfRows = NumberOfRows;
@@ -160,6 +146,11 @@ namespace fi
 			this->LastRow = NumberOfRows - 1;
 			this->HorizontalWrap = HorizontalWrap;
 
+            if (GridType == GRID_TYPE_ISOMETRIC)
+            {
+                this->TileHeight = this->TileHeight / 2;
+            }
+
 			CommonCellData.clear();
 			CommonCellData.resize(NumberOfCells);
 			ColumnTransforms.clear();
@@ -171,7 +162,7 @@ namespace fi
 
 	////////////////////////////////////////////////////////////
 
-		virtual void resizeCustomCellData(int NumberOfCells) = 0;
+		virtual void resizeCustomCellData(int NumberOfCells) { };
 
 	////////////////////////////////////////////////////////////
 
@@ -488,7 +479,7 @@ namespace fi
 		}
 
 	////////////////////////////////////////////////////////////
-
+	    // todo performance...
 		int findTileClosestToPoint(sf::Vector2i Point)
 		{
 			int ClosestTileIndex = 0;
@@ -1115,12 +1106,6 @@ namespace fi
 	public:
 		// app specific data.
 		std::vector<T> CustomCellData;
-
-        void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellSize, bool HorizontalWrap) override
-        {
-            CustomCellData.clear();
-            Grid_Base::init(NumberOfRows, NumberOfColumns, GridType, CellSpacing, CellSize, HorizontalWrap);
-        }
 
         void init(int NumberOfRows, int NumberOfColumns, int GridType, int CellSpacing, int CellWidth, int CellHeight, bool HorizontalWrap) override
         {

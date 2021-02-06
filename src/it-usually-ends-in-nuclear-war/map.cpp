@@ -3,7 +3,7 @@
 #include "map_generation.h"
 #include "color_schemes.h"
 #include "vision.h"
-#include "iueinw.h"
+#include "app.h"
 
 ////////////////////////////////////////////////////////////
 
@@ -804,6 +804,70 @@ std::vector<int> IUEINW::IUEINW_Tiles::calculateArea_ImplementationTwo(int Cente
 	}
 	
 	return Result;
+}
+
+////////////////////////////////////////////////////////////
+
+int IUEINW::IUEINW_Tile::calculateLossFromAttrition(int NationIndex)
+{
+	return 0;
+
+	// todo
+
+	/*
+	 * todo -- Instead of 1 or 0, Attrition is a % of Manpower.
+	 * todo -- The % is a range, 0 to 10.
+	 * todo -- units can be upgraded to become immune to ICE attrition || any other type
+	 */
+
+	//bool ApplyAttrition = true;
+	//if (Unit != nullptr)
+	//{
+	//	if (Unit->CanSufferAttrition)
+	//	{
+	//		if (HasRoad)
+	//		{
+	//			//if (this->NationIndex == -1) // todo replace this with check to see if the tile belongs to friendly nation
+	//			{
+	//				if (App.Vision.lastTickSeen(Unit->TileIndex, Unit->NationIndex) >= App.Tiles[TileIndex].RoadBuiltOnTick)
+	//				{
+	//					ApplyAttrition = false;
+	//				}
+	//			}
+	//		}
+	//	}
+	//	else
+	//	{
+	//		ApplyAttrition = false;
+	//	}
+	//}
+	//
+	//if (ApplyAttrition)
+	//{
+	//	bool ImmuneToIce, ImmuneToWater, ImmuneToDesert;
+	//	App.Nations[NationIndex].getUnitAttritionImmunities(ImmuneToIce, ImmuneToWater, ImmuneToDesert);
+	//
+	//	if ((isWaterTile()) && (ImmuneToWater != true))
+	//	{
+	//		return _calculateLossFromAttrition();
+	//	}
+	//	if ((LatitudeZone == 1) && (ImmuneToDesert != true))
+	//	{
+	//		return _calculateLossFromAttrition();
+	//	}
+	//	if ((ImmuneToIce != true) && (LatitudeZone == 0) || (LatitudeZone == 2))
+	//	{
+	//		return _calculateLossFromAttrition();
+	//	}
+	//}
+	//
+	//return 0;
+	// ----
+	//int Sum = FoodOutput + ProductionOutput;
+	//if (Sum < 10) // for some reason if i set to 9 its like it doesnt display the visual for unit pathing
+	//{
+	//	return 1;
+	//}
 }
 
 ////////////////////////////////////////////////////////////

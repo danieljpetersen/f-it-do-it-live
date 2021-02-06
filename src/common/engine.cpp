@@ -7,7 +7,10 @@ void fi::Engine::run(fi::Application_Base *App)
 {
     this->App = App;
 
+    main_thread_id = std::this_thread::get_id();
+
     initJSON();
+    ThreadPool.launch();
     initTicks();
     Input.init();
     Audio.init();
@@ -20,11 +23,18 @@ void fi::Engine::run(fi::Application_Base *App)
 
     Plugins.changeStateIfApplicable();
 
-    executeResize(Window.getSize().x, Window.getSize().y);
+    executeResize();
 
     mainThreadLoop();
 
     saveJSONConfig();
+}
+
+////////////////////////////////////////////////////////////
+
+void fi::Engine::quit()
+{
+    QuitFlag = true;
 }
 
 ////////////////////////////////////////////////////////////
@@ -47,16 +57,13 @@ void fi::Engine::mainThreadLoop()
     while (!QuitFlag)
     {
         ClockHUD.beginFrame();
+        fi::getGUI().beginFrame();
 
         QuitFlag = Input.record();
 
         handleDefaultInput();
 
-        if (QuitFlag)
-        {
-            Window.close();
-        }
-        else
+        if (! QuitFlag)
         {
             if (CurrentlySuspended)
             {
@@ -84,26 +91,23 @@ void fi::Engine::mainThreadLoop()
 
             stepTicks();
             Plugins.changeStateIfApplicable();
-            Plugins.execute(EVENT_PRE_UPDATE);
             Plugins.execute(EVENT_UPDATE);
-            Plugins.execute(EVENT_POST_UPDATE);
             Plugins.execute(EVENT_DRAW);
 
             ClockHUD.drawIfApplicable(*CanvasGUI.getRenderTarget());
             drawCanvasesToScreen();
-
             ImGui::SFML::Render(Window);
 
             Window.display();
-
             ClockHUD.endFrame();
-
-
             DeltaTime = DeltaTimeClock.restart();
         }
     }
 
+    Plugins.executeOnShutdown();
+    Window.close();
     ImGui::SFML::Shutdown();
+    ThreadPool.join();
 }
 
 ////////////////////////////////////////////////////////////
@@ -144,28 +148,26 @@ void fi::Engine::handleDefaultInput()
 
 ////////////////////////////////////////////////////////////
 
-void fi::Engine::executeResize(float x, float y)
+void fi::Engine::executeResize()
 {
     Input.resetRecordedInput(true);
 
+    float x = Window.getSize().x;
+    float y = Window.getSize().y;
+
     auto settings = sf::ContextSettings(getWindow().getSettings());
-    CanvasWorld.create((int)x, (int)y, settings);
+    CanvasWorld.create(x, y, true, settings);
     CanvasWorld.setSmooth(true);
 
     settings.antialiasingLevel = 0; // anti aliasing on texture when rendering text looks blurry
-    this->CanvasGUI.create((int)x, (int)y, settings);
-    CanvasWorld.setSmooth(false); // same deal, makes the text look more blurry if smooth==true
+    this->CanvasGUI.create(x, y, false, settings);
+    CanvasGUI.setSmooth(false); // same deal, makes the text look more blurry if smooth==true
 
     sf::View WindowView;
     WindowView.reset(sf::FloatRect((float)0, (float)0, x, y));
     Window.setView(WindowView);
 
-    for (int i = 0; i < Ticks.size(); i++)
-    {
-        Ticks[i].init(); // delay the tick when resized, seems right to me
-    }
-
-    Plugins.execute(EVENT_RESIZE);
+    Plugins.executeOnResize();
 }
 
 ////////////////////////////////////////////////////////////
@@ -174,6 +176,11 @@ void fi::Engine::initJSON()
 {
     auto Path = OS.getPathToExecutableDirectory();
     jsonConfig = fi::jsonLoad(Path + "settings-default.json", true);
+
+    OS.createFolderIfNotExist(fi::getOS().getPathToExecutableDirectory() + "images/");
+	OS.createFolderIfNotExist(fi::getOS().getPathToExecutableDirectory() + "images/screenshots/");
+    OS.createFolderIfNotExist(fi::getOS().getPathToExecutableDirectory() + "fonts/");
+    OS.createFolderIfNotExist(fi::getOS().getPathToExecutableDirectory() + "audio/");
 }
 
 ////////////////////////////////////////////////////////////
@@ -295,7 +302,7 @@ void fi::Engine::initWindow()
         Window.setFramerateLimit((unsigned) FramerateLimit);
     }
 
-    executeResize(xWindowSize, yWindowSize); // so plugins know what is up
+    executeResize(); // so plugins know what is up
 
     ImGui::SFML::Init(Window); // todo can i call init multiple times?
 
@@ -306,7 +313,6 @@ void fi::Engine::initWindow()
 
     Window.clear(BackgroundColor);
     Window.display();
-
 
     Engine::instance().CurrentlySuspended = false;
 }
@@ -320,6 +326,9 @@ void fi::Engine::initCanvases()
     auto Highest = getConfig()["controls"]["highest-camera-zoom-level"].get<int>();
     CanvasWorld.setZoomLevels(Default, Lowest, Highest);
     CanvasGUI.setZoomLevels(0, 0, 0);
+
+    CanvasWorld.setCenter(sf::Vector2f(fi::getWindow().getSize().x / 2, fi::getWindow().getSize().y / 2));
+    CanvasGUI.setCenter(sf::Vector2f(fi::getWindow().getSize().x / 2, fi::getWindow().getSize().y / 2));
 }
 
 ////////////////////////////////////////////////////////////
@@ -331,7 +340,14 @@ void fi::Engine::initTicks()
         std::string id = jsonTickData["id"].get<std::string>();
         TickIdToIndexMap[id] = (signed)Ticks.size();
 
-        double TicksPerSecond = jsonTickData["ticks-per-second"].get<double>();
+        auto TicksPerSecondOptions = jsonTickData["ticks-per-second-options"].get<nlohmann::json>();
+
+        std::vector<double> TicksPerSecond;
+        for (auto Option : TicksPerSecondOptions)
+        {
+            TicksPerSecond.push_back(Option);
+        }
+
         fi::Tick t;
         t.init(id, TicksPerSecond, false, (int)Ticks.size());
         TickIndexToIdMap[(int)Ticks.size()] = id;
@@ -455,6 +471,13 @@ bool fi::Engine::getCursorVisible()
 
 ////////////////////////////////////////////////////////////
 
+sf::Color fi::Engine::getBackgroundColor()
+{
+    return BackgroundColor;
+}
+
+////////////////////////////////////////////////////////////
+
 void fi::Engine::setBackgroundColor(sf::Color Color)
 {
     BackgroundColor = Color;
@@ -561,6 +584,13 @@ sf::Uint64 fi::Engine::getFrameCount()
 
 ////////////////////////////////////////////////////////////
 
+bool fi::Engine::isMainThread()
+{
+    return main_thread_id == std::this_thread::get_id();
+}
+
+////////////////////////////////////////////////////////////
+
 fi::Engine &fi::getEngine()
 {
     return fi::Engine::instance();
@@ -588,9 +618,23 @@ fi::Random_Generator &fi::getRandom()
 }
 ////////////////////////////////////////////////////////////
 
-fi::Audio fi::getAudio()
+fi::Audio &fi::getAudio()
 {
     return fi::Engine::instance().Audio;
+}
+
+////////////////////////////////////////////////////////////
+
+fi::Thread_Pool &fi::getThreadPool()
+{
+    return fi::Engine::instance().ThreadPool;
+}
+
+////////////////////////////////////////////////////////////
+
+fi::GUI &fi::getGUI()
+{
+    return fi::Engine::instance().GUI;
 }
 
 ////////////////////////////////////////////////////////////
@@ -598,6 +642,13 @@ fi::Audio fi::getAudio()
 sf::RenderWindow &fi::getWindow()
 {
     return fi::Engine::instance().Window;
+}
+
+////////////////////////////////////////////////////////////
+
+int fi::getFrameCount()
+{
+    return fi::Engine::instance().getFrameCount();
 }
 
 ////////////////////////////////////////////////////////////
@@ -626,6 +677,13 @@ sf::Time fi::getDeltaTime()
 sf::Clock &fi::getClock()
 {
     return fi::Engine::instance().Clock;
+}
+
+////////////////////////////////////////////////////////////
+
+fi::Texture_Store &fi::getTextureStore()
+{
+    return fi::Engine::instance().TextureStore;
 }
 
 ////////////////////////////////////////////////////////////
@@ -711,4 +769,3 @@ fi::Tick *getCoreTick()
 {
     return fi::Engine::instance().getTick("core");
 }
-

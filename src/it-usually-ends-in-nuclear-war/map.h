@@ -8,9 +8,7 @@
 
 namespace IUEINW
 {
-    const int INITIAL_SPAWN_AREA_SEARCH_SIZE = 13;
     const int CITY_CREATION_REVEAL_AREA_SIZE = 11;
-    const int CITY_LINK_PATH_MAX_SIZE = 18;
 
     // ----
 
@@ -37,7 +35,7 @@ namespace IUEINW
         float DistanceFromMousedTile = 0;
 
 		bool isWaterTile() { return ((TileType == OCEAN) || (TileType == COASTAL_OCEAN)); }
-
+		int calculateLossFromAttrition(int NationIndex);
 
 		template <class Archive>
 		void serialize( Archive & ar )

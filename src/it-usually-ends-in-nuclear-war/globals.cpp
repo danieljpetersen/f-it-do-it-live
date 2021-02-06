@@ -1,4 +1,6 @@
-#include "iueinw.h"
+#include "app.h"
+#include "pathfinding.h"
+
 
 int IUEINW::CITY_RING_SIZE = 0;
 
@@ -62,7 +64,7 @@ IUEINW::IUEINW_Cheats &IUEINW::getCheats()
 
 int IUEINW::getProgramState_Core()
 {
-    return getApp().ProgramStateIndex_Core;
+    return getApp().ProgramStateIndex_CoreScreen;
 }
 
 ////////////////////////////////////////////////////////////
@@ -92,3 +94,26 @@ IUEINW::IUEINW_Units &IUEINW::getUnits()
 {
     return getApp().Units;
 }
+
+////////////////////////////////////////////////////////////
+
+IUEINW::IUEINW_Plugin_Pathfinding &IUEINW::getPathfinding()
+{
+    return getApp().PluginPathfinding;
+}
+
+////////////////////////////////////////////////////////////
+
+IUEINW::IUEINW_Plugin_Simulation &IUEINW::getSimulation()
+{
+    return getApp().PluginSimulation;
+}
+
+////////////////////////////////////////////////////////////
+
+IUEINW::IUEINW_Plugin_User_Interface &IUEINW::getUI()
+{
+	return getApp().PluginUI;
+}
+
+////////////////////////////////////////////////////////////

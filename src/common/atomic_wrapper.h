@@ -9,7 +9,7 @@ struct atomicwrapper
 	std::atomic<T> _a;
 	
 	atomicwrapper()
-			:_a()
+			:_a(false)
 	{}
 	
 	atomicwrapper(const std::atomic<T> &a)

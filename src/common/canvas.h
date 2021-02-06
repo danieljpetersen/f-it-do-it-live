@@ -9,10 +9,11 @@ namespace fi
     class Canvas
     {
     public:
-        void create(int width, int height, sf::ContextSettings Settings);
+        void create(int width, int height, bool KeepCurrentCenter, sf::ContextSettings Settings);
 
         sf::RenderTarget *getRenderTarget();
         const sf::Texture *getTexture();
+        sf::View getView();
 
         sf::Vector2f mapPixelToCoords(const sf::Vector2i& point, const sf::View& view) const;
         sf::Vector2f mapPixelToCoords(const sf::Vector2i& point) const;
@@ -20,7 +21,7 @@ namespace fi
         sf::Vector2i mapCoordsToPixel(const sf::Vector2f& point, const sf::View& view) const;
         sf::Vector2u getSize();
 
-        Mesh_Builder &draw();
+		Mesh_Builder MeshBuilder;
         void draw(sf::Text &T);
         void draw(sf::VertexArray &VertexArray);
         void draw(sf::VertexBuffer &VertexBuffer);
@@ -47,9 +48,10 @@ namespace fi
         void setCenter(sf::Vector2i Center);
         sf::Vector2f getCenter();
 
+        bool handleCameraInput(bool Pan, bool Zoom, bool CenterOnMouseClick, bool MouseDrag, bool MouseWindowEdgeScrolling);
+
     private:
         sf::RenderTexture RenderTexture;
-        Mesh_Builder MeshBuilder;
 
         int CurrentZoomLevel = 0;
         int DefaultZoomLevel = 0;

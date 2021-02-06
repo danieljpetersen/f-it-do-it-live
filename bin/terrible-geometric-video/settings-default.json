@@ -1,0 +1,353 @@
+{
+	"general":
+	{
+		// "window-style": "fullscreen", // "default", "windowed" || "none", "close", "borderless" || "borderless-windowed" || "fullscreen" || "resize" || "titlebar"
+		"window-style": "windowed", // "default", "windowed" || "none", "close", "borderless" || "borderless-windowed" || "fullscreen" || "resize" || "titlebar"
+		"antialiasing-level": 16,
+		"framerate-limit": -1, // negative number for vsync on, positive number for an explicit frame limit.
+		"mouse-grab": false, // todo not implemented. should be -- "never", "always", "only-while-fullscreen" todo
+		"title": "Terrible Video Generator",
+		"title-info": true, // if true, titlebar == title + FPS + mouse global coords
+		"windowed-height": 1049,
+		"windowed-width": 1920,
+		"windowed-x-position": -9999, // -9999 to mark as whatever position the OS gives us...  todo transition to using a flag for this instead because it's insane
+		"windowed-y-position": -9999,
+		"suspend-on-lost-focus": true,
+		"draw-frame-clock": false,
+		"output-logs-to-txt": false,
+		"double-click-time":  300,
+		"music-volume": 0,
+		"sound-effect-volume": 10
+	},
+
+	"gui":
+	{
+		"font-path" : "fonts/NotoSansMono-Bold.ttf", // I coded the game with a mono font in mind.  There may or may not be formatting issues with a non-mono font
+		"spacing-from-widget-edge": 5,
+		"spacing-from-screen-edge": 0,
+		"scale": 1.0,
+		"tooltip-hover-ms": 500,
+
+		"styles":
+		[
+			{
+				"name": "default",
+				"row-height": 20,
+				"text-character-size": 12,
+				"text-outline-color": { "r": 0, "g": 0, "b": 0, "a": 255 },
+				"text-outline-thickness": 1,
+				"BGRegular": { "r": 47, "g": 47, "b": 47, "a": 220 },
+				"BorderRegular": { "r": 55, "g": 55, "b": 55, "a": 255 },
+				"TextRegular": { "r": 244, "g": 244, "b": 244, "a": 255 },
+				"BGHighlight": { "r": 112, "g": 128, "b": 144, "a": 255 },
+				"BorderHighlight": { "r": 183, "g": 210, "b": 241, "a": 255 },
+				"TextHighlight": { "r": 255, "g": 255, "b": 255, "a": 255 },
+				"BGSelected":  { "r": 46, "g": 107, "b": 213, "a": 255 },
+				"BorderSelected": { "r": 66, "g": 147, "b": 77, "a": 255 },
+				"TextSelected": { "r": 255, "g": 255, "b": 255, "a": 255 },
+			}
+		],
+	},
+
+	"controls":
+	{
+		// where "state" can be "tap", "released", "down", or "double-tapped"
+		"key-bindings":
+		{
+			"Camera Pan Up": { "state":  "down", "bindings": ["up-arrow", "w"] },
+			"Camera Pan Down": { "state":  "down", "bindings": ["down-arrow", "s"] },
+			"Camera Pan Left": { "state":  "down", "bindings": ["left-arrow", "a"] },
+			"Camera Pan Right": { "state":  "down", "bindings": ["right-arrow", "d"] },
+
+			"Camera Zoom In": { "state":  "tap", "bindings": ["z", "scroll-up", "page-up"] },
+			"Camera Zoom Out": { "state":  "tap", "bindings": ["x", "scroll-down", "page-down"] },
+			"Camera Zoom Reset": { "state":  "tap", "bindings": ["c"] },
+			"Camera Mouse Drag": { "state":  "down", "bindings": ["mouse-2"] },
+			"Camera Center On Mouse": { "state":  "released", "bindings": ["mouse-2"] },
+			"Camera Follows Selected Unit": { "state":  "tap", "bindings": ["o"] },
+
+			"gui-select-item": { "state":  "tap", "bindings": ["enter"] },
+			"gui-previous-item": { "state":  "tap", "bindings": ["j"] },
+			"gui-next-item": { "state":  "tap", "bindings": ["k"] },
+
+			"Cheat Reveal Terrain": { "state":  "tap", "bindings": [ "[" ] },
+			"Cheat Reveal Fog of War": { "state":  "tap", "bindings": [ "]"] },
+
+			"Generate New Map": { "state": "tap", "bindings": [ "backspace" ]},
+
+			"Deselect Units": { "state":  "tap", "bindings": ["mouse-3", "mouse-4", "f" ] },
+			"Select Next Unit": { "state":  "tap", "bindings": ["mouse-5", "space"] },
+			"Autoexplore Selected Unit": { "state":  "tap", "bindings": ["q"] },
+			"Build City": { "state":  "tap", "bindings": ["b"] },
+			"Unit Controller Double Click Action": { "state":  "double-tapped", "bindings": ["mouse-1"] },
+			"Unit Controller Initial Button Down Action": { "state":  "tap", "bindings": ["mouse-1"] },
+			"Unit Controller Button Released Action": { "state":  "released", "bindings": ["mouse-1"] },
+
+			"Queue Key": { "state":  "down", "bindings": ["shift"] },
+			"Control Group Modifier": { "state":  "down", "bindings": ["ctrl"] },
+
+			"Close City Screen": { "state":  "tap", "bindings": ["enter"] },
+			"Select Previous Province": { "state":  "tap", "bindings": ["down-arrow", "left-arrow", "a"] },
+			"Select Next Province": { "state":  "tap", "bindings": ["up-arrow", "right-arrow", "d"] },
+
+			"Tick Speed Next": { "state":  "tap", "bindings": [] },
+			"Tick Speed 0": { "state":  "tap", "bindings": ["space"] },
+			"Tick Speed 1": { "state":  "tap", "bindings": ["num-1"] },
+			"Tick Speed 2": { "state":  "tap", "bindings": ["num-2"] },
+			"Tick Speed 3": { "state":  "tap", "bindings": ["num-3"] },
+			"Tick Speed 4": { "state":  "tap", "bindings": ["num-4"] },
+
+			"quit": { "state":  "tap", "bindings": ["tilde"] },
+			"frame-clock-toggle": { "state":  "tap", "bindings": ["y"] },
+			"frame-clock-reset": { "state":  "tap", "bindings": ["t"] },
+		},
+
+		"default-camera-zoom-level": 0,  // 0 being no zoom
+		"lowest-camera-zoom-level": -8,  // should be a negative number
+		"highest-camera-zoom-level": 15, // should be a positive number
+		"show-no-text-camera-zoom-level": 4,
+
+        "keyboard-pan-speed": 1.4,
+        "mouse-window-edge-pan-speed": 1.4,
+		"mouse-pan-on-fullscreen": true,
+		"mouse-pan-on-windowed": false
+	},
+
+	"ticks":
+	[
+		{
+			"id": "core",
+			"ticks-per-second-options": [ 0.5, 1, 2, 3] // corresponds to menubar speed buttons
+		}
+	],
+
+	"visuals":
+	{
+		"notification-text-size-offset": 2,
+		"notification-transparency-time": 3.5, // in seconds
+
+		// todo move this into color schemes
+		"grid-lines-enabled":  [ "around-mouse", "always-on-in-vison", "always-on-nonvision" ], // choices -- "around-mouse", "always-on-in-vison", "always-on-nonvision"
+
+		// one scheme is picked at random if not explicitly set
+		"map-color-schemes":
+		[
+			{
+				"name": "standard",
+
+//				"unexplored": { "r": 50, "g": 50, "b": 50 }, // has hardcoded a to 255, the a here is ignored
+				"unexplored": { "r": 42, "g": 33, "b": 28 }, // has hardcoded a to 255, the a here is ignored
+				"ice-tile-color": { "r": 240, "g": 240, "b": 240, "a": 255 },
+				"grassland-tile-color": { "r": 33, "g": 120, "b": 35, "a": 255 },
+				"forest-tile-color": { "r": 14, "g": 24, "b": 8, "a": 255 },
+				"plains-tile-color": { "r": 40, "g": 140, "b": 46, "a": 255 },
+				"desert-tile-color": { "r": 230	, "g": 	200	, "b": 90, "a": 255 },
+				"coastal-tile-color": { "r": 10, "g": 55, "b": 85, "a": 255 },
+				"ocean-tile-color": { "r": 15, "g": 43, "b": 72, "a": 255 },
+				"small-board-extra-type-tile-color": { "r": 40, "g": 80, "b": 56, "a": 255 },
+
+				"tile-type-non-shadow-color-offset": 9,
+				"tile-type-shadow-color-offset": 24,
+
+				"front-dirt-color-left": { "r": 129, "g": 69, "b": 9 },
+				"front-dirt-color-right": { "r": 144, "g": 84, "b": 24 },
+
+				"land-ocean-border-line-color": { "r": 50, "g": 95, "b":125, "a": 255 },
+				"map-edge-line-color": { "r": 100, "g": 100, "b": 100 },
+
+				"always-on-grid-line-tile-grouping": "ocean", // what tiles to draw lines on -- "all", "ocean", "land"
+				"always-on-grid-line-nonvision-color": { "r": 18, "g": 42, "b": 68, "a": 255 },
+
+				"always-on-grid-line-vision-color": { "r": 225, "g": 225, "b": 225, "a": 255 }, // todo -- doesn't do anything on ocean???
+				"grid-lines-around-mouse-tile-grouping": "land", // what tiles to draw lines on -- "all", "ocean", "land"
+				"grid-lines-around-mouse-nonvision-color": { "r": 0, "g": 0, "b": 0, "a": 20 },// was 24
+				"grid-lines-around-mouse-vision-color": { "r": 200, "g": 200, "b": 200, "a": 20 },
+
+				"attrition-color": { "r": 200, "g": 0, "b": 0, "a": 130 },
+				"selection-color": { "r": 244, "g": 244, "b": 50, "a": 255 },
+				"battle-line-color": { "r": 255, "g": 255, "b": 255, "a": 255 },
+
+				"unit-manpower-resupply-color": { "r": 255, "g": 200, "b": 200, "a": 255 },
+				"settler-overlay-grid-valid-color": { "r": 50, "g": 255, "b": 50, "a": 255 },
+				"settler-overlay-grid-invalid-color": { "r": 255, "g": 50, "b": 50, "a": 255 },
+				"settler-overlay-ring-valid-color": { "r": 250, "g": 250, "b": 250, "a": 255 },
+				"settler-overlay-ring-invalid-color": { "r": 60, "g": 60, "b": 60, "a": 255 },
+
+				"road-color": { "r": 90, "g": 44, "b": 5, "a": 255 },
+				"road-thickness": 1,
+
+				// nation borders are a vertex array.  "nation-border-color-type" determines how the game handles coloring the vertices when two different nation borders meet
+				// "color-average" draws each verticy with the same color (which is determined by averaging the two colors together).
+				// "vertex-blend" sets the verticies to the nation-color of the nation on that side of the border.  this will either smoothly transition between the colors (w/ primitive-type=quads) or draw two sets of lines, one for each nation-color (in case of prim-type lines w/ thickness)
+				"nation-border-vertex-array-primitive-type": "quads", // "lines" or "quads"
+				"nation-border-color-type": "vertex-blend", // "vertex-blend", "color-average".  Wasn't sure what to name these, but see explanation a few lines above this
+				"nation-border-thickness": 1,
+
+				 "explicit-city-color": "222,0,0",
+				 "use-nation-color-instead-of-explicit-city-color": false,
+				 "city-underside-color": "112,112,112", // drawn beneath city quad
+			},
+		],
+
+		"selected-color-scheme": "standard",
+
+		// modifies each color-scheme color by the amount specified here.  I just wanted a quick way to test brightening / darkening color schemes without having to modify each color individually
+		// "master-tile-color-offset": { "r": 14, "g": 14, "b": 14, "a": 0 },
+		"master-tile-color-offset": { "r": 0, "g": 0, "b": 0, "a": 0 },
+
+		// I know I use RGB everywhere else, it was easier to use hex here.
+		"nation-color-schemes":
+		[
+			"#00FF00", // green
+			"#000000", // black
+			"#4040f7", // blue
+			"#ea7d2a", // orange
+			"#01FFFE", // teal
+			"#FF00F6", // pink
+			"#FFE502", // yellow
+			"#95003A", // red
+			"#7544B1", // purple
+			"#F5F5F5", // white
+			"#5FAD4E", // another green
+			"#6B6882", // grayish purple?
+			"#BE9970", // tanish green
+			"#005F39", // green
+			"#6A826C", // green
+		],
+
+		"barbarian-color": { "r": 255, "g": 255, "b": 255 },
+
+		// =========================
+
+		"name-tag-y-offset": 9,
+
+		"city-name-tag":
+		{
+			"on": true,
+
+			// values between {} are replaced with the province stat of that name
+			"in-vision-format": "{Manpower}",
+			"fog-of-war-format": "{Name}",
+			"selected-format": "{Name}",
+			"minimum-width": 40,
+			"nation-color-alpha": 100,
+			"overlay-color": { "r": 120, "g": 120, "b": 120 },
+			"font-outline": true,
+			"progress-bar-height": 7,
+			"text-size-offset": -1
+		},
+
+		"unit-name-tag":
+		{
+			"on": true,
+			"text-size-offset": -1,
+			"selected-text-size-offset": 2,
+			"font-outline": true,
+			"fog-of-war-format": "",
+			"nation-color-alpha": 255,
+			"overlay-color": { "r": 200, "g": 200, "b": 200, "a": 0 },
+		},
+	},
+
+	"game": {
+
+		"skip-main-menu": false,
+		"main-menu-movie": "5",
+
+		// ======
+
+		"map":
+		{
+			"sizes":
+			[
+				// note that we're not guaranteed to spawn the suggested number of nations, it's simply the target.
+				// The limiting factor is map size -- if the map only has enough room for 10 provinces, we will only spawn 10 nations
+				{
+					"name": "tiny",
+					"scale": 2,
+					"rows": 50,
+					"cols": 50,
+					"suggested-number-of-nations": 6,
+					"minimum-nation-spawn-distance": 40,
+				},
+
+				{
+					"name": "small",
+					"scale": 2,
+					"rows": 80,
+					"cols": 80,
+					"suggested-number-of-nations": 7,
+					"minimum-nation-spawn-distance": 40
+				},
+
+				{
+					"name": "normal",
+					"scale": 1,
+					"rows": 220,//210
+					"cols": 220,
+					"suggested-number-of-nations": 11,
+					"minimum-nation-spawn-distance": 40
+				},
+
+				{
+					"name": "large",
+					"scale": 2,
+					"rows": 115,
+					"cols": 115,
+					"suggested-number-of-nations": 13,
+					"minimum-nation-spawn-distance": 40
+				}
+			],
+
+			// random number is picked between these two values
+			// todo -- islands-percent-of-map-covered-in-land-low-range, islands-*-high-range, continents-*, pangea-*
+			"percent-of-map-covered-in-land-low-range": 26,
+			"percent-of-map-covered-in-land-high-range": 40,
+
+			"tile-width": 12,
+			"tile-height": 24,
+			//		"tile-width": 12,
+			//		"tile-height": 12,
+			"tile-height-offset": 3.5, // the game assigns each tile corner a height value (representing how many pixels of height a tile corner has).  set to 0 for flat map
+			"unit-drawable-tile-offset": 4, // offset verticies of unit quads so that some of the tile is visible.
+			"city-drawable-tile-offset": 2, // offset verticies of city quads so that some of the tile is visible.
+			"grid-type": "isometric", // "isometric" || "rectangle" -- rectangle was added after the fact.  it mostly works, but there are a few visual issues (for instance, w/ nation borders) due to everything initially being coded with isometric in mind.
+			"grid-spacing": 0, // not quite all there w/ isometric
+//			"round-world": true,
+			 "round-world": false,
+			"column-wrap-threshold": 0 // when round-world is true, how far the column of the tile closest to the camera center can be from the current center column  was at 16.  Was an attempt at optimizing but no good
+		},
+
+		"city-ring-size": 8,
+
+		"units":
+		{
+			"starting-units": [ "Explorer" ],
+
+			"types":
+			[
+				{
+					"name": "Explorer",
+					"name-tag": "E",
+
+					"tick-interval-movement": 1,
+					"tick-interval-attack": -1,
+					"vision-range": 4,
+					"attack-range-air": -1,
+					"attack-range-ocean": -1,
+					"attack-range-land": -1,
+					"land-capable": true,
+					"ocean-capable": false,
+					"is-settler": false,
+					"is-explorer": true,
+					"strength": 1,
+					"supply": 1,
+					"cost":   [ { "gold": 400 } ],
+					"upkeep": [ { "food": 4 } ],
+				},
+			]
+		},
+	}
+}
+
+

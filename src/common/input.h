@@ -125,12 +125,18 @@ namespace fi
 		void resetDoubleClickTimer(int fiKey);
 		sf::Time timeOfLastInitialDown(std::string BindingName);
 		sf::Time timeOfLastInitialDown(int fiKey);
+
+		void resetKey(int fiKey);
 		
 		sf::Vector2i MouseWindowPosition, MouseWorldPosition;
 		sf::Vector2i MouseWindowPositionOnLastMouseDown, MouseWorldPositionOnLastMouseDown;
 		sf::Vector2i MouseWindowPositionOnLastLoop, MouseWorldPositionOnLastLoop; // needed for camera mouse drag
-		
+        sf::Time MouseIdleTime;
+
 		std::vector<int> NumberKeysPressed;
+
+		std::string getRawInput();
+        sf::Time getMouseIdleTime();
 
 		friend class Engine;
 	};

@@ -41,7 +41,6 @@ void IUEINW::IUEINW_Nations::init()
 		Nation.EdgeTilesDiscovered[3].clear();
 		Nation.TotalNumberOfUnitsInitialized = 0;
 		Nation.Cities.clear();
-        Nation.Units.clear();
 
 		Nations.push_back(Nation);
 
@@ -87,7 +86,9 @@ void IUEINW::IUEINW_Nations::init()
 
 	// ---- set camera position
     {
-        int TileIndex = getCities()[Human->Cities[0]].TileIndex;
+        auto CitiesWriteAccess =  getCities().Cities.getWriteAccess();
+        auto CitiesWritePtr = CitiesWriteAccess.Data;
+        int TileIndex = CitiesWritePtr->at(Human->Cities[0]).TileIndex;
         fi::getCanvasWorld().setCenter(getGrid().CommonCellData[TileIndex].getBack2f());
     }
 }

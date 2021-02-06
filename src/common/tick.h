@@ -16,8 +16,8 @@ namespace fi
 {
 	class Tick
 	{
-	private:
-		std::string Name;
+	public:
+        std::string Name;
 		int TickIndex = -1;
         int TickCount = 0;
 
@@ -26,7 +26,9 @@ namespace fi
 		std::set<int> ActiveProgramStates;
 		int UniqueTokenPerFrame = -INT_MAX; // for ensuring step occurs once per frame, as we'll potentially be calling stepIfApplicable() multiple times per frame
 
-		double TicksPerSecond = 0;
+        std::vector<double> TicksPerSecondOptions;
+        double NextTickTime, TimeOfLastTick = 0;
+        double TicksPerSecond = 0;
 		double Interpolation = 0;
 		double SkipTicks = 0;
 
@@ -59,8 +61,6 @@ namespace fi
 					UniqueTokenPerFrame = FrameToken;
 
 					StepThisFrame._a.store(false);
-
-                    LocalClock.think();
 
                     if (!LocalClock.isPaused())
                     {
@@ -95,44 +95,42 @@ namespace fi
 
 		////////////////////////////////////////////////////////////
 
-	public:
-
-		double NextTickTime, TimeOfLastTick = 0;
-
 		void init()
 		{
-			init(Name, TicksPerSecond, isPaused(), TickIndex);
+			init(Name, TicksPerSecondOptions, isPaused(), TickIndex);
 		}
 
 		////////////////////////////////////////////////////////////
 
-		void init(std::string TickName, double TicksPerSecond, bool IsPaused, int TickIndex)
+        void init(std::string TickName, double TicksPerSecond, bool IsPaused, int TickIndex)
+        {
+		    init(TickName, std::vector<double>{ TicksPerSecond }, IsPaused, TickIndex);
+        }
+
+        ////////////////////////////////////////////////////////////
+
+        void init(std::string TickName, std::vector<double> TicksPerSecondOptions, bool IsPaused, int TickIndex)
 		{
 			this->Name = TickName;
 			std::chrono::steady_clock::time_point now = std::chrono::steady_clock::now();
 			auto duration = now.time_since_epoch();
 			auto millis = std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
-			this->SkipTicks = 1000.f / TicksPerSecond;
-			this->TicksPerSecond = TicksPerSecond;
+
+            this->TicksPerSecondOptions = TicksPerSecondOptions;
+            this->TicksPerSecond = TicksPerSecondOptions.front();
+            this->SkipTicks = 1000.f / TicksPerSecond;
 			this->TimeOfLastTick = millis;
 			this->NextTickTime = millis + SkipTicks;
 			this->TickIndex = TickIndex;
-			this->LocalClock.restart();
 			this->Interpolation = 0;
 
 			StepThisFrame._a.store(false);
-
-			if (IsPaused)
-			{
-				this->LocalClock.pause();
-			}
-			else
-			{
-				this->LocalClock.start();
-			}
+            this->LocalClock.restart(IsPaused);
 		}
 
 		////////////////////////////////////////////////////////////
+
+		// todo these get functions are no longer needed if the entire class will be public
 
 		double getDurationMS(int NumTicks)
 		{

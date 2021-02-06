@@ -13,6 +13,7 @@ void fi::Input::init()
 	NumberKeysPressed.clear();
 	KeyStates.resize(fi::key::NUMBER_OF_FI_KEY_CODES);
 	DOUBLE_CLICK_TIME = fi::getConfig()["general"]["double-click-time"].get<int>();
+    MouseIdleTime = sf::Time::Zero;
 	
 	bindKeysBasedOffJSON();
 	resetRecordedInput(true);
@@ -31,6 +32,15 @@ bool fi::Input::record()
 	sf::Vector2f MousePos = fi::getCanvasWorld().mapPixelToCoords(MouseWindowPosition);
 	MouseWorldPosition.x = (int)MousePos.x;
 	MouseWorldPosition.y = (int)MousePos.y;
+
+	if (MouseWindowPosition == MouseWindowPositionOnLastLoop)
+    {
+        MouseIdleTime += fi::getDeltaTime();
+    }
+	else
+    {
+	    MouseIdleTime = sf::Time::Zero;
+    }
 	
 	sf::Event Event;
 	while (Engine::instance().Window.pollEvent(Event))
@@ -77,7 +87,7 @@ bool fi::Input::record()
 		}
 		else if (Event.type == sf::Event::Resized)
 		{
-			fi::Engine::instance().executeResize(Event.size.width, Event.size.height);
+			fi::Engine::instance().executeResize();
 		}
 		else
 		{
@@ -336,6 +346,19 @@ sf::Time fi::Input::timeOfLastInitialDown(std::string BindingName)
 sf::Time fi::Input::timeOfLastInitialDown(int fiKey)
 {
 	return KeyStates[fiKey].TimeOfLastInitialDown;
+}
+
+////////////////////////////////////////////////////////////
+
+void fi::Input::resetKey(int fiKey)
+{
+    KeyStates[fiKey].States[0] = false;
+    KeyStates[fiKey].States[1] = false;
+    KeyStates[fiKey].States[2] = false;
+    KeyStates[fiKey].States[3] = false;
+    KeyStates[fiKey].ArtificialTrigger = false;
+    KeyStates[fiKey].PreviousArtificialTrigger = false;
+    KeyStates[fiKey].TimeOfLastInitialDown = sf::Time::Zero;
 }
 
 ////////////////////////////////////////////////////////////
@@ -715,6 +738,20 @@ std::unordered_map<std::string, int> fi::Input::generateMappings()
 	jsonStrToFiKeyMapping["scroll-down"] = fi::key::ScrollDown; // only 1 mapping, we just explicitly handle it in record...
 
 	return jsonStrToFiKeyMapping;
+}
+
+////////////////////////////////////////////////////////////
+
+std::string fi::Input::getRawInput()
+{
+    return RawUserInput;
+}
+
+////////////////////////////////////////////////////////////
+
+sf::Time fi::Input::getMouseIdleTime()
+{
+    return MouseIdleTime;
 }
 
 ////////////////////////////////////////////////////////////

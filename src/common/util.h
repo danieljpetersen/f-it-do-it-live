@@ -11,6 +11,7 @@
 #include "cereal/types/memory.hpp"
 #include "cereal/archives/binary.hpp"
 #include "cereal/archives/json.hpp"
+#include "imgui/imgui.h"
 
 namespace sf
 {
@@ -31,6 +32,10 @@ namespace sf
 
 }
 
+ImVec2 operator+(ImVec2 a, ImVec2 const& b);
+ImVec2 operator-(ImVec2 a, ImVec2 const& b);
+sf::Vector2f operator+(sf::Vector2f a, sf::Vector2i const& b);
+sf::Vector2f operator-(sf::Vector2f a, sf::Vector2f const& b);
 namespace fi
 {
     void log(sf::Color Color);

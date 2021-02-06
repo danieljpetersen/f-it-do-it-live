@@ -3,7 +3,7 @@
 #include "color_schemes.h"
 #include "mouse_tile_tracker.h"
 #include "vision.h"
-#include "controls.h"
+#include "user_interface.h"
 
 void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::init()
 {

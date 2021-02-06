@@ -104,3 +104,51 @@ bool fi::Math::doLineSegmentsIntersect(sf::Vector2f Point1, sf::Vector2f Point2,
 
     return true;
 }
+
+////////////////////////////////////////////////////////////
+
+void fi::Math::getRect(sf::Vector2i aCorner, sf::Vector2i CornerDiagonalToA, sf::Vector2i &ReturnValue_TopLeft, int &ReturnValue_Width, int &ReturnValue_Height)
+{
+	if (aCorner.x > CornerDiagonalToA.x)
+	{
+		ReturnValue_TopLeft.x = CornerDiagonalToA.x;
+		ReturnValue_Width = aCorner.x - CornerDiagonalToA.x;
+	}
+	else
+	{
+		ReturnValue_TopLeft.x = aCorner.x;
+		ReturnValue_Width = CornerDiagonalToA.x - aCorner.x;
+	}
+
+	if (aCorner.y > CornerDiagonalToA.y)
+	{
+		ReturnValue_TopLeft.y = CornerDiagonalToA.y;
+		ReturnValue_Height = aCorner.y - CornerDiagonalToA.y;
+	}
+	else
+	{
+		ReturnValue_TopLeft.y = aCorner.y;
+		ReturnValue_Height = CornerDiagonalToA.y - aCorner.y;
+	}
+}
+
+////////////////////////////////////////////////////////////
+
+bool fi::Math::isPointInBounds(sf::Vector2f Point, sf::Vector2f TopLeft, int Width, int Height)
+{
+	if (Point.x > TopLeft.x)
+	{
+		if (Point.y > TopLeft.y)
+		{
+			if (Point.x < TopLeft.x + Width)
+			{
+				if (Point.y < TopLeft.y + Height)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}

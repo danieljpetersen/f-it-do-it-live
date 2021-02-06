@@ -156,7 +156,8 @@ namespace fi
 
         T   operator [](int i) const {return Objects[i];}
         T & operator [](int i)       {return Objects[i];}
-        int size() { return (int)Objects.size(); }
+		int size() { return (int)Objects.size(); }
+		bool empty() { return Objects.empty(); }
 
         ////////////////////////////////////////////////////////////
 
@@ -340,6 +341,18 @@ namespace fi
         ////////////////////////////////////////////////////////////
 
     };
+
+////////////////////////////////////////////////////////////
+
+	class Slot_Map_Hash_Fn
+	{
+	public:
+		size_t operator()(const fi::Slot_Map_ID& p) const
+		{
+			return (std::hash<int>()(p.Version)) ^
+				   (std::hash<int>()(p.SlotMapIndex));
+		}
+	};
 }
 
 #endif

@@ -148,7 +148,7 @@ namespace fi
 						continue;
 					}
 
-					ReturnValue.emplace_back(f->d_name);
+					ReturnValue.emplace_back(std::string(f->d_name));
 				}
 
 				closedir(dir);

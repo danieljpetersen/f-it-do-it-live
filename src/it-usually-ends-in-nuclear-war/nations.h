@@ -21,43 +21,31 @@ namespace IUEINW
     class IUEINW_Nation
 	{
 	public:
+        bool IsAlive;
+        std::string Name;
+        int NationIndex;
+        int TotalNumberOfUnitsInitialized;
+        sf::Color Color;
 	    std::vector<int> Cities;
-	    std::vector<fi::Slot_Map_ID> Units;
-
-		std::vector<std::vector<int>> EdgeTilesDiscovered; // todo should be in vision
-		bool IsAlive;
-		sf::Color Color;
-		std::string Name;
-		int NationIndex;
-		int TotalNumberOfUnitsInitialized;
 
 		bool isHumanNation();
 
+        std::vector<std::vector<int>> EdgeTilesDiscovered; // todo should be in vision
 		bool discoveredBottomLeftEdge()
 		{
 			return (bool)EdgeTilesDiscovered[BOTTOMLEFT_EDGE].empty();
 		}
-
 		bool discoveredBottomRightEdge()
 		{
 			return (bool)EdgeTilesDiscovered[BOTTOMRIGHT_EDGE].empty();
 		}
-
 		bool discoveredTopLeftEdge()
 		{
 			return (bool)EdgeTilesDiscovered[TOPLEFT_EDGE].empty();
 		}
-
 		bool discoveredTopRightEdge()
 		{
 			return (bool)EdgeTilesDiscovered[TOPRIGHT_EDGE].empty();
-		}
-
-		void getUnitAttritionImmunities(bool &ImmuneToIce, bool &ImmuneToWater, bool &ImmuneToDesert) // todo
-        {
-			ImmuneToDesert = false;
-			ImmuneToWater = false;
-			ImmuneToIce = false;
 		}
 	};
 

@@ -2,22 +2,6 @@
 
 namespace fi
 {
-	bool Pauseable_Clock::universalpause = false;
-
-	void Pauseable_Clock::think()
-	{
-		if (universalpause)
-		{
-			pause();
-		}
-		else
-		{
-			start();
-		}
-	}
-
-    ////////////////////////////////////////////////////////////
-
 	void Pauseable_Clock::pause()
 	{
 		if (!paused)
@@ -63,26 +47,6 @@ namespace fi
 		internalClock.restart();
 
 		return et;
-	}
-
-    ////////////////////////////////////////////////////////////
-
-	void Pauseable_Clock::universalPause()
-	{
-		if (!universalpause)
-		{
-			universalpause = true;
-		}
-	}
-
-    ////////////////////////////////////////////////////////////
-
-	void Pauseable_Clock::universalStart()
-	{
-		if (universalpause)
-		{
-			universalpause = false;
-		}
 	}
 
     ////////////////////////////////////////////////////////////

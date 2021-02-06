@@ -20,25 +20,33 @@
 		"sound-effect-volume": 10
 	},
 
-	"gui-style":
+	"gui":
 	{
-		"imgui-font-size": 16,
-		"font-path" : "fonts/RobotoMono-Bold.ttf", // I coded the game with a mono font in mind.  There may or may not be formatting issues with a non-mono font
-		"text-outline-color": { "r": 0, "g": 0, "b": 0, "a": 255 },
-		"text-outline-thickness": 1,
-		"BGRegular": { "r": 47, "g": 47, "b": 47, "a": 100 },
-		"BorderRegular": { "r": 55, "g": 55, "b": 55, "a": 255 },
-		"TextRegular": { "r": 244, "g": 244, "b": 244, "a": 255 },
-		"BGHighlight": { "r": 112, "g": 128, "b": 144, "a": 255 },
-		"BorderHighlight": { "r": 183, "g": 210, "b": 241, "a": 255 },
-		"TextHighlight": { "r": 255, "g": 255, "b": 255, "a": 255 },
-		"BGSelected":  { "r": 46, "g": 107, "b": 213, "a": 255 },
-		"BorderSelected": { "r": 66, "g": 147, "b": 77, "a": 255 },
-		"TextSelected": { "r": 255, "g": 255, "b": 255, "a": 255 },
-		"button-height": 18,
-		"TextSizeOffset": 0,
-		"SPACING_FROM_BUTTON_EDGE": 5,
-		"SPACING_FROM_SCREEN_EDGE": 5
+		"font-path" : "fonts/NotoSansMono-Bold.ttf", // I coded the game with a mono font in mind.  There may or may not be formatting issues with a non-mono font
+		"spacing-from-widget-edge": 5,
+		"spacing-from-screen-edge": 0,
+		"scale": 1.0,
+		"tooltip-hover-ms": 500,
+
+		"styles":
+		[
+			{
+				"name": "default",
+				"row-height": 20,
+				"text-character-size": 12,
+				"text-outline-color": { "r": 0, "g": 0, "b": 0, "a": 255 },
+				"text-outline-thickness": 1,
+				"BGRegular": { "r": 47, "g": 47, "b": 47, "a": 220 },
+				"BorderRegular": { "r": 55, "g": 55, "b": 55, "a": 255 },
+				"TextRegular": { "r": 244, "g": 244, "b": 244, "a": 255 },
+				"BGHighlight": { "r": 112, "g": 128, "b": 144, "a": 255 },
+				"BorderHighlight": { "r": 183, "g": 210, "b": 241, "a": 255 },
+				"TextHighlight": { "r": 255, "g": 255, "b": 255, "a": 255 },
+				"BGSelected":  { "r": 46, "g": 107, "b": 213, "a": 255 },
+				"BorderSelected": { "r": 66, "g": 147, "b": 77, "a": 255 },
+				"TextSelected": { "r": 255, "g": 255, "b": 255, "a": 255 },
+			}
+		],
 	},
 
 	"controls":
@@ -57,6 +65,10 @@
 			"Camera Mouse Drag": { "state":  "down", "bindings": ["mouse-2"] },
 			"Camera Center On Mouse": { "state":  "released", "bindings": ["mouse-2"] },
 			"Camera Follows Selected Unit": { "state":  "tap", "bindings": ["o"] },
+
+			"gui-select-item": { "state":  "tap", "bindings": ["enter"] },
+			"gui-previous-item": { "state":  "tap", "bindings": ["j"] },
+			"gui-next-item": { "state":  "tap", "bindings": ["k"] },
 
 			"Cheat Reveal Terrain": { "state":  "tap", "bindings": [ "[" ] },
 			"Cheat Reveal Fog of War": { "state":  "tap", "bindings": [ "]"] },
@@ -78,12 +90,12 @@
 			"Select Previous Province": { "state":  "tap", "bindings": ["down-arrow", "left-arrow", "a"] },
 			"Select Next Province": { "state":  "tap", "bindings": ["up-arrow", "right-arrow", "d"] },
 
-			"Next Speed": { "state":  "tap", "bindings": [] },
-			"Tick Speed Zero": { "state":  "tap", "bindings": ["space"] },
-			"Tick Speed One": { "state":  "tap", "bindings": ["num-1"] },
-			"Tick Speed Two": { "state":  "tap", "bindings": ["num-2"] },
-			"Tick Speed Three": { "state":  "tap", "bindings": ["num-3"] },
-			"Tick Speed Four": { "state":  "tap", "bindings": ["num-4"] },
+			"Tick Speed Next": { "state":  "tap", "bindings": [] },
+			"Tick Speed 0": { "state":  "tap", "bindings": ["space"] },
+			"Tick Speed 1": { "state":  "tap", "bindings": ["num-1"] },
+			"Tick Speed 2": { "state":  "tap", "bindings": ["num-2"] },
+			"Tick Speed 3": { "state":  "tap", "bindings": ["num-3"] },
+			"Tick Speed 4": { "state":  "tap", "bindings": ["num-4"] },
 
 			"quit": { "state":  "tap", "bindings": ["tilde"] },
 			"frame-clock-toggle": { "state":  "tap", "bindings": ["y"] },
@@ -104,10 +116,8 @@
 	"ticks":
 	[
 		{
-			"id": "core", "ticks-per-second": 2,
-			"id": "core-speed-1", "ticks-per-second": 2,
-			"id": "core-speed-2", "ticks-per-second": 3,
-			"id": "core-speed-3", "ticks-per-second": 4
+			"id": "core",
+			"ticks-per-second-options": [ 0.5, 1, 2, 3] // corresponds to menubar speed buttons
 		}
 	],
 
@@ -125,7 +135,8 @@
 			{
 				"name": "standard",
 
-				"unexplored": { "r": 50, "g": 50, "b": 50 }, // has hardcoded a to 255, the a here is ignored
+//				"unexplored": { "r": 50, "g": 50, "b": 50 }, // has hardcoded a to 255, the a here is ignored
+				"unexplored": { "r": 42, "g": 33, "b": 28 }, // has hardcoded a to 255, the a here is ignored
 				"ice-tile-color": { "r": 240, "g": 240, "b": 240, "a": 255 },
 				"grassland-tile-color": { "r": 33, "g": 120, "b": 35, "a": 255 },
 				"forest-tile-color": { "r": 14, "g": 24, "b": 8, "a": 255 },
@@ -174,7 +185,7 @@
 
 				 "explicit-city-color": "222,0,0",
 				 "use-nation-color-instead-of-explicit-city-color": false,
-				 "city-underside-color": "112,112,112", // drawn beneath city quad
+				 "city-underside-color": "32,32,32", // drawn beneath city quad
 			},
 		],
 
@@ -228,7 +239,7 @@
 
 		"unit-name-tag":
 		{
-			"on": true, // todo -- does not work?
+			"on": true,
 			"text-size-offset": -1,
 			"selected-text-size-offset": 2,
 			"font-outline": true,
@@ -298,7 +309,7 @@
 			//		"tile-width": 12,
 			//		"tile-height": 12,
 			"tile-height-offset": 3.5, // the game assigns each tile corner a height value (representing how many pixels of height a tile corner has).  set to 0 for flat map
-			"unit-drawable-tile-offset": 4, // offset verticies of unit quads so that some of the tile is visible.
+			"unit-drawable-tile-offset": 3, // offset verticies of unit quads so that some of the tile is visible.
 			"city-drawable-tile-offset": 2, // offset verticies of city quads so that some of the tile is visible.
 			"grid-type": "isometric", // "isometric" || "rectangle" -- rectangle was added after the fact.  it mostly works, but there are a few visual issues (for instance, w/ nation borders) due to everything initially being coded with isometric in mind.
 			"grid-spacing": 0, // not quite all there w/ isometric

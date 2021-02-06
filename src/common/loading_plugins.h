@@ -12,8 +12,11 @@ namespace fi
 		void work(const int Event) override
 		{
 		    fi::getRandom().seed();
-		    fi::setCursorStyle(sf::StandardCursor::WAIT);
-		}
+            fi::setCursorStyle(sf::StandardCursor::WAIT);
+            fi::Double_Buffer_Object_Tracker::instance().reset();
+            getCoreTick()->setTickCount(0);
+            getCoreTick()->pauseTimestep();
+        }
 	};
 
 	// ----
@@ -23,6 +26,7 @@ namespace fi
 	public:
 		void work(const int Event) override
 		{
+            fi::Double_Buffer_Object_Tracker::instance()._swapPointers();
 		    fi::setCursorStyle(sf::StandardCursor::NORMAL);
 		}
 	};

@@ -19,11 +19,13 @@ namespace fi
         float distance(sf::Vector2f a, sf::Vector2f b);
         float getPercent(float Percent, float Number);
 
-
         sf::Vector2f infiniteLineCast_PointOfIntersection(sf::Vector2f aLineStart, sf::Vector2f aLineEnd, sf::Vector2f bLineStart, sf::Vector2f bLineEnd);
         bool doLineSegmentsIntersect(sf::Vector2f p1, sf::Vector2f p2, sf::Vector2f q1, sf::Vector2f q2, sf::Vector2f &PointOfIntersection);
         bool doLineSegmentsIntersect(sf::Vector2f Point1, sf::Vector2f Point2, sf::Vector2f Point3, sf::Vector2f Point4);
-    }
+
+		void getRect(sf::Vector2i aCorner, sf::Vector2i CornerDiagonalToA, sf::Vector2i &ReturnValue_TopLeft, int &ReturnValue_Width, int &ReturnValue_Height);
+		bool isPointInBounds(sf::Vector2f Point, sf::Vector2f TopLeft, int Width, int Height);
+	}
 }
 
 #endif

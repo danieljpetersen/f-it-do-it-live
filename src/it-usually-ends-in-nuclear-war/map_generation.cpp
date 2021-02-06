@@ -1,11 +1,13 @@
 #include "map_generation.h"
-#include "iueinw.h"
+#include "app.h"
 #include "nations.h"
 
 ////////////////////////////////////////////////////////////
 
 void IUEINW::IUEINW_Plugin_Generate_Map::work(const int Event)
 {
+    fi::Double_Buffer_Object_Tracker::instance().reset();
+
     getMap().PossibleMapLayouts.initFromJSON();
     getMap().TileTypeProperties.initFromJSON();
     getMap().CurrentMapLayout = getMap().PossibleMapLayouts.getSuggestedMapSize();
@@ -43,5 +45,6 @@ void IUEINW::IUEINW_Plugin_Generate_Map::work(const int Event)
     largeBoard_determineTileShadows();
     TileTypes.clear();
 
-    fi::getPlugins().delayedExecute(EVENT_BUILD_MAP_DRAWABLES);
+
+	fi::getPlugins().delayedExecute(EVENT_BUILD_MAP_DRAWABLES);
 }

@@ -2,6 +2,78 @@
 #include "draw.h"
 #include "engine.h"
 
+////////////////////////////////////////////////////////////
+
+fi::Texture_Store::~Texture_Store()
+{
+    for (auto Texture : Textures)
+    {
+        delete Texture.second;
+    }
+
+    Textures.clear();
+}
+
+////////////////////////////////////////////////////////////
+
+std::optional<sf::Texture *> fi::Texture_Store::addTexture(std::string Path)
+{
+    std::optional<sf::Texture *> anOptional;
+
+    sf::Texture *Texture = new sf::Texture();
+
+    if (Texture->loadFromFile(Path))
+    {
+        Textures[Path] = Texture;
+        anOptional.emplace(Texture);
+    }
+    else
+    {
+        delete Texture;
+        Texture = nullptr;
+    }
+
+    return anOptional;
+}
+
+////////////////////////////////////////////////////////////
+
+std::optional<sf::Texture *> fi::Texture_Store::getTexture(std::string Path)
+{
+    std::optional<sf::Texture *> anOptional;
+
+    if (hasTexture(Path))
+    {
+        fi::log("a");
+        anOptional.emplace(Textures[Path]);
+    }
+
+    return anOptional;
+}
+
+////////////////////////////////////////////////////////////
+
+std::optional<sf::Texture *> fi::Texture_Store::getAddTexture(std::string Path)
+{
+    if (hasTexture(Path) != true)
+    {
+        addTexture(Path);
+    }
+
+    std::optional<sf::Texture *> anOptional(nullptr);
+    anOptional.emplace(Textures[Path]);
+    return anOptional;
+}
+
+////////////////////////////////////////////////////////////
+
+bool fi::Texture_Store::hasTexture(std::string Path)
+{
+    return (Textures.find(Path) != Textures.end());
+}
+
+////////////////////////////////////////////////////////////
+
 void fi::Draw::text(std::string Str, int x, int y)
 {
     sf::Text T;

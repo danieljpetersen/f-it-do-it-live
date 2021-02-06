@@ -65,8 +65,6 @@ void IUEINW::IUEINW_Vision::incrementVision(int TileIndex, int NationIndex)
 	LastTickSeen[TileIndex][NationIndex] = getCoreTick()->getTickCount();
 
 	// By Default, values are flagged as -1 to indicate not ever explored.
-	// If we increment and the value is 0, we know this is the first time we've visited this tile
-	// todo what the fuck this doesn't explain what is wrong with just checking for 1 here
 	if (VisionCount[TileIndex][NationIndex] == 0)
 	{
 		VisionCount[TileIndex][NationIndex] += 1;

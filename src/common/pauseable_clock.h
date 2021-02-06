@@ -30,7 +30,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-// file has been modified by being wrapped in gr namespace
+// file has been modified by being wrapped in fi namespace + universal pause removed
 
 
 #ifndef PAUSEABLECLOCK_HPP
@@ -43,16 +43,10 @@ namespace fi
 	class Pauseable_Clock
 	{
 		sf::Clock internalClock;
-		bool paused;
-		static bool universalpause;
 		sf::Time pcTime;
+        bool paused;
 
 	public:
-
-		// Think must be run for the instanced Pauseableclock to support
-		// Universal Pause. If not run, will work/pause normally but Universal Pausing
-		// will not be supported.
-		void think();
 
 		void pause();
 
@@ -66,10 +60,6 @@ namespace fi
 		const sf::Time getElapsedTime();
 
 		sf::Time restart(const bool pause = false);
-
-		static void universalPause();
-
-		static void universalStart();
 
 		Pauseable_Clock();
 	};

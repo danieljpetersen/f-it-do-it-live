@@ -6,6 +6,10 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include "nlohmann_json.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui-SFML.h"
+#include "moodycamel_queue/blocking_concurrent_queue.h"
+#include "moodycamel_queue/concurrent_queue.h"
 #include "nameof.h"
 #include "non_copyable.h"
 #include "non_movable.h"
@@ -21,13 +25,17 @@
 #include "plugins.h"
 #include "canvas.h"
 #include "frame_clock.h"
-#include "gui.h"
+#include "gui/gui.h"
 #include "tick.h"
 #include "grid.h"
 #include "slot_map.h"
+#include "work_queue.h"
+#include "double_buffer.h"
 #include "loading_plugins.h"
-#include "imgui/imgui.h"
-#include "imgui/imgui-SFML.h"
+#include "selection_manager.h"
+#include "astar_pathfinder.h"
+#include "gui/complex_widgets/gui_camera_zoom.h"
+#include "gui/complex_widgets/gui_tick_controller.h"
 
 namespace fi
 {
@@ -43,6 +51,7 @@ namespace fi
     {
     public:
         void run(Application_Base *App);
+        void quit();
         void quitFromError(std::string err);
 
         // note -- user can bypass some functions via calling directly to Engine.Window,  ie:  setCursorVisible
@@ -60,11 +69,14 @@ namespace fi
         sf::Uint8 getWindowStyle();
         bool getCursorGrabbed();
         bool getCursorVisible();
+        sf::Color getBackgroundColor();
         sf::Time getDeltaTime();
         bool isSuspended();
         sf::Uint64 getFrameCount();
         fi::Tick *getTick(std::string TickID);
         fi::Tick *getTick(int TickID);
+
+        bool isMainThread();
 
         sf::Clock Clock;
         sf::RenderWindow Window;
@@ -73,11 +85,13 @@ namespace fi
         fi::Random_Generator RNG;
         fi::Input Input;
         fi::Audio Audio;
+        fi::Thread_Pool ThreadPool;
         fi::Plugin_Manager Plugins;
         std::vector<fi::Tick> Ticks;
         fi::GUI GUI;
         fi::Canvas CanvasWorld;
         fi::Canvas CanvasGUI;
+        fi::Texture_Store TextureStore;
 
     private:
         Application_Base *App;
@@ -89,13 +103,13 @@ namespace fi
         void initTicks();
         void mainThreadLoop();
         void handleDefaultInput();
-        void executeResize(float x, float y);
+        void executeResize();
         void saveJSONConfig();
         void stepTicks();
         void updateWindowTitleIfApplicable();
         void drawCanvasesToScreen();
 
-        bool QuitFlag = false;
+        bool QuitFlag;
         bool SuspendOnLostFocus = false;
         bool CurrentlySuspended = false;
         bool UnsuspendThisFrame = false;
@@ -112,6 +126,8 @@ namespace fi
         std::unordered_map<std::string, int> TickIdToIndexMap;
         std::unordered_map<int, std::string> TickIndexToIdMap;
 
+        std::thread::id main_thread_id;
+
         friend class Input;
         friend class Program_State_Builder;
 
@@ -125,13 +141,15 @@ namespace fi
     fi::Input &getInput();
     sf::Time getDeltaTime();
     sf::Clock &getClock();
-    fi::Audio getAudio();
+    fi::Audio &getAudio();
+    fi::GUI &getGUI();
     fi::Tick *getTick(std::string TickID);
     fi::Tick *getTick(int TickID);
     fi::Plugin_Manager &getPlugins();
     fi::Canvas &getCanvasWorld();
     fi::Canvas &getCanvasGUI();
     sf::RenderWindow &getWindow();
+    int getFrameCount();
 }
 
 #endif

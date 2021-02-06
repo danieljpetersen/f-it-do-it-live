@@ -9,18 +9,17 @@
 #include "non_movable.h"
 #include "non_copyable.h"
 #include "util.h"
+#include "work_queue.h"
 
 namespace fi
 {
-    const int EVENT_PRE_LOAD = 1;
     const int EVENT_SERIALIZE = 0;
+    const int EVENT_PRE_LOAD = 1;
     const int EVENT_POST_LOAD = 2;
-    const int EVENT_PRE_UPDATE = 3;
-    const int EVENT_UPDATE = 4;
-    const int EVENT_POST_UPDATE = 5;
-    const int EVENT_DRAW = 6;
-    const int EVENT_RESIZE = 7;
-    const int FI_EVENT_COUNT = 8;
+    const int EVENT_UPDATE = 3;
+    const int EVENT_DRAW = 4;
+    const int EVENT_STATE_CHANGE = 5;
+    const int FI_EVENT_COUNT = 6;
 
     ////////////////////////////////////////////////////////////
     // a wrapper for an empty overridable function which is automatically called at specified events
@@ -32,6 +31,8 @@ namespace fi
 
         virtual void work(const int Event) {};
         virtual void onEnableChange(bool Enabling) {};
+        virtual void onResize() {};
+        virtual void onShutdown() {};
     };
 
     ////////////////////////////////////////////////////////////
@@ -71,12 +72,6 @@ namespace fi
         void setProgramState(int ProgramStateIndex)
         {
             NextProgramState = ProgramStateIndex;
-
-            // first time being set, let's call the relevant onEnabled
-            if (CurrentProgramStateIndex == -1)
-            {
-                changeStateIfApplicable();
-            }
         }
 
         // two functions for this because, thanks to ProgramStateBuilder.withProgramState(...), a ProgramState can made up of multiple ProgramStates.
@@ -94,12 +89,9 @@ namespace fi
                 return false;
             }
 
-            for (int i = 0; i < ProgramStatesPerProgramState[CurrentProgramStateIndex].size(); i++)
+            if (doesProgramStateContain(CurrentProgramStateIndex, ProgramStateIndex))
             {
-                if (ProgramStatesPerProgramState[CurrentProgramStateIndex][i] == ProgramStateIndex)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
@@ -109,6 +101,21 @@ namespace fi
         {
             return CurrentProgramStateIndex;
         }
+
+        bool doesProgramStateContain(int ProgramStateIndex, int PossibleSubsetProgramIndex)
+        {
+            for (int i = 0; i < ProgramStatesPerProgramState[ProgramStateIndex].size(); i++)
+            {
+                if (ProgramStatesPerProgramState[ProgramStateIndex][i] == PossibleSubsetProgramIndex)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        int DebugRemoveMe = 0;
 
         // engine calls this->execute(...) for all the default EVENT_* events, but users are equally able to call execute with user defined events
         // note that executions happen immediately, so if you're in the middle of an update event, plugins which are yet to be executed for update will wait
@@ -120,24 +127,15 @@ namespace fi
                 return;
             }
 
-            std::vector<int> *PluginsToExecute = &EnabledPluginsPerStatePerEventType[CurrentProgramStateIndex][EventType];
+			std::vector<int> *PluginsToExecute = &EnabledPluginsPerStatePerEventType[CurrentProgramStateIndex][EventType];
             for (int i = 0; i < PluginsToExecute->size(); i++)
             {
-                int PluginIndex = PluginsToExecute->at(i);
+				DebugRemoveMe = i;
+				int PluginIndex = PluginsToExecute->at(i);
                 Plugins[PluginIndex]->work(EventType);
             }
 
-            if (DelayedExecutes.empty() != true)
-            {
-                auto Event = DelayedExecutes.front();
-
-                // second being the Event that the delayed event should execute after. -1 for after the current stack is exhausted
-                if ((Event.second == -1) || (Event.second == EventType))
-                {
-                    DelayedExecutes.pop_front();
-                    execute(Event.first);
-                }
-            }
+            executeNextDelayedEventIfApplicable(EventType);
         }
 
         // same as execute but can queue events; will wait until the current event (+ any previous delayedExecute) is exhausted
@@ -185,6 +183,7 @@ namespace fi
         // map key: int EventType
         // third dimension: the set (duplicates not allowed, ordered according to the order of withPlugin(...) calls) of enabled plugins for that state / event combination
         std::vector<std::unordered_map<int, std::vector<int>>> EnabledPluginsPerStatePerEventType;
+        std::set<int> SetOfEnabledPlugins; // PerEventType is hard to iterate and can potentially contain the same Plugin multiple times. this is a set of currently enabled for iteration
 
         std::vector<std::vector<int>> ProgramStatesPerProgramState; // like was said, ProgramStates can be made up of multiple ProgramStates. This tracks that
 
@@ -192,6 +191,12 @@ namespace fi
 
         int CurrentProgramStateIndex = -1;
         int NextProgramState = -1;
+
+        void registerPlugin(fi::Plugin_Base *Plugin)
+        {
+            Plugins.push_back(Plugin);
+            Plugin->PluginIndex = (int)Plugins.size() - 1;
+        }
 
         bool changeStateIfApplicable()
         {
@@ -202,6 +207,12 @@ namespace fi
 
             if (NextProgramState != -1)
             {
+                // for sanity, tasks which are running for one state aren't going to be allowed to be running for states which they are not a subset of
+                if (doesProgramStateContain(NextProgramState, CurrentProgramStateIndex) != true)
+                {
+                    getThreadPool().joinLaunch();
+                }
+
                 // ---- save which are currently enabled so that we can properly call onEnableChange after all is done
                 std::vector<bool> PrevState(Plugins.size(), false);
                 for (int _i = 0; _i < Plugins.size(); _i++)
@@ -236,6 +247,23 @@ namespace fi
                     }
                 }
 
+                // ---- populate next set of enabled plugins
+                {
+                    SetOfEnabledPlugins.clear();
+                    for (int _i = 0; _i < EnabledPluginsPerStatePerEventType[NextProgramState].size(); _i++)
+                    {
+                        for (auto Events : EnabledPluginsPerStatePerEventType[NextProgramState])
+                        {
+                            for (int j = 0; j < Events.second.size(); j++)
+                            {
+                                int _Index = Events.second[j];
+                                SetOfEnabledPlugins.insert(_Index);
+
+                            }
+                        }
+                    }
+                }
+
                 // ---- execute onEnableChange(true)
                 for (int _i = 0; _i < PrevState.size(); _i++)
                 {
@@ -248,17 +276,61 @@ namespace fi
                     }
                 }
 
+                // once more if any tasks were launched for onEnableChange force them to finish
+                if (doesProgramStateContain(NextProgramState, CurrentProgramStateIndex) != true)
+                {
+                    getThreadPool().joinLaunch();
+                }
+
                 CurrentProgramStateIndex = NextProgramState;
                 NextProgramState = -1;
+            }
+
+            // execute any events queued during previous frame
+            while (true)
+            {
+                if (! executeNextDelayedEventIfApplicable(fi::EVENT_STATE_CHANGE))
+                {
+                    break;
+                }
             }
 
             return false;
         }
 
-        void registerPlugin(fi::Plugin_Base *Plugin)
+        bool executeNextDelayedEventIfApplicable(int EventType)
         {
-            Plugins.push_back(Plugin);
-            Plugin->PluginIndex = (int)Plugins.size() - 1;
+            if (DelayedExecutes.empty() != true)
+            {
+                auto Event = DelayedExecutes.front();
+
+                // second being the Event that the delayed event should execute after. -1 for after the current stack is exhausted
+                if ((Event.second == -1) || (Event.second == EventType))
+                {
+                    DelayedExecutes.pop_front();
+                    execute(Event.first);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        void executeOnResize()
+        {
+            for (auto PluginIndex : SetOfEnabledPlugins)
+            {
+                Plugins[PluginIndex]->onResize();
+            }
+        }
+
+        void executeOnShutdown()
+        {
+            for (auto PluginIndex : SetOfEnabledPlugins)
+            {
+                Plugins[PluginIndex]->onShutdown();
+            }
         }
 
         friend class Program_State_Builder;

@@ -9,6 +9,38 @@
 
 ////////////////////////////////////////////////////////////
 
+ImVec2 operator+(ImVec2 a, ImVec2 const& b) {
+    a.x = a.x + b.x;
+    a.y = a.y + b.y;
+    return a;
+}
+
+////////////////////////////////////////////////////////////
+
+ImVec2 operator-(ImVec2 a, ImVec2 const& b) {
+    a.x = a.x - b.x;
+    a.y = a.y - b.y;
+    return a;
+}
+
+////////////////////////////////////////////////////////////
+
+sf::Vector2f operator+(sf::Vector2f a, sf::Vector2i const& b) {
+    a.x = a.x + b.x;
+    a.y = a.y + b.y;
+    return a;
+}
+
+////////////////////////////////////////////////////////////
+
+sf::Vector2f operator-(sf::Vector2f a, sf::Vector2f const& b) {
+    a.x = a.x - b.x;
+    a.y = a.y - b.y;
+    return a;
+}
+
+////////////////////////////////////////////////////////////
+
 void fi::log(sf::Color Color)
 {
     std::string Result = to_s(Color);
