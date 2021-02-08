@@ -22,6 +22,17 @@ namespace IUEINW
     public:
 		IUEINW_Plugin_Simulation()
 		{
+			resetInput();
+		}
+
+		void resetInput()
+		{
+			if (NextSimulationInput != nullptr)
+			{
+				delete NextSimulationInput;
+				NextSimulationInput = nullptr;
+			}
+
 			NextSimulationInput = new IUEINW_Simulation_Input();
 		}
 

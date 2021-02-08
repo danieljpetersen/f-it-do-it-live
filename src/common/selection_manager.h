@@ -41,7 +41,6 @@ namespace fi
 
         bool UnitsSelectedThisFrame = false;
         bool UnitsDeselectedThisFrame = false;
-        bool UnitSelectedOrDeselected = -1;
         const sf::Vector2i SELECTION_BOX_INACTIVE_COORDS = sf::Vector2i(-1, -1);
         sf::Vector2i BoxSelectInitialMouseDownPosition = SELECTION_BOX_INACTIVE_COORDS;
         void resetSelectionBox();

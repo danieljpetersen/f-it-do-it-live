@@ -147,7 +147,8 @@ void IUEINW::IUEINW_Plugin_User_Interface::onUpdate()
 	{
 		if (IsUnitSelected != true)
 		{
-			getSimulation().NextSimulationInput->UnitCreationDestructionRequests.unitCreationRequest(getNations().HumanNationIndex, getMouseTileTracker().MouseTileIndex, 0, false);
+			// for debug
+			//getSimulation().NextSimulationInput->UnitCreationDestructionRequests.unitCreationRequest(getNations().HumanNationIndex, getMouseTileTracker().MouseTileIndex, 0, false);
 		}
 	}
 

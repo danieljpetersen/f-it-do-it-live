@@ -12,8 +12,8 @@ void IUEINW::IUEINW_Plugin_Init_Cheats::work(const int Event)
 
 void IUEINW::IUEINW_Cheats::reset()
 {
-    RevealAllTerrain = true;
-    NoFogOfWar = true;
+    RevealAllTerrain = false;
+    NoFogOfWar = false;
 }
 
 ////////////////////////////////////////////////////////////

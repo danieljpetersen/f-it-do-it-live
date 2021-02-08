@@ -71,17 +71,16 @@ void fi::Selection_Manager::onUpdate()
     {
         if (fi::getInput().check(fi::key::Mouse1, fi::KEYSTATE_DOUBLE_TAPPED))
         {
-            if (Selected.size())
+            if (Selected.empty() != true)
             {
                 if (true) // todo mouse distance
                 {
-                    UnitSelectedOrDeselected = true;
                     deselectUnits();
                 }
             }
             else
             {
-                UnitSelectedOrDeselected = true;
+                //UnitSelectedOrDeselected = true;
 
                 // if there are no units within the selection rect then we want to select the closest unit to the current position of the mouse
                 auto UnitIDClosestToMouse = getUnitClosestToMouse();
@@ -95,7 +94,7 @@ void fi::Selection_Manager::onUpdate()
             //else if (fi::getInput().check("Unit Controller Initial Button Down Action"))
         if (fi::getInput().check(fi::key::Mouse1, fi::KEYSTATE_INITIAL_DOWN))
         {
-            if (Selected.size() == 0)
+            if (Selected.empty())
             {
                 BoxSelectInitialMouseDownPosition = fi::getInput().MouseWorldPosition;
             }
@@ -104,14 +103,10 @@ void fi::Selection_Manager::onUpdate()
         //else if (fi::getInput().check("Unit Controller Button Released Action"))
         if (fi::getInput().check(fi::key::Mouse1, fi::KEYSTATE_RELEASED))
         {
-            if (UnitSelectedOrDeselected != true)
-            {
-                onActionButtonReleased(QueueKeyHeldDown);
-            }
+            onActionButtonReleased(QueueKeyHeldDown);
 
             BoxSelectInitialMouseDownPosition.x = -1;
             BoxSelectInitialMouseDownPosition.y = -1;
-            UnitSelectedOrDeselected = false;
         }
     }
 

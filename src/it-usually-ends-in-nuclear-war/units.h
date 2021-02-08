@@ -103,9 +103,12 @@ namespace IUEINW
 		fi::Lock_Guard_Wrapper<fi::Slot_Map<IUEINW_Unit>> getWriteAccess();
 		void processCreationDestructionRequests(IUEINW_Unit_Creation_Destruction_Request_Lists *Commands);
 
+		int prototypeNameToIndex(std::string UnitName);
+
 		const bool areSameContinent(const fi::Slot_Map_ID a, const fi::Slot_Map_ID b);
         const bool areSameContinent(const IUEINW_Unit *a, const IUEINW_Unit *b);
 		void moveUnitByTileIndex(IUEINW_Unit *UnitWritePtr, int TileIndex);
+
 
 	private:
         IUEINW_Unit copyUnitPrototype(int PrototypeIndex);

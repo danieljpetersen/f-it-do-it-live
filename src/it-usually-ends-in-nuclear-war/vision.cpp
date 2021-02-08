@@ -74,6 +74,7 @@ void IUEINW::IUEINW_Vision::decrementArea(int CenterTileIndex, int HalfAreaSize)
 
 void IUEINW::IUEINW_Vision::incrementVision(int TileIndex)
 {
+	const int s = VisionCount[TileIndex];
 	VisionCount[TileIndex] += 1;
 	LastTickSeen[TileIndex] = std::max(1, getCoreTick()->getTickCount());
 

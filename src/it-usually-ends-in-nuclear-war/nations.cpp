@@ -5,6 +5,7 @@
 #include "cities.h"
 #include "drawable_map.h"
 #include "user_interface.h"
+#include "simulation.h"
 
 ////////////////////////////////////////////////////////////
 
@@ -23,6 +24,7 @@ void IUEINW::IUEINW_Nations::init()
     const int NumberOfNations = (int)SpawnTiles.size();
     getMap().CurrentMapLayout.StartingNumberOfNations = NumberOfNations;
 	getVision().init();
+	getSimulation().resetInput();
 
     Nations.clear();
 	for (int NationIndex = 0; NationIndex < NumberOfNations; NationIndex++)
@@ -40,12 +42,30 @@ void IUEINW::IUEINW_Nations::init()
 		Nations.push_back(Nation);
 
 		int i = fi::getRandom().i(0, (int)SpawnTiles.size()-1);
-        int CityIndex = getTiles()[SpawnTiles[i]].CityIndex;
+		int SpawnTile = SpawnTiles[i];
+        int CityIndex = getTiles()[SpawnTile].CityIndex;
         SpawnTiles[i] = SpawnTiles.back();
         SpawnTiles.pop_back();
-
 		getCities().setCity(CityIndex, NationIndex);
+
+		// ---- spawn units
+		{
+			auto jsonStartingUnits = fi::getConfig()["game"]["units"]["starting-units"];
+
+			for (auto jsonStartingUnit : jsonStartingUnits)
+			{
+				int PrototypeIndex = getUnits().prototypeNameToIndex(jsonStartingUnit);
+				if (PrototypeIndex != -1)
+				{
+					getSimulation().NextSimulationInput->UnitCreationDestructionRequests.unitCreationRequest(NationIndex, SpawnTile, PrototypeIndex, false);
+				}
+			}
+		}
 	}
+
+	getUnits().processCreationDestructionRequests(&getSimulation().NextSimulationInput->UnitCreationDestructionRequests);
+
+	// ----
 
 	HumanNationIndex = 0;
 	Human = &Nations[HumanNationIndex];

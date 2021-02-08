@@ -26,8 +26,7 @@ void IUEINW::IUEINW_Plugin_Draw_Units::work(const int Event)
     	auto Unit = &Units->Objects[i];
     	sf::Color UnitColor = getNations()[Unit->NationIndex].Color;
 
-		int TickLastSeen = getVision().lastTickSeen(Unit->TileIndex);
-
+		//int TickLastSeen = getVision().lastTickSeen(Unit->TileIndex);
 		//if (TickLastSeen == getCoreTick()->getTickCount())
 		//if (TickLastSeen != -1)
 		if (getVision().hasVision(Unit->TileIndex))
@@ -150,6 +149,7 @@ IUEINW::IUEINW_Unit *IUEINW::IUEINW_Units::createUnit_noRequirements(int NationI
         Unit->NationIndex = NationIndex;
         Unit->TickCreated = getCoreTick()->getTickCount();
         Unit->nthUnitInitialized_Nation = ++getNations()[NationIndex].TotalNumberOfUnitsInitialized;
+        Unit->TileIndex = -1;
 
         moveUnitByTileIndex(Unit, TileIndex);
     }
@@ -168,6 +168,21 @@ void IUEINW::IUEINW_Units::destroyUnit(fi::Slot_Map_ID UnitID)
     {
         UnitsWriteAccess.Data->remove(UnitID);
     }
+}
+
+////////////////////////////////////////////////////////////
+
+int IUEINW::IUEINW_Units::prototypeNameToIndex(std::string UnitName)
+{
+	for (int i = 0; i < Prototypes.size(); i++)
+	{
+		if (Prototypes[i].Name == UnitName)
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 ////////////////////////////////////////////////////////////
@@ -238,14 +253,14 @@ void IUEINW::IUEINW_Unit_Creation_Destruction_Request_Lists::process()
 
 ////////////////////////////////////////////////////////////
 
-void IUEINW::IUEINW_Units:: moveUnitByTileIndex(IUEINW_Unit *UnitWritePtr, int TileIndex)
+void IUEINW::IUEINW_Units::moveUnitByTileIndex(IUEINW_Unit *UnitWritePtr, int TileIndex)
 {
 	if (UnitWritePtr->NationIndex == getNations().HumanNationIndex)
 	{
-		if (getGrid().isValidTile(TileIndex)) // really only possible on spawn
+		if (getGrid().isValidTile(UnitWritePtr->TileIndex)) // atm only possible that it's invalid on spawn
 		{
 			int CoTSize;
-			std::vector<int> *Area = getTiles().getArea(TileIndex, UnitWritePtr->VisionRange, Tile_Type_Grouping::ALL_TILE_TYPES, CoTSize);
+			std::vector<int> *Area = getTiles().getArea(UnitWritePtr->TileIndex, UnitWritePtr->VisionRange, Tile_Type_Grouping::ALL_TILE_TYPES, CoTSize);
 			for (int i = 0; i < CoTSize; i++)
 			{
 				getVision().decrementVision(Area->at(i));
