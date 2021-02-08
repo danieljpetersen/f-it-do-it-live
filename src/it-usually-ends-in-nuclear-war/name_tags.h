@@ -10,6 +10,7 @@ namespace IUEINW
     {
     public:
         int Strength;
+        bool HasCity = false;
     };
 
     // ----

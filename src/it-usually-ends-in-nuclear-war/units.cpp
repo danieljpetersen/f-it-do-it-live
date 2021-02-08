@@ -29,25 +29,32 @@ void IUEINW::IUEINW_Plugin_Draw_Units::work(const int Event)
 		//int TickLastSeen = getVision().lastTickSeen(Unit->TileIndex);
 		//if (TickLastSeen == getCoreTick()->getTickCount())
 		//if (TickLastSeen != -1)
-		if (getVision().hasVision(Unit->TileIndex))
+		if (getGrid().CustomCellData[Unit->TileIndex].IsCityTile != true)
 		{
-			int Alpha = 255;
-
-			// todo
-
-			if (Alpha)
+			if (getVision().hasVision(Unit->TileIndex))
 			{
-				if (Alpha == 255)
-				{
-					if (Unit->isSelected() != true)
-					{
-						getTiles().Grid.buildVertexForCell_Quad(Unit->TileIndex, UnderColor, Quads);
-					}
-				}
+				int Alpha = 255;
 
-				UnitColor.a = sf::Uint8(Alpha);
-				getTiles().Grid.buildVertexForCell_QuadOffset(Unit->TileIndex, UnitColor, UnitQuadOffset, Quads);
+				// todo
+
+				if (Alpha)
+				{
+					if (Alpha == 255)
+					{
+						if (Unit->isSelected() != true)
+						{
+							getTiles().Grid.buildVertexForCell_Quad(Unit->TileIndex, UnderColor, Quads);
+						}
+					}
+
+					UnitColor.a = sf::Uint8(Alpha);
+					getTiles().Grid.buildVertexForCell_QuadOffset(Unit->TileIndex, UnitColor, UnitQuadOffset, Quads);
+				}
 			}
+		}
+		else if (getVision().hasVision(Unit->TileIndex))
+		{
+			fi::Draw::circleOutline(fi::getCanvasWorld().getRenderTarget(), getGrid().CommonCellData[Unit->TileIndex].Center, getGrid().TileHeight/2, sf::Color::White, 1);
 		}
     }
 

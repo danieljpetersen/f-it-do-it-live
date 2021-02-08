@@ -100,7 +100,7 @@ bool IUEINW::IUEINW_Nations::changeHumanPlayer(int NationIndex)
 
 		sf::Vector2f Center = getGrid().CommonCellData[Nations[NationIndex].getCapitalCityTileIndex()].Center;
 		fi::getCanvasWorld().setCenter(Center);
-		fi::getPlugins().delayedExecute(EVENT_BUILD_MAP_DRAWABLES, fi::EVENT_DRAW);
+		fi::getPlugins().delayedExecute(EVENT_BUILD_MAP_DRAWABLES);
 
 		return true;
 	}

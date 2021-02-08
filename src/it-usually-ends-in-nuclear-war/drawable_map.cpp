@@ -40,7 +40,7 @@ void IUEINW::IUEINW_Plugin_Draw_Map::work(const int Event)
 void IUEINW::IUEINW_Map_Drawables::buildMapDrawable()
 {
 	fi::log("build map drawable");
-	
+
     VBO.clear();
     Vertices.clear();
 
