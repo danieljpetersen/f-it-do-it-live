@@ -39,6 +39,8 @@ void IUEINW::IUEINW_Plugin_Draw_Map::work(const int Event)
 
 void IUEINW::IUEINW_Map_Drawables::buildMapDrawable()
 {
+	fi::log("build map drawable");
+	
     VBO.clear();
     Vertices.clear();
 
@@ -111,8 +113,6 @@ void IUEINW::IUEINW_Map_Drawables::buildMapDrawable()
 
 void IUEINW::IUEINW_Map_Drawables::draw()
 {
-	buildMapDrawable();
-
     for (int ColIndex = 0; ColIndex < VBO.size(); ColIndex++)
     {
         VBO[ColIndex].update(&Vertices[ColIndex][0], Vertices[ColIndex].size(), 0);
