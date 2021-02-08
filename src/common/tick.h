@@ -19,7 +19,7 @@ namespace fi
 	public:
         std::string Name;
 		int TickIndex = -1;
-        int TickCount = 0;
+        int TickCount = 1;
 
 		Pauseable_Clock LocalClock;
 		atomicwrapper<bool> StepThisFrame;

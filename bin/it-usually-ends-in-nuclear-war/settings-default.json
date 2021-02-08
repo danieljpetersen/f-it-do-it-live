@@ -15,7 +15,7 @@
 		"suspend-on-lost-focus": true,
 		"draw-frame-clock": false,
 		"output-logs-to-txt": false,
-		"double-click-time":  300,
+		"double-click-time":  200,
 		"music-volume": 0,
 		"sound-effect-volume": 10
 	},
@@ -117,7 +117,7 @@
 	[
 		{
 			"id": "core",
-			"ticks-per-second-options": [ 0.5, 1, 2, 3] // corresponds to menubar speed buttons
+			"ticks-per-second-options": [ 0.5, 1, 1.5] // corresponds to menubar speed buttons
 		}
 	],
 

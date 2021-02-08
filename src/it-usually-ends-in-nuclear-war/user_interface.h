@@ -28,6 +28,7 @@ namespace IUEINW
     public:
         void work(const int Event) override;
         void onEnableChange(bool Enabling) override;
+        void reset();
 
 		IUEINW_Unit_Selection_Manager SelectionManager;
 		std::unordered_map<fi::Slot_Map_ID, IUEINW_Path, fi::Slot_Map_Hash_Fn> Paths;

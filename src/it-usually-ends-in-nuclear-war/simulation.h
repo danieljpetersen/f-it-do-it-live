@@ -28,6 +28,10 @@ namespace IUEINW
         std::shared_ptr<IUEINW_Simulation_Input> SimulationInput;
         IUEINW_Simulation_Input *NextSimulationInput;
 
+        // i'm just going to keep a fucking map of like
+        std::unordered_map<int, int> VisionChanges;
+        // which gets applied every simulation tick
+
         void work(const int EventID) override
         {
             if (getCoreTick()->isStepThisFrame())
@@ -77,7 +81,7 @@ namespace IUEINW
 					{
 						if (Unit->Path.Path->size())
 						{
-							Unit->TileIndex = Unit->Path.Path->front();
+							getUnits().moveUnitByTileIndex(Unit, Unit->Path.Path->front());
 							Unit->Path.Path->pop_front();
 						}
 						else

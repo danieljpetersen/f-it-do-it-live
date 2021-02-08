@@ -25,7 +25,7 @@ void IUEINW::IUEINW_Plugin_Draw_Cities::work(const int Event)
             int TileIndex = TileTransparencyInfo.AssociatedTile;
             if ((getTiles()[TileIndex].IsCityTile) && (getTiles()[TileIndex].NationIndex == -1))
             {
-                if (getVision().hasHumanNationExplored(TileIndex))
+                if (getVision().hasExplored(TileIndex))
                 {
                     Color.a = TileTransparencyInfo.CurrentTransparency;
                     getGrid().buildVertexForCell_Lines(TileIndex, Color, Lines);
@@ -44,7 +44,7 @@ void IUEINW::IUEINW_Plugin_Draw_Cities::work(const int Event)
             {
                 int TileIndex = CitiesReadPtr->at(i).TileIndex;
 
-                if (getVision().canHumanSeeCity(TileIndex, CitiesReadPtr->at(i).TickCreated))
+                if (getVision().hasExplored(TileIndex))
                 {
                     getTiles().Grid.buildVertexForCell_Quad(TileIndex, getColorSchemes().getCityUndersideColor(), Quads); // underneath city
 
@@ -343,6 +343,7 @@ void IUEINW::IUEINW_Cities::setCity(int CityIndex, int NationIndex)
     getTiles()[CitiesWritePtr->at(CityIndex).TileIndex].NationIndex = NationIndex;
 
     // ---- handle vision
+    if (NationIndex == getNations().HumanNationIndex)
     {
         int ContinentIndex = getTiles()[CitiesWritePtr->at(CityIndex).TileIndex].ContinentIndex;
         int CoTSize;
@@ -353,7 +354,7 @@ void IUEINW::IUEINW_Cities::setCity(int CityIndex, int NationIndex)
             int OtherContinentIndex = getTiles()[TileIndex].ContinentIndex;
             if ((OtherContinentIndex == -1) || (OtherContinentIndex == ContinentIndex)) // if is water or the same continent, set vision to explored
             {
-                getVision().revealTile(Area->at(i), NationIndex);
+                getVision().revealTile(Area->at(i));
             }
         }
     }

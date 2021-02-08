@@ -89,36 +89,37 @@ namespace IUEINW
             ;
 
             fi::getPlugins().defineProgramState(ProgramStateIndex_CoreScreen)
-					.withTick("core") // ticks auto loaded from settings json file
+				.withTick("core") // ticks auto loaded from settings json file
 
-					.withPlugin(&PluginLoadingStart, EVENT_MAP_GENERATION)
-					.withPlugin(&PluginInitColorSchemes, EVENT_MAP_GENERATION)
-					.withPlugin(&PluginGenerateMap, EVENT_MAP_GENERATION)
-					.withPlugin(&PluginInitCities, EVENT_MAP_GENERATION)
-					.withPlugin(&PluginInitUnits, EVENT_MAP_GENERATION)
-					.withPlugin(&PluginInitNations, EVENT_MAP_GENERATION)
-					.withPlugin(&PluginInitCheats, EVENT_MAP_GENERATION)
-					.withPlugin(&PluginInitMapDrawables, EVENT_MAP_GENERATION)
-					.withPlugin(&PluginLoadingEnd, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginLoadingStart, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginInitColorSchemes, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginGenerateMap, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginInitCities, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginInitUnits, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginInitNations, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginInitCheats, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginUI, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginInitMapDrawables, EVENT_MAP_GENERATION)
+				.withPlugin(&PluginLoadingEnd, EVENT_MAP_GENERATION)
 
-					.withPlugin(this, fi::EVENT_UPDATE)
-					.withPlugin(&PluginMouseTileTracker, fi::EVENT_UPDATE)
-					.withPlugin(&PluginUI, fi::EVENT_UPDATE)
-					.withPlugin(&PluginAI, fi::EVENT_UPDATE)
-					.withPlugin(&PluginPathfinding, fi::EVENT_UPDATE)
-					.withPlugin(&PluginAudio, fi::EVENT_UPDATE)
-					.withPlugin(&PluginSimulation, fi::EVENT_UPDATE)
-					.withPlugin(&PluginLastCoreState, fi::EVENT_UPDATE)
+				.withPlugin(this, fi::EVENT_UPDATE)
+				.withPlugin(&PluginMouseTileTracker, fi::EVENT_UPDATE)
+				.withPlugin(&PluginUI, fi::EVENT_UPDATE)
+				.withPlugin(&PluginAI, fi::EVENT_UPDATE)
+				.withPlugin(&PluginPathfinding, fi::EVENT_UPDATE)
+				.withPlugin(&PluginAudio, fi::EVENT_UPDATE)
+				.withPlugin(&PluginSimulation, fi::EVENT_UPDATE)
+				.withPlugin(&PluginLastCoreState, fi::EVENT_UPDATE)
 
-					.withPlugin(&PluginBuildMapDrawables, EVENT_BUILD_MAP_DRAWABLES)
+				.withPlugin(&PluginBuildMapDrawables, EVENT_BUILD_MAP_DRAWABLES)
 
-					.withPlugin(&PluginDrawMap, fi::EVENT_DRAW)
-					.withPlugin(&PluginDrawCities, fi::EVENT_DRAW)
-					.withPlugin(&PluginUI, fi::EVENT_DRAW)
-					.withPlugin(&PluginDrawUnits, fi::EVENT_DRAW)
-					.withPlugin(&PluginNameTags, fi::EVENT_DRAW)
-					.withPlugin(&PluginWorldCanvasZoomGUI, fi::EVENT_DRAW)
-					;
+				.withPlugin(&PluginDrawMap, fi::EVENT_DRAW)
+				.withPlugin(&PluginDrawCities, fi::EVENT_DRAW)
+				.withPlugin(&PluginUI, fi::EVENT_DRAW)
+				.withPlugin(&PluginDrawUnits, fi::EVENT_DRAW)
+				.withPlugin(&PluginNameTags, fi::EVENT_DRAW)
+				.withPlugin(&PluginWorldCanvasZoomGUI, fi::EVENT_DRAW)
+			;
 
 			setProgramStateStartScreen();
         }

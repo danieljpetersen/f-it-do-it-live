@@ -3,12 +3,25 @@
 
 ////////////////////////////////////////////////////////////
 
+void fi::Tick_Controller::reset()
+{
+	SelectedTickSpeed = 0;
+	TickSpeedPriorToPause = -1;
+}
+
+////////////////////////////////////////////////////////////
+
 void fi::Tick_Controller::update(fi::Tick *Tick)
 {
 	const int InitialTickSpeed = SelectedTickSpeed;
 
 	if (fi::getInput().check("Tick Speed 0")) // aka pause
 	{
+		if (TickSpeedPriorToPause ==  -1)
+		{
+			TickSpeedPriorToPause = (int)Tick->TicksPerSecondOptions.size(); // not (size() - 1) because speed 0 isn't in the options array
+		}
+
 		if (SelectedTickSpeed == 0)
 		{
 			SelectedTickSpeed = TickSpeedPriorToPause;
@@ -19,7 +32,7 @@ void fi::Tick_Controller::update(fi::Tick *Tick)
 			SelectedTickSpeed = 0;
 		}
 
-		fi::getGUI().setFocus(-1);
+		fi::getGUI().setFocus(-1); // todo wtf?
 	}
 
 	std::vector<std::string> Labels { "-" };

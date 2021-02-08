@@ -15,7 +15,6 @@ namespace fi
             fi::setCursorStyle(sf::StandardCursor::WAIT);
             fi::Double_Buffer_Object_Tracker::instance().reset();
             getCoreTick()->setTickCount(0);
-            getCoreTick()->pauseTimestep();
         }
 	};
 

@@ -15,8 +15,16 @@ void IUEINW::IUEINW_Plugin_User_Interface::onEnableChange(bool Enabling)
 {
 	if (Enabling)
 	{
-		SelectionManager.reset();
+		reset();
 	}
+}
+
+////////////////////////////////////////////////////////////
+
+void IUEINW::IUEINW_Plugin_User_Interface::reset()
+{
+	SelectionManager.reset();
+	TickController.reset();
 }
 
 ////////////////////////////////////////////////////////////
@@ -34,6 +42,12 @@ void IUEINW::IUEINW_Plugin_User_Interface::work(const int Event)
 		case fi::EVENT_DRAW:
 		{
 			onDraw();
+			break;
+		}
+
+		case EVENT_MAP_GENERATION:
+		{
+			reset();
 			break;
 		}
 
@@ -87,6 +101,10 @@ void IUEINW::IUEINW_Plugin_User_Interface::onUpdate()
 					{
 						GoalTile = getMouseTileTracker().MouseTileIndex;
 
+						// TODO THIS IS WRONG
+						// 		units on different continents should move to that continent across ocean.
+						// 		if not ocean capable it should move to the closest tile on its continent. meaning we need to perform the finndclosest search once per continent which containns a unit
+
 						// MouseTileIndex isn't necessarily the desired GoalTile. If not water capable or clicked on coastal tile, find closest tile on same continent
 						if (getGrid().CustomCellData[Unit->TileIndex].ContinentIndex != getGrid().CustomCellData[GoalTile].ContinentIndex)
 						{
@@ -129,7 +147,7 @@ void IUEINW::IUEINW_Plugin_User_Interface::onUpdate()
 	{
 		if (IsUnitSelected != true)
 		{
-			getSimulation().NextSimulationInput->UnitCreationDestructionRequests.unitCreationRequest(getNations().getRandomNation().NationIndex, getMouseTileTracker().MouseTileIndex, 0, false);
+			getSimulation().NextSimulationInput->UnitCreationDestructionRequests.unitCreationRequest(getNations().HumanNationIndex, getMouseTileTracker().MouseTileIndex, 0, false);
 		}
 	}
 
@@ -137,7 +155,7 @@ void IUEINW::IUEINW_Plugin_User_Interface::onUpdate()
 	{
 		if (fi::getInput().check("Generate New Map"))
 		{
-			fi::getPlugins().execute(EVENT_MAP_GENERATION);
+			fi::getPlugins().delayedExecute(EVENT_MAP_GENERATION, fi::EVENT_DRAW);
 		}
 		//else if (fi::getInput().check(fi::key::code::L))
 		//{

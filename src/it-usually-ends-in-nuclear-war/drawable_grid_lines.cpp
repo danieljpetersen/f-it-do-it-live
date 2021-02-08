@@ -46,7 +46,7 @@ void IUEINW::IUEINW_Drawable_Grid_Lines_Around_Mouse::buildDrawable()
         for (std::list<fi::Tile_Transparency_Tracker>::iterator iterator = getMouseTileTracker().TileTransparencies.begin(),
                 end = getMouseTileTracker().TileTransparencies.end(); iterator != end; ++iterator)
         {
-             if (!getVision().hasHumanNationExplored((*iterator).AssociatedTile))
+             if (!getVision().hasExplored((*iterator).AssociatedTile))
              {
                 continue;
              }
@@ -168,7 +168,7 @@ void IUEINW::IUEINW_Drawable_Grid_Lines_Always_On::buildDrawable()
         {
             int TileIndex = TilesWithGridLines->at(i);
             {
-                 if (getVision().hasHumanNationExplored(TileIndex))
+                 if (getVision().hasExplored(TileIndex))
                 {
                      if ((getVision().hasVision_IgnoreCheatMode(TileIndex) && (GridLinesAlwaysOnInVision)))
                      {
@@ -284,7 +284,7 @@ void IUEINW::IUEINW_Drawable_Map_Land_Ocean_Border::buildDrawable()
 	Lines.clear();
 	for (int TileIndex = 0; TileIndex < getTiles().size(); TileIndex++)
 	{
-		if (getVision().hasHumanNationExplored(TileIndex))
+		if (getVision().hasExplored(TileIndex))
 		{
 			addLandOceanBorderIfApplicable(TileIndex);
 		}

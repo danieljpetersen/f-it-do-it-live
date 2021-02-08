@@ -9,9 +9,10 @@ namespace fi
     {
     public:
         int SelectedTickSpeed = 0;
-        int TickSpeedPriorToPause = 4;
+        int TickSpeedPriorToPause = -1;
         bool ShowingProgressBarForTickCounter = false;
 
+        void reset();
         void update(fi::Tick *Tick);
     };
 }

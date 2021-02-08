@@ -4,6 +4,7 @@
 #include "map.h"
 #include "cheats.h"
 #include "nations.h"
+#include "vision.h"
 
 void IUEINW::IUEINW_Drawable_Map_Edges::init()
 {
@@ -81,7 +82,7 @@ void IUEINW::IUEINW_Drawable_Map_Edges::buildDrawable()
         }
         else if (getNations().Human != nullptr)
         {
-            Tiles = &getNations().Human->EdgeTilesDiscovered[i];
+            Tiles = &getVision().EdgeTilesDiscovered[i];
         }
         else
         {

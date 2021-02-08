@@ -25,7 +25,7 @@ void IUEINW::IUEINW_Plugin_Generate_Map::work(const int Event)
     getTiles().populateAreaCache();
     largeBoard_blendTiles();
 
-    largeBoard_setTilePropertiesBasedOnCurrentTileType();//todo
+    largeBoard_setTilePropertiesBasedOnCurrentTileType(); // todo
     largeBoard_blendTileTypes();
     largeBoard_setTileIntensitiesAkaBonusOutput();
     largeBoard_finalTileTypeAssignment();
@@ -44,7 +44,6 @@ void IUEINW::IUEINW_Plugin_Generate_Map::work(const int Event)
 
     largeBoard_determineTileShadows();
     TileTypes.clear();
-
 
 	fi::getPlugins().delayedExecute(EVENT_BUILD_MAP_DRAWABLES);
 }

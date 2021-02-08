@@ -8,40 +8,38 @@ namespace IUEINW
     class IUEINW_Vision
 	{
 	private:
-		std::vector<std::vector<int>> VisionCount; // [0] == TileIndexes, [1] == NationIndexes;  VisionCount of -1 indicates not explored
-		std::vector<std::vector<int>> LastTickSeen; // [0] == TileIndexes, [1] == NationIndexes;  VisionCount of -1 indicates not explored
+		std::vector<int> VisionCount; // -1 indicates not explored
+		std::vector<int> LastTickSeen; // -1 indicates not explored
 
 	public:
-        void init(int NumberOfNations);
+        void init();
+        void recalculateVision(); // for cheat mode changing human player; will
 
-		void revealTile(int TileIndex, int NationIndex);
-		void incrementVision(int TileIndex, int NationIndex);
-		void decrementVision(int TileIndex, int NationIndex);
-		void incrementArea(int CenterTileIndex, int NationIndex, int HalfAreaSize);
-		void decrementArea(int CenterTileIndex, int NationIndex, int HalfAreaSize);
-		void clearVision(int TileIndex, int NationIndex);
-		void clearVision_AllNations(int TileIndex);
+		void revealTile(int TileIndex);
+		void incrementVision(int TileIndex);
+		void decrementVision(int TileIndex);
+		void incrementArea(int CenterTileIndex, int HalfAreaSize);
+		void decrementArea(int CenterTileIndex, int HalfAreaSize);
+		void clearVision(int TileIndex);
 
-		int lastTickSeen(int TileIndex, int NationIndex);
-		int lastTickSeen_ignoreCheatMode(int TileIndex, int NationIndex);
-		bool canHumanSeeCity(int TileIndex, int TickCityCreated);
+		int lastTickSeen(int TileIndex);
+		int lastTickSeen_ignoreCheatMode(int TileIndex);
 
-		bool hasHumanNationExplored(int TileIndex);
-		bool hasHumanNationExplored_IgnoreCheatMode(int TileIndex);
-		bool hasHumanNationDiscoveredBottomLeftEdge();
-		bool hasHumanNationDiscoveredBottomRightEdge();
-		bool hasHumanNationDiscoveredTopLeftEdge();
-		bool hasHumanNationDiscoveredTopRightEdge();
-		bool hasHumanNationDiscoveredAllEdges();
-
-		bool hasNationExplored(int NationIndex, int TileIndex);
-		bool hasNationExplored_IgnoreCheatMode(int NationIndex, int TileIndex);
-
+		bool hasExplored(int TileIndex);
+		bool hasExplored_IgnoreCheatMode(int TileIndex);
 		bool hasVision(int TileIndex);
 		bool hasVision_IgnoreCheatMode(int TileIndex);
 
-		bool canAnyoneSee(int TileIndex);
-		bool canNationSee(int TileIndex, int NationIndex);
+		std::vector<std::vector<int>> EdgeTilesDiscovered;
+		bool hasDiscoveredBottomLeftEdge();
+		bool hasDiscoveredBottomRightEdge();
+		bool hasDiscoveredTopLeftEdge();
+		bool hasDiscoveredTopRightEdge();
+		bool hasDiscoveredAllEdges();
+		bool hasDiscoveredBottomLeftEdge_ignoreCheats();
+		bool hasDiscoveredBottomRightEdge_ignoreCheats();
+		bool hasDiscoveredTopLeftEdge_ignoreCheats();
+		bool hasDiscoveredTopRightEdge_ignoreCheats();
 	};
 
     IUEINW_Vision &getVision();

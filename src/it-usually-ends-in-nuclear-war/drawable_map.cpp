@@ -111,6 +111,8 @@ void IUEINW::IUEINW_Map_Drawables::buildMapDrawable()
 
 void IUEINW::IUEINW_Map_Drawables::draw()
 {
+	buildMapDrawable();
+
     for (int ColIndex = 0; ColIndex < VBO.size(); ColIndex++)
     {
         VBO[ColIndex].update(&Vertices[ColIndex][0], Vertices[ColIndex].size(), 0);
@@ -152,7 +154,7 @@ void IUEINW::IUEINW_Map_Drawables::setTileVertexColors(int TileIndex, sf::Color 
 
 void IUEINW::IUEINW_Map_Drawables::setTileVertexColors(int TileIndex)
 {
-    if (getVision().hasHumanNationExplored(TileIndex))
+    if (getVision().hasExplored(TileIndex))
     {
         setTileVertexColors(TileIndex, true);
     }
@@ -166,6 +168,11 @@ void IUEINW::IUEINW_Map_Drawables::setTileVertexColors(int TileIndex)
 
 void IUEINW::IUEINW_Map_Drawables::setTileVertexColors(int TileIndex, bool ExploredTile)
 {
+	if (Vertices.empty())
+	{
+		return;
+	}
+
     fi::Grid_1D_Custom_Data<IUEINW_Tile> *Grid = &getMap().Tiles.Grid;
 
     int ColIndex = getTiles().Grid.getCol(TileIndex);

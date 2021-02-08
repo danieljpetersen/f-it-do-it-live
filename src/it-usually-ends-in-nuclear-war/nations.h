@@ -26,27 +26,9 @@ namespace IUEINW
         int NationIndex;
         int TotalNumberOfUnitsInitialized;
         sf::Color Color;
-	    std::vector<int> Cities;
-
+	    std::vector<int> Cities; // functions as index into getCities().Cities; ie:  getCities.Cities[Nation->Cities[0]];
 		bool isHumanNation();
-
-        std::vector<std::vector<int>> EdgeTilesDiscovered; // todo should be in vision
-		bool discoveredBottomLeftEdge()
-		{
-			return (bool)EdgeTilesDiscovered[BOTTOMLEFT_EDGE].empty();
-		}
-		bool discoveredBottomRightEdge()
-		{
-			return (bool)EdgeTilesDiscovered[BOTTOMRIGHT_EDGE].empty();
-		}
-		bool discoveredTopLeftEdge()
-		{
-			return (bool)EdgeTilesDiscovered[TOPLEFT_EDGE].empty();
-		}
-		bool discoveredTopRightEdge()
-		{
-			return (bool)EdgeTilesDiscovered[TOPRIGHT_EDGE].empty();
-		}
+		int getCapitalCityTileIndex();
 	};
 
 	////////////////////////////////////////////////////////////
@@ -58,18 +40,20 @@ namespace IUEINW
 		IUEINW_Nation & operator [](int i)       {return Nations[i];}
 
 		std::vector<IUEINW_Nation> Nations;
-		int HumanNationIndex = -1;
+		int HumanNationIndex = 0;
 		IUEINW_Nation *Human = nullptr;
 
 		void init();
 		unsigned int size() { return (unsigned int)Nations.size(); }
+		bool isValidNation(int NationIndex);
 		bool changeHumanPlayer(int NationIndex);
-		void changeHumanPlayerToNextNation();
+		bool changeHumanPlayerToNextNation();
 		IUEINW_Nation &getRandomNation();
 	};
 
     ////////////////////////////////////////////////////////////
 
     IUEINW_Nations &getNations();
+    int getHumanNationIndex();
 }
 #endif

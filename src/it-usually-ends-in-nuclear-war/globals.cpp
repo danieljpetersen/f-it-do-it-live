@@ -48,6 +48,13 @@ IUEINW::IUEINW_Nations &IUEINW::getNations()
 
 ////////////////////////////////////////////////////////////
 
+int IUEINW::getHumanNationIndex()
+{
+	return getApp().Nations.HumanNationIndex;
+}
+
+////////////////////////////////////////////////////////////
+
 IUEINW::IUEINW_Vision &IUEINW::getVision()
 {
     return getApp().Vision;

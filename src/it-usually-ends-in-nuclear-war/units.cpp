@@ -26,7 +26,7 @@ void IUEINW::IUEINW_Plugin_Draw_Units::work(const int Event)
     	auto Unit = &Units->Objects[i];
     	sf::Color UnitColor = getNations()[Unit->NationIndex].Color;
 
-		int TickLastSeen = getVision().lastTickSeen(Unit->TileIndex, getNations().HumanNationIndex);
+		int TickLastSeen = getVision().lastTickSeen(Unit->TileIndex);
 
 		//if (TickLastSeen == getCoreTick()->getTickCount())
 		//if (TickLastSeen != -1)
@@ -145,13 +145,13 @@ IUEINW::IUEINW_Unit *IUEINW::IUEINW_Units::createUnit_noRequirements(int NationI
     *Unit = copyUnitPrototype(PrototypeIndex);
     Unit->SlotMapID = ID; // todo copy w/o overwriting id
 
-    // ---- set Bounds
+    // ---- set
     {
         Unit->NationIndex = NationIndex;
         Unit->TickCreated = getCoreTick()->getTickCount();
-        Unit->TileIndex = TileIndex;
-        Unit->ContinentIndex = getTiles()[TileIndex].ContinentIndex;
         Unit->nthUnitInitialized_Nation = ++getNations()[NationIndex].TotalNumberOfUnitsInitialized;
+
+        moveUnitByTileIndex(Unit, TileIndex);
     }
 
     return Unit;
@@ -234,6 +234,39 @@ void IUEINW::IUEINW_Unit_Creation_Destruction_Request_Lists::process()
     }
 
     CreationRequests.clear();
+}
+
+////////////////////////////////////////////////////////////
+
+void IUEINW::IUEINW_Units:: moveUnitByTileIndex(IUEINW_Unit *UnitWritePtr, int TileIndex)
+{
+	if (UnitWritePtr->NationIndex == getNations().HumanNationIndex)
+	{
+		if (getGrid().isValidTile(TileIndex)) // really only possible on spawn
+		{
+			int CoTSize;
+			std::vector<int> *Area = getTiles().getArea(TileIndex, UnitWritePtr->VisionRange, Tile_Type_Grouping::ALL_TILE_TYPES, CoTSize);
+			for (int i = 0; i < CoTSize; i++)
+			{
+				getVision().decrementVision(Area->at(i));
+			}
+		}
+	}
+
+	UnitWritePtr->TileIndex = TileIndex;
+	UnitWritePtr->ContinentIndex = getTiles()[TileIndex].ContinentIndex;
+
+	// ---- update vision
+	if (UnitWritePtr->NationIndex == getNations().HumanNationIndex)
+	{
+		int CoTSize;
+		std::vector<int> *Area = getTiles().getArea(TileIndex, UnitWritePtr->VisionRange, Tile_Type_Grouping::ALL_TILE_TYPES, CoTSize);
+		for (int i = 0; i < CoTSize; i++)
+		{
+			getVision().revealTile(Area->at(i));
+			getVision().incrementVision(Area->at(i));
+		}
+	}
 }
 
 ////////////////////////////////////////////////////////////
